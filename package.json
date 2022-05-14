@@ -9,9 +9,14 @@
   "main": "./src/index.ts",
   "scripts": {
     "build": "tsc",
-    "start": "node ./build/index.js"
+    "start": "node ./build/index.js",
+    "lint": "eslint . --ext .js,.ts",
+    "lint-fix": "eslint . --fix --ext .js,.ts",
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.23.0",
+    "@typescript-eslint/parser": "^5.23.0",
+    "eslint": "^8.15.0",
     "typescript": "^4.6.4"
   }
 }
