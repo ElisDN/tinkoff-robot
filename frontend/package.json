@@ -12,21 +12,34 @@
     "@types/node": "^16.11.35",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.4",
+    "@typescript-eslint/eslint-plugin": "^5.23.0",
+    "eslint-config-prettier": "^8.0.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jest-dom": "^4.0.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-testing-library": "^5.0.0",
+    "prettier": "^2.0.4",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-scripts": "5.0.1",
+    "stylelint": "^14.0.0",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-standard": "^25.0.0",
+    "stylelint-prettier": "^2.0.0",
     "typescript": "^4.6.4"
   },
   "scripts": {
     "dev": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "test": "react-scripts test",
+    "eslint": "eslint --ext .js,.ts,.jsx,.tsx src",
+    "eslint-fix": "eslint --fix --ext .js,.ts,.jsx,.tsx src",
+    "stylelint": "stylelint \"src/**/*.css\"",
+    "prettier": "prettier --write \"**/*.+(js|jsx|ts|tsx|json|css|md)\""
   },
   "browserslist": {
     "production": [
