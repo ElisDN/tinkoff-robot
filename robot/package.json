@@ -1,8 +1,9 @@
 {
-  "name": "tinkoff-robot",
+  "name": "tinkoff-robot-server",
   "version": "1.0.0",
   "description": "Tinkoff Contest",
   "license": "Apache-2.0",
+  "private": true,
   "engines": {
     "node": ">=16.0.0"
   },
