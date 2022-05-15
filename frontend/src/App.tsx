@@ -4,7 +4,7 @@ function App() {
   const [content, setContent] = useState(null)
 
   useEffect(() => {
-    fetch('http://localhost:3001')
+    fetch(process.env.REACT_APP_API_HOST + '/')
       .then((response) => response.json())
       .then((data) => {
         setContent(data)
