@@ -19,11 +19,13 @@
     "proto": "grpc_tools_node_protoc --plugin=protoc-gen-ts_proto=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_opt=esModuleInterop=true --ts_proto_out=./src/tinkoff/contracts --ts_proto_opt=outputServices=generic-definitions,useExactTypes=false -I ./protos/ ./protos/*.proto"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.6.7",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "nice-grpc": "^1.2.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.2",

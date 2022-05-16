@@ -3,6 +3,8 @@ import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
+import createSdk from './tinkoff/client'
+import createUsers from './tinkoff/service/users'
 
 dotenv.config()
 
@@ -15,6 +17,17 @@ const authPassword = process.env.AUTH_PASSWORD
 if (!authPassword) {
   throw new Error('AUTH_PASSWORD env is not set')
 }
+
+const tinkoffToken = process.env.TINKOFF_TOKEN
+if (!tinkoffToken) {
+  throw new Error('TINKOFF_TOKEN env is not set')
+}
+
+const isSandbox = process.env.IS_SANDBOX === '1'
+
+const client = createSdk('invest-public-api.tinkoff.ru:443', tinkoffToken, 'ElisDN')
+
+const users = createUsers(client, isSandbox)
 
 const app = express()
 
@@ -48,6 +61,16 @@ app.use('/api', (req, res, next) => {
 
 app.get('/api', function (req, res) {
   res.json('API')
+})
+
+app.get('/api/accounts', async function (req, res) {
+  try {
+    const accounts = await users.getAccounts()
+    res.json(accounts)
+  } catch (e) {
+    console.error(e)
+    res.status(500).json(e)
+  }
 })
 
 app.listen(process.env.PORT, () => {
