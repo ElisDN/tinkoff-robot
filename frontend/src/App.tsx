@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import Home from './Home'
+import useAuth from './auth/useAuth'
+import Login from './Login'
 
 function App() {
-  const [content, setContent] = useState(null)
+  const { isAuthenticated } = useAuth()
 
-  useEffect(() => {
-    fetch(process.env.REACT_APP_API_HOST + '/')
-      .then((response) => response.json())
-      .then((data) => {
-        setContent(data)
-      })
-  }, [])
+  if (!isAuthenticated) {
+    return <Login />
+  }
 
-  return <div className="container">{JSON.stringify(content)}</div>
+  return <Home />
 }
 
 export default App
