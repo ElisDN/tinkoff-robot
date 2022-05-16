@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from './auth/useAuth'
+import { Link } from 'react-router-dom'
 
 type Account = {
   id: string
@@ -38,7 +39,9 @@ function Accounts() {
           <tbody>
             {accounts.map((account) => (
               <tr key={'account-' + account.id}>
-                <td>{account.name}</td>
+                <td>
+                  <Link to={'/' + account.id}>{account.name}</Link>
+                </td>
               </tr>
             ))}
           </tbody>

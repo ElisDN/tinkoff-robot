@@ -5,6 +5,7 @@ import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import createSdk from './tinkoff/client'
 import createUsers from './tinkoff/service/users'
+import createOperations from "./tinkoff/service/operations";
 
 dotenv.config()
 
@@ -28,6 +29,7 @@ const isSandbox = process.env.IS_SANDBOX === '1'
 const client = createSdk('invest-public-api.tinkoff.ru:443', tinkoffToken, 'ElisDN')
 
 const users = createUsers(client, isSandbox)
+const operations = createOperations(client, isSandbox)
 
 const app = express()
 
@@ -67,6 +69,31 @@ app.get('/api/accounts', async function (req, res) {
   try {
     const accounts = await users.getAccounts()
     res.json(accounts)
+  } catch (e) {
+    console.error(e)
+    res.status(500).json(e)
+  }
+})
+
+app.get('/api/accounts/:id', async function (req, res) {
+  try {
+    const accounts = await users.getAccounts()
+    const account = accounts.filter((account) => account.id === req.params.id).pop()
+    if (account) {
+      res.json(account)
+    } else {
+      res.status(404).json({ message: 'Not Found' })
+    }
+  } catch (e) {
+    console.error(e)
+    res.status(500).json(e)
+  }
+})
+
+app.get('/api/accounts/:id/portfolio', async function (req, res) {
+  try {
+    const positions = await operations.getPortfolio(req.params.id)
+    res.json(positions)
   } catch (e) {
     console.error(e)
     res.status(500).json(e)
