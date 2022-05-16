@@ -11,7 +11,7 @@ function App() {
       })
   }, [])
 
-  return <div>{JSON.stringify(content)}</div>
+  return <div className="container">{JSON.stringify(content)}</div>
 }
 
 export default App
