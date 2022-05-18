@@ -52,9 +52,10 @@ app.use((req, res, next) => {
 
 app.post('/auth', (req, res) => {
   if (req.body.password === authPassword) {
+    const expires = 3600 * 4
     return res.status(200).json({
-      token: jwt.sign({ id: 0 }, authSecret, { expiresIn: 3600 }),
-      expires: 3600,
+      token: jwt.sign({ id: 0 }, authSecret, { expiresIn: expires }),
+      expires,
     })
   }
   return res.status(409).json({ message: 'Incorrect password' })
