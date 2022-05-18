@@ -1,10 +1,10 @@
 import React from 'react'
-import Home from './Home'
 import useAuth from './auth/useAuth'
-import Login from './Login'
+import Login from './login/Login'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import NotFound from './NotFound'
-import Account from './Account'
+import AccountPage from './home/account/AccountPage'
+import HomePage from './home/HomePage'
 
 function App() {
   const { isAuthenticated } = useAuth()
@@ -16,8 +16,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/:accountId" element={<Account />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/:accountId" element={<AccountPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import useAuth from './auth/useAuth'
+import useAuth from '../../auth/useAuth'
 import { Link, useParams } from 'react-router-dom'
 import Portfolio from './Portfolio'
 
@@ -11,7 +11,7 @@ type AccountResponse = {
   }
 }
 
-function Account() {
+function AccountPage() {
   const { accountId } = useParams()
 
   const { getToken } = useAuth()
@@ -48,4 +48,4 @@ function Account() {
   )
 }
 
-export default Account
+export default AccountPage

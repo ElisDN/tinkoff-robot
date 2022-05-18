@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import useAuth from './auth/useAuth'
+import useAuth from '../auth/useAuth'
 import { Link } from 'react-router-dom'
 
 type Account = {

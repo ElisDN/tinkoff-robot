@@ -1,7 +1,7 @@
 import React from 'react'
 import Accounts from './Accounts'
 
-function Home() {
+function HomePage() {
   return (
     <div className="container py-3">
       <Accounts />
@@ -9,4 +9,4 @@ function Home() {
   )
 }
 
-export default Home
+export default HomePage
