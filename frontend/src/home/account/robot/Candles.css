@@ -1,0 +1,42 @@
+.area {
+  width: 100%;
+  overflow: auto;
+}
+
+.bar {
+  fill: #8d8d8d;
+}
+
+.bar.bar-up {
+  fill: #239532;
+}
+
+.bar.bar-down {
+  fill: #e32020;
+}
+
+.bar:hover {
+  fill: #333;
+}
+
+svg text {
+  display: none;
+}
+
+svg g:hover text {
+  display: block;
+}
+
+.axis {
+  font: 10px sans-serif;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}

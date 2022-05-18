@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from '../../../auth/useAuth'
+import './Candles.css'
 
 type Props = {
   accountId: string
@@ -12,17 +13,18 @@ interface Quantity {
 }
 
 interface Candle {
-  open: Quantity | undefined
-  high: Quantity | undefined
-  low: Quantity | undefined
-  close: Quantity | undefined
+  open: Quantity
+  high: Quantity
+  low: Quantity
+  close: Quantity
   volume: number
-  time: string | undefined
+  time: string
 }
 
 function Candles({ accountId, robotId }: Props) {
   const { getToken } = useAuth()
 
+  const [barWidth, setBarWidth] = useState<number>(2)
   const [candles, setCandles] = useState<Candle[] | null>(null)
   const [error, setError] = useState(null)
 
@@ -39,39 +41,62 @@ function Candles({ accountId, robotId }: Props) {
       .catch(() => null)
   }, [])
 
-  const formatPrice = (price: Quantity) => {
-    return (price.units + price.nano / 1000000000).toFixed(2)
+  const calcPrice = (price: Quantity) => {
+    return price.units + price.nano / 1000000000
   }
+
+  const formatPrice = (price: Quantity) => {
+    return calcPrice(price).toFixed(2)
+  }
+
+  const min = candles ? Math.min(...candles.map((candle) => calcPrice(candle.low))) : 0
+  const max = candles ? Math.max(...candles.map((candle) => calcPrice(candle.high))) : 0
+
+  const height = 400
+  const verticalScale = height / (max - min)
 
   return (
     <div className="card my-3">
-      <div className="card-header">Цены</div>
+      <div className="card-header">
+        Цены
+        <div className="btn-group float-end">
+          <button type="button" className="btn btn-sm btn-outline-dark" onClick={() => setBarWidth(barWidth * 2)}>
+            +
+          </button>
+          <button type="button" className="btn btn-sm btn-outline-dark" onClick={() => setBarWidth(barWidth / 2)}>
+            &ndash;
+          </button>
+        </div>
+      </div>
       {error ? <div className="alert alert-danger my-0">{error}</div> : null}
       {candles !== null ? (
-        <table className="table table-striped my-0">
-          <thead>
-            <tr>
-              <th>Время</th>
-              <th style={{ textAlign: 'right' }}>Открытие</th>
-              <th style={{ textAlign: 'right' }}>Мин</th>
-              <th style={{ textAlign: 'right' }}>Макс</th>
-              <th style={{ textAlign: 'right' }}>Закрытие</th>
-              <th style={{ textAlign: 'right' }}>Объём</th>
-            </tr>
-          </thead>
-          <tbody>
-            {candles.map((candle) => (
-              <tr key={'candle-' + candle.time}>
-                <td>{candle.time}</td>
-                <td style={{ textAlign: 'right' }}>{candle.open ? formatPrice(candle.open) : ''}</td>
-                <td style={{ textAlign: 'right' }}>{candle.low ? formatPrice(candle.low) : ''}</td>
-                <td style={{ textAlign: 'right' }}>{candle.high ? formatPrice(candle.high) : ''}</td>
-                <td style={{ textAlign: 'right' }}>{candle.close ? formatPrice(candle.close) : ''}</td>
-                <td style={{ textAlign: 'right' }}>{candle.volume}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="area">
+          <svg width={candles.length * barWidth} height={height + 20}>
+            {candles.map((candle, index) => {
+              return (
+                <g key={candle.time}>
+                  <rect
+                    className="bar"
+                    x={index * barWidth + barWidth / 2 - 1}
+                    width={2}
+                    y={(max - calcPrice(candle.high)) * verticalScale + 20}
+                    height={Math.abs(calcPrice(candle.high) - calcPrice(candle.low)) * verticalScale}
+                  />
+                  <rect
+                    className={calcPrice(candle.open) <= calcPrice(candle.close) ? 'bar bar-up' : 'bar bar-down'}
+                    x={index * barWidth}
+                    width={barWidth}
+                    y={(max - Math.max(calcPrice(candle.open), calcPrice(candle.close))) * verticalScale + 20}
+                    height={Math.abs(calcPrice(candle.open) - calcPrice(candle.close)) * verticalScale}
+                  />
+                  <text x={index * barWidth} y="20">
+                    {formatPrice(candle.close)}
+                  </text>
+                </g>
+              )
+            })}
+          </svg>
+        </div>
       ) : null}
     </div>
   )
