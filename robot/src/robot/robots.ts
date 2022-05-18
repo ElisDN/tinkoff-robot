@@ -12,6 +12,14 @@ class Robots {
     this.robots.push(new Robot(id, accountId, figi))
   }
 
+  get(accountId: string, id: string): Robot {
+    const robot = this.robots.find((robot) => robot.getId() === id)
+    if (!robot) {
+      throw new RobotsError('Robot not found')
+    }
+    return robot
+  }
+
   getAll(accountId: string): Robot[] {
     return this.robots.filter((robot) => robot.getAccountId() === accountId)
   }

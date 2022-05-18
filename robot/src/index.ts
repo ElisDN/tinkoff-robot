@@ -149,6 +149,19 @@ app.post('/api/accounts/:account/robots/create', async function (req, res) {
   }
 })
 
+app.get('/api/accounts/:account/robots/:robot', async function (req, res) {
+  try {
+    const robot = robots.get(req.params.account, req.params.robot)
+    res.json({
+      id: robot.getId(),
+      figi: robot.getFigi(),
+    })
+  } catch (e) {
+    console.error(e)
+    res.status(500).json(e)
+  }
+})
+
 app.listen(process.env.PORT, () => {
   console.log('Listening on port ' + process.env.PORT)
 })

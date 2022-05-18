@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from '../../auth/useAuth'
+import { Link } from 'react-router-dom'
 
 type Props = {
   accountId: string
 }
 
 type Robot = {
+  id: string
   figi: string
 }
 
@@ -89,7 +91,9 @@ function Robots({ accountId }: Props) {
           <tbody>
             {robots.map((robot) => (
               <tr key={'robot-' + robot.figi}>
-                <td>{robot.figi}</td>
+                <td>
+                  <Link to={'/' + accountId + '/' + robot.id}>{robot.figi}</Link>
+                </td>
               </tr>
             ))}
           </tbody>
