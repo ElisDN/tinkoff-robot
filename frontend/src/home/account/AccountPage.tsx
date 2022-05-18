@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import useAuth from '../../auth/useAuth'
 import { Link, useParams } from 'react-router-dom'
 import Portfolio from './Portfolio'
+import Robots from './Robots'
 
 type AccountResponse = {
   real: boolean
@@ -42,7 +43,8 @@ function AccountPage() {
           {account !== null ? <li className="breadcrumb-item active">{account.account.name || 'Песочница'}</li> : null}
         </ol>
       </nav>
-      {error ? <div className="alert alert-danger my-0">{error}</div> : null}
+      {error ? <div className="alert alert-danger">{error}</div> : null}
+      {account !== null ? <Robots accountId={account.account.id} /> : null}
       {account !== null ? <Portfolio accountId={account.account.id} /> : null}
     </div>
   )
