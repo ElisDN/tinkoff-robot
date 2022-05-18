@@ -6,7 +6,8 @@ import dotenv from 'dotenv'
 import createSdk from './tinkoff/client'
 import AccountsService from './tinkoff/service/accounts'
 import PortfolioService from './tinkoff/service/portfolio'
-import Robots, {RobotsError} from "./robot/robots";
+import Robots, { RobotsError } from './robot/robots'
+import {v4} from "uuid";
 
 dotenv.config()
 
@@ -121,6 +122,7 @@ app.get('/api/accounts/:account/robots', async function (req, res) {
   try {
     res.json(
       robots.getAll(req.params.account).map((robot) => ({
+        id: robot.getId(),
         figi: robot.getFigi(),
       }))
     )
@@ -135,7 +137,7 @@ app.post('/api/accounts/:account/robots/create', async function (req, res) {
     if (!req.body.figi) {
       res.status(422).json({ message: 'Property figi is empty' })
     }
-    robots.create(req.params.account, req.body.figi)
+    robots.create(req.params.account, v4(), req.body.figi)
     res.json()
   } catch (e) {
     console.error(e)
