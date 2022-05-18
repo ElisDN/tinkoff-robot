@@ -24,7 +24,7 @@ function Portfolio({ accountId }: Props) {
   const [positions, setPositions] = useState<Position[] | null>(null)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
+  const loadPositions = () => {
     getToken()
       .then((token) => {
         fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/portfolio`, {
@@ -35,6 +35,12 @@ function Portfolio({ accountId }: Props) {
           .catch((error) => setError(error.message || error.statusText))
       })
       .catch(() => null)
+  }
+
+  useEffect(() => {
+    loadPositions()
+    const interval = setInterval(loadPositions, 3000)
+    return () => clearInterval(interval)
   }, [])
 
   return (
