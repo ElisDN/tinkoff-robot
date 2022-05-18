@@ -1,4 +1,4 @@
-import express, { NextFunction } from 'express'
+import express from 'express'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import bodyParser from 'body-parser'
