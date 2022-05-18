@@ -94,7 +94,7 @@ function Accounts() {
                       className="btn btn-danger btn-sm"
                       onClick={() => closeSandboxAccount(account.account.id)}
                     >
-                      Закрыть
+                      Удалить
                     </button>
                   ) : null}
                 </td>
