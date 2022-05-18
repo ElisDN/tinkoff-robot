@@ -36,6 +36,7 @@ function Accounts() {
   }, [])
 
   const openSandboxAccount = () => {
+    setError(null)
     getToken()
       .then((token) => {
         fetch(process.env.REACT_APP_API_HOST + '/api/accounts/open-sandbox', {
@@ -55,6 +56,7 @@ function Accounts() {
   }
 
   const closeSandboxAccount = (accountId: string) => {
+    setError(null)
     getToken()
       .then((token) => {
         fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/close-sandbox`, {

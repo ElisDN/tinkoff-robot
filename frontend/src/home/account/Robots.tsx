@@ -51,6 +51,7 @@ function Robots({ accountId }: Props) {
 
   const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault()
+    setError(null)
     getToken().then((token) => {
       fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/robots/create`, {
         method: 'POST',
@@ -83,6 +84,7 @@ function Robots({ accountId }: Props) {
   }
 
   const removeRobot = (robotId: string) => {
+    setError(null)
     getToken()
       .then((token) => {
         fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/robots/${robotId}`, {
