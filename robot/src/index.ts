@@ -7,7 +7,7 @@ import createSdk from './tinkoff/client'
 import AccountsService from './tinkoff/service/accounts'
 import PortfolioService from './tinkoff/service/portfolio'
 import Robots, { RobotsError } from './robot/robots'
-import {v4} from "uuid";
+import { v4 } from 'uuid'
 
 dotenv.config()
 
