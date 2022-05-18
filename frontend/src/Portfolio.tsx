@@ -40,11 +40,7 @@ function Portfolio({ accountId }: Props) {
   return (
     <div className="card">
       <div className="card-header">Positions</div>
-      {error ? (
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      ) : null}
+      {error ? <div className="alert alert-danger my-0">{error}</div> : null}
       {positions !== null ? (
         <table className="table table-striped my-0">
           <thead>

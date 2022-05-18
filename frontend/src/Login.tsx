@@ -58,11 +58,7 @@ function Login() {
     <div className="signin">
       <main className="form-signin w-100 m-auto text-center">
         <form method="post" onSubmit={handleSubmit}>
-          {error ? (
-            <div className="alert alert-danger" role="alert">
-              {error}
-            </div>
-          ) : null}
+          {error ? <div className="alert alert-danger my-0">{error}</div> : null}
           <div className="form-floating">
             <input
               type="password"

@@ -42,11 +42,7 @@ function Account() {
           {account !== null ? <li className="breadcrumb-item active">{account.account.name || 'Песочница'}</li> : null}
         </ol>
       </nav>
-      {error ? (
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      ) : null}
+      {error ? <div className="alert alert-danger my-0">{error}</div> : null}
       {account !== null ? <Portfolio accountId={account.account.id} /> : null}
     </div>
   )

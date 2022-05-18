@@ -76,11 +76,7 @@ function Accounts() {
   return (
     <div className="card">
       <div className="card-header">Accounts</div>
-      {error ? (
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      ) : null}
+      {error ? <div className="alert alert-danger my-0">{error}</div> : null}
       {accounts !== null ? (
         <table className="table my-0">
           <tbody>
