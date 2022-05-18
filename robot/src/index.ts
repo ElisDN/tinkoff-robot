@@ -42,14 +42,16 @@ app.use(cors())
 app.use(bodyParser.json())
 
 app.post('/auth', (req, res) => {
+  if (!req.body.password) {
+    res.status(422).json({ message: 'Заполните пароль' })
+    return
+  }
   if (req.body.password === authPassword) {
     const expires = 3600 * 4
-    return res.status(200).json({
-      token: jwt.sign({ id: 0 }, authSecret, { expiresIn: expires }),
-      expires,
-    })
+    const token = jwt.sign({ id: 0 }, authSecret, { expiresIn: expires })
+    return res.status(200).json({ token, expires })
   }
-  return res.status(409).json({ message: 'Incorrect password' })
+  return res.status(409).json({ message: 'Неверный пароль' })
 })
 
 app.use('/api', (req, res, next) => {
@@ -108,7 +110,7 @@ app.get('/api/accounts/:account/robots', async function (req, res) {
 
 app.post('/api/accounts/:account/robots/create', async function (req, res) {
   if (!req.body.figi) {
-    res.status(422).json({ message: 'Property figi is empty' })
+    res.status(422).json({ message: 'Заполните FIGI' })
     return
   }
   robotsService
