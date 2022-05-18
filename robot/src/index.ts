@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { NextFunction } from 'express'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import bodyParser from 'body-parser'
@@ -40,18 +40,6 @@ const app = express()
 
 app.use(cors())
 app.use(bodyParser.json())
-
-app.use((req, res, next) => {
-  try {
-    next()
-  } catch (e) {
-    console.error(e)
-    if (e instanceof Error) {
-      res.status(500).json({ message: e.message })
-    }
-    res.status(500).json(e)
-  }
-})
 
 app.post('/auth', (req, res) => {
   if (req.body.password === authPassword) {
@@ -123,8 +111,10 @@ app.post('/api/accounts/:account/robots/create', async function (req, res) {
     res.status(422).json({ message: 'Property figi is empty' })
     return
   }
-  await robotsService.create(req.params.account, v4(), req.body.figi)
-  res.json()
+  robotsService
+    .create(req.params.account, v4(), req.body.figi)
+    .then(() => res.json())
+    .catch((err) => res.status(400).json({ message: err.message }))
 })
 
 app.get('/api/accounts/:account/robots/:robot', async function (req, res) {
@@ -136,8 +126,10 @@ app.get('/api/accounts/:account/robots/:robot', async function (req, res) {
 })
 
 app.delete('/api/accounts/:account/robots/:robot', async function (req, res) {
-  await robotsService.remove(req.params.account, req.params.robot)
-  res.json()
+  robotsService
+    .remove(req.params.account, req.params.robot)
+    .then(() => res.json())
+    .catch((err) => res.status(400).json({ message: err.message }))
 })
 
 app.listen(process.env.PORT, () => {
