@@ -120,7 +120,7 @@ app.get('/api/accounts/:account/portfolio', async function (req, res) {
 app.get('/api/accounts/:account/robots', async function (req, res) {
   try {
     res.json(
-      robots.getRobots().map((robot) => ({
+      robots.getAll(req.params.account).map((robot) => ({
         figi: robot.getFigi(),
       }))
     )

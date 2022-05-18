@@ -12,8 +12,8 @@ class Robots {
     this.robots.push(new Robot(accountId, figi))
   }
 
-  getRobots(): Robot[] {
-    return this.robots
+  getAll(accountId: string): Robot[] {
+    return this.robots.filter((robot) => robot.getAccountId() === accountId)
   }
 }
 
