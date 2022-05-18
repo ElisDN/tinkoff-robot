@@ -85,7 +85,7 @@ function Accounts() {
                 <td>
                   <Link to={'/' + account.account.id}>{account.account.name || 'Песочница'}</Link>
                 </td>
-                <td>
+                <td style={{ textAlign: 'right' }}>
                   {!account.real ? (
                     <button
                       type="button"
