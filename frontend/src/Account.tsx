@@ -4,8 +4,11 @@ import { Link, useParams } from 'react-router-dom'
 import Portfolio from './Portfolio'
 
 type AccountResponse = {
-  id: string
-  name: string
+  real: boolean
+  account: {
+    id: string
+    name: string
+  }
 }
 
 function Account() {
@@ -14,7 +17,7 @@ function Account() {
   const { getToken } = useAuth()
 
   const [account, setAccount] = useState<AccountResponse | null>(null)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     getToken()
@@ -27,7 +30,7 @@ function Account() {
           .catch((error) => setError(error.message || error.statusText))
       })
       .catch(() => null)
-  }, [])
+  }, [accountId])
 
   return (
     <div className="container py-3">
@@ -36,7 +39,7 @@ function Account() {
           <li className="breadcrumb-item">
             <Link to="/">Home</Link>
           </li>
-          {account !== null ? <li className="breadcrumb-item active">{account.name}</li> : null}
+          {account !== null ? <li className="breadcrumb-item active">{account.account.name || 'Песочница'}</li> : null}
         </ol>
       </nav>
       {error ? (
@@ -44,7 +47,7 @@ function Account() {
           {error}
         </div>
       ) : null}
-      {account !== null ? <Portfolio accountId={account.id} /> : null}
+      {account !== null ? <Portfolio accountId={account.account.id} /> : null}
     </div>
   )
 }

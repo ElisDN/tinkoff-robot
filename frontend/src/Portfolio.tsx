@@ -61,9 +61,9 @@ function Portfolio({ accountId }: Props) {
               <tr key={'position-' + position.figi}>
                 <td>{position.figi}</td>
                 <td>{position.instrumentType}</td>
-                <td>{position.quantityLots.units}</td>
+                <td>{position.quantityLots?.units}</td>
                 <td>{position.quantity.units}</td>
-                <td>{position.currentPrice.units}</td>
+                <td>{position.currentPrice ? position.currentPrice.units + '.' + position.currentPrice.nano : ''}</td>
               </tr>
             ))}
           </tbody>

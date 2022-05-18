@@ -3,8 +3,11 @@ import useAuth from './auth/useAuth'
 import { Link } from 'react-router-dom'
 
 type Account = {
-  id: string
-  name: string
+  real: boolean
+  account: {
+    id: string
+    name: string | null
+  }
 }
 
 function Accounts() {
@@ -13,7 +16,7 @@ function Accounts() {
   const [accounts, setAccounts] = useState<Account[] | null>(null)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
+  const loadAccounts = () => {
     getToken()
       .then((token) => {
         fetch(process.env.REACT_APP_API_HOST + '/api/accounts', {
@@ -24,7 +27,51 @@ function Accounts() {
           .catch((error) => setError(error.message || error.statusText))
       })
       .catch(() => null)
+  }
+
+  useEffect(() => {
+    if (accounts === null) {
+      loadAccounts()
+    }
   }, [])
+
+  const openSandboxAccount = () => {
+    getToken()
+      .then((token) => {
+        fetch(process.env.REACT_APP_API_HOST + '/api/accounts/open-sandbox', {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + token },
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response
+            }
+            throw response
+          })
+          .then(() => loadAccounts())
+          .catch((error) => setError(error.message || error.statusText))
+      })
+      .catch(() => null)
+  }
+
+  const closeSandboxAccount = (accountId: string) => {
+    getToken()
+      .then((token) => {
+        fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/close-sandbox`, {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + token },
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response
+            }
+            throw response
+          })
+          .then(() => loadAccounts())
+          .catch((error) => setError(error.message || error.statusText))
+      })
+      .catch(() => null)
+  }
 
   return (
     <div className="card">
@@ -38,14 +85,32 @@ function Accounts() {
         <table className="table my-0">
           <tbody>
             {accounts.map((account) => (
-              <tr key={'account-' + account.id}>
+              <tr key={'account-' + account.account.id}>
                 <td>
-                  <Link to={'/' + account.id}>{account.name}</Link>
+                  <Link to={'/' + account.account.id}>{account.account.name || 'Песочница'}</Link>
+                </td>
+                <td>
+                  {!account.real ? (
+                    <button
+                      type="button"
+                      className="btn btn-danger btn-sm"
+                      onClick={() => closeSandboxAccount(account.account.id)}
+                    >
+                      Close
+                    </button>
+                  ) : null}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+      ) : null}
+      {accounts !== null ? (
+        <div className="card-footer">
+          <button type="button" className="btn btn-primary btn-sm" onClick={openSandboxAccount}>
+            Open Sandbox Account
+          </button>
+        </div>
       ) : null}
     </div>
   )

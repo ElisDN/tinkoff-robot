@@ -4,8 +4,8 @@ import jwt from 'jsonwebtoken'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import createSdk from './tinkoff/client'
-import createUsers from './tinkoff/service/users'
-import createOperations from "./tinkoff/service/operations";
+import AccountsService from './tinkoff/service/accounts'
+import PortfolioService from './tinkoff/service/portfolio'
 
 dotenv.config()
 
@@ -24,12 +24,10 @@ if (!tinkoffToken) {
   throw new Error('TINKOFF_TOKEN env is not set')
 }
 
-const isSandbox = process.env.IS_SANDBOX === '1'
-
 const client = createSdk('invest-public-api.tinkoff.ru:443', tinkoffToken, 'ElisDN')
 
-const users = createUsers(client, isSandbox)
-const operations = createOperations(client, isSandbox)
+const accountsService = new AccountsService(client)
+const portfolioService = new PortfolioService(client)
 
 const app = express()
 
@@ -67,7 +65,7 @@ app.get('/api', function (req, res) {
 
 app.get('/api/accounts', async function (req, res) {
   try {
-    const accounts = await users.getAccounts()
+    const accounts = await accountsService.getAll()
     res.json(accounts)
   } catch (e) {
     console.error(e)
@@ -75,24 +73,40 @@ app.get('/api/accounts', async function (req, res) {
   }
 })
 
-app.get('/api/accounts/:id', async function (req, res) {
+app.post('/api/accounts/open-sandbox', async function (req, res) {
   try {
-    const accounts = await users.getAccounts()
-    const account = accounts.filter((account) => account.id === req.params.id).pop()
-    if (account) {
-      res.json(account)
-    } else {
-      res.status(404).json({ message: 'Not Found' })
-    }
+    await accountsService.openSandboxAccount()
+    res.json()
   } catch (e) {
     console.error(e)
     res.status(500).json(e)
   }
 })
 
-app.get('/api/accounts/:id/portfolio', async function (req, res) {
+app.get('/api/accounts/:account', async function (req, res) {
   try {
-    const positions = await operations.getPortfolio(req.params.id)
+    const account = await accountsService.get(req.params.account)
+    res.json(account)
+  } catch (e) {
+    console.error(e)
+    res.status(500).json(e)
+  }
+})
+
+app.post('/api/accounts/:account/close-sandbox', async function (req, res) {
+  try {
+    await accountsService.closeSandboxAccount(req.params.account)
+    res.json()
+  } catch (e) {
+    console.error(e)
+    res.status(500).json(e)
+  }
+})
+
+app.get('/api/accounts/:account/portfolio', async function (req, res) {
+  try {
+    const account = await accountsService.get(req.params.account)
+    const positions = await portfolioService.getPositions(account)
     res.json(positions)
   } catch (e) {
     console.error(e)
