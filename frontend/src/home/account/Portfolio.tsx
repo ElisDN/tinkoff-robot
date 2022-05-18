@@ -43,6 +43,10 @@ function Portfolio({ accountId }: Props) {
     return () => clearInterval(interval)
   }, [])
 
+  const formatPrice = (price: Quantity) => {
+    return (price.units + price.nano / 1000000000).toFixed(2)
+  }
+
   return (
     <div className="card">
       <div className="card-header">Positions</div>
@@ -55,7 +59,7 @@ function Portfolio({ accountId }: Props) {
               <th>Type</th>
               <th>Lots</th>
               <th>Quantity</th>
-              <th>Current Price</th>
+              <th style={{ textAlign: 'right' }}>Price</th>
             </tr>
           </thead>
           <tbody>
@@ -65,7 +69,9 @@ function Portfolio({ accountId }: Props) {
                 <td>{position.instrumentType}</td>
                 <td>{position.quantityLots?.units}</td>
                 <td>{position.quantity.units}</td>
-                <td>{position.currentPrice ? position.currentPrice.units + '.' + position.currentPrice.nano : ''}</td>
+                <td style={{ textAlign: 'right' }}>
+                  {position.currentPrice ? formatPrice(position.currentPrice) : ''}
+                </td>
               </tr>
             ))}
           </tbody>
