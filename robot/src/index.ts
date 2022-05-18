@@ -10,6 +10,7 @@ import RobotsService from './robot/robotsService'
 import { v4 } from 'uuid'
 import { FileRobotsStorage } from './robot/robotsStorage'
 import * as path from 'path'
+import CandlesService from './tinkoff/service/candles'
 
 dotenv.config()
 
@@ -32,6 +33,7 @@ const client = createSdk('invest-public-api.tinkoff.ru:443', tinkoffToken, 'Elis
 
 const accountsService = new AccountsService(client)
 const portfolioService = new PortfolioService(client)
+const candlesService = new CandlesService(client)
 
 const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../var/robots'))
 const robotsService = new RobotsService(robotsStorage)
@@ -131,6 +133,16 @@ app.delete('/api/accounts/:account/robots/:robot', async function (req, res) {
   robotsService
     .remove(req.params.account, req.params.robot)
     .then(() => res.json())
+    .catch((err) => res.status(400).json({ message: err.message }))
+})
+
+app.get('/api/accounts/:account/robots/:robot/candles', async function (req, res) {
+  const robot = robotsService.get(req.params.account, req.params.robot)
+  const date = new Date()
+  date.setDate(date.getDate() - 1)
+  candlesService
+    .getFrom(robot.getFigi(), date)
+    .then((candles) => res.json(candles))
     .catch((err) => res.status(400).json({ message: err.message }))
 })
 

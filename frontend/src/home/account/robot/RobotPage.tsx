@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from '../../../auth/useAuth'
 import { Link, useParams } from 'react-router-dom'
+import Candles from './Candles'
 
 type AccountResponse = {
   real: boolean
@@ -72,6 +73,7 @@ function RobotPage() {
           </table>
         ) : null}
       </div>
+      <Candles accountId={accountId || ''} robotId={robotId || ''} />
     </div>
   )
 }
