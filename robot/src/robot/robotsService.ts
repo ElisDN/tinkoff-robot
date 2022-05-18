@@ -1,6 +1,6 @@
 import Robot from './robot'
 
-class Robots {
+class RobotsService {
   private readonly robots: Robot[] = []
 
   create(accountId: string, id: string, figi: string): void {
@@ -23,4 +23,4 @@ class Robots {
   }
 }
 
-export default Robots
+export default RobotsService

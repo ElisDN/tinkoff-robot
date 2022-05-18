@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 import createSdk from './tinkoff/client'
 import AccountsService from './tinkoff/service/accounts'
 import PortfolioService from './tinkoff/service/portfolio'
-import Robots from './robot/robots'
+import RobotsService from './robot/robotsService'
 import { v4 } from 'uuid'
 
 dotenv.config()
@@ -31,7 +31,7 @@ const client = createSdk('invest-public-api.tinkoff.ru:443', tinkoffToken, 'Elis
 const accountsService = new AccountsService(client)
 const portfolioService = new PortfolioService(client)
 
-const robots = new Robots()
+const robots = new RobotsService()
 
 const app = express()
 
