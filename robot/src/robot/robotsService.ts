@@ -12,7 +12,7 @@ class RobotsService {
 
   async create(accountId: string, id: string, figi: string) {
     if (this.robots.find((robot) => robot.isFor(accountId, figi))) {
-      throw new Error('Robot for this figi already exists')
+      throw new Error('Робот для этого инструмента уже есть')
     }
     const robot = new Robot(id, accountId, figi)
     this.robots.push(robot)
@@ -22,7 +22,7 @@ class RobotsService {
   get(accountId: string, id: string): Robot {
     const robot = this.robots.find((robot) => robot.getId() === id)
     if (!robot) {
-      throw new Error('Robot not found')
+      throw new Error('Робот не найден')
     }
     return robot
   }
@@ -30,7 +30,7 @@ class RobotsService {
   async remove(accountId: string, id: string) {
     const robot = this.robots.find((robot) => robot.getId() === id)
     if (!robot) {
-      throw new Error('Robot not found')
+      throw new Error('Робот не найден')
     }
     const index = this.robots.indexOf(robot)
     if (index > -1) {

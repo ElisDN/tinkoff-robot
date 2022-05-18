@@ -38,7 +38,7 @@ function AccountPage() {
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
-            <Link to="/">Home</Link>
+            <Link to="/">Главная</Link>
           </li>
           {account !== null ? <li className="breadcrumb-item active">{account.account.name || 'Песочница'}</li> : null}
         </ol>

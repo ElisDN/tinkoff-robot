@@ -75,7 +75,7 @@ function Accounts() {
 
   return (
     <div className="card">
-      <div className="card-header">Accounts</div>
+      <div className="card-header">Счета</div>
       {error ? <div className="alert alert-danger my-0">{error}</div> : null}
       {accounts !== null ? (
         <table className="table my-0">
@@ -92,7 +92,7 @@ function Accounts() {
                       className="btn btn-danger btn-sm"
                       onClick={() => closeSandboxAccount(account.account.id)}
                     >
-                      Close
+                      Закрыть
                     </button>
                   ) : null}
                 </td>
@@ -104,7 +104,7 @@ function Accounts() {
       {accounts !== null ? (
         <div className="card-footer">
           <button type="button" className="btn btn-primary btn-sm" onClick={openSandboxAccount}>
-            Open Sandbox Account
+            Создать песочницу
           </button>
         </div>
       ) : null}

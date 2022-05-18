@@ -49,7 +49,7 @@ function RobotPage() {
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
-            <Link to="/">Home</Link>
+            <Link to="/">Главная</Link>
           </li>
           {account !== null ? (
             <li className="breadcrumb-item">

@@ -49,17 +49,17 @@ function Portfolio({ accountId }: Props) {
 
   return (
     <div className="card my-3">
-      <div className="card-header">Positions</div>
+      <div className="card-header">Портфолио</div>
       {error ? <div className="alert alert-danger my-0">{error}</div> : null}
       {positions !== null ? (
         <table className="table table-striped my-0">
           <thead>
             <tr>
               <th>FIGI</th>
-              <th>Type</th>
-              <th>Lots</th>
-              <th>Quantity</th>
-              <th style={{ textAlign: 'right' }}>Price</th>
+              <th>Тип</th>
+              <th>Лотов</th>
+              <th>Единиц</th>
+              <th style={{ textAlign: 'right' }}>Цена</th>
             </tr>
           </thead>
           <tbody>

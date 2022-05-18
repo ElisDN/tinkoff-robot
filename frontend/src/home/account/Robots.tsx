@@ -103,7 +103,7 @@ function Robots({ accountId }: Props) {
 
   return (
     <div className="card my-3">
-      <div className="card-header">Robots</div>
+      <div className="card-header">Роботы</div>
       {error ? <div className="alert alert-danger my-0">{error}</div> : null}
       {robots !== null ? (
         <table className="table my-0">
@@ -115,7 +115,7 @@ function Robots({ accountId }: Props) {
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   <button type="button" className="btn btn-danger btn-sm" onClick={() => removeRobot(robot.id)}>
-                    Remove
+                    Удалить
                   </button>
                 </td>
               </tr>
@@ -139,7 +139,7 @@ function Robots({ accountId }: Props) {
               </div>
               <div className="col-auto">
                 <button className="w-100 btn btn-primary" type="submit">
-                  Add
+                  Создать
                 </button>
               </div>
             </div>
