@@ -1,13 +1,22 @@
 import Robot from './robot'
+import RobotsStorage from './robotsStorage'
 
 class RobotsService {
-  private readonly robots: Robot[] = []
+  private readonly storage: RobotsStorage
+  private robots: Robot[] = []
 
-  create(accountId: string, id: string, figi: string): void {
+  constructor(storage: RobotsStorage) {
+    this.storage = storage
+    this.robots = storage.readAll()
+  }
+
+  async create(accountId: string, id: string, figi: string) {
     if (this.robots.find((robot) => robot.isFor(accountId, figi))) {
       throw new Error('Robot for this figi already exists')
     }
-    this.robots.push(new Robot(id, accountId, figi))
+    const robot = new Robot(id, accountId, figi)
+    this.robots.push(robot)
+    await this.storage.save(robot)
   }
 
   get(accountId: string, id: string): Robot {
@@ -16,6 +25,18 @@ class RobotsService {
       throw new Error('Robot not found')
     }
     return robot
+  }
+
+  async remove(accountId: string, id: string) {
+    const robot = this.robots.find((robot) => robot.getId() === id)
+    if (!robot) {
+      throw new Error('Robot not found')
+    }
+    const index = this.robots.indexOf(robot)
+    if (index > -1) {
+      this.robots.splice(index, 1)
+    }
+    await this.storage.remove(robot)
   }
 
   getAll(accountId: string): Robot[] {

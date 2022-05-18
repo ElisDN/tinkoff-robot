@@ -82,6 +82,25 @@ function Robots({ accountId }: Props) {
     })
   }
 
+  const removeRobot = (robotId: string) => {
+    getToken()
+      .then((token) => {
+        fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/robots/${robotId}`, {
+          method: 'DELETE',
+          headers: { Authorization: 'Bearer ' + token },
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response
+            }
+            throw response
+          })
+          .then(() => loadRobots())
+          .catch((error) => setError(error.message || error.statusText))
+      })
+      .catch(() => null)
+  }
+
   return (
     <div className="card my-3">
       <div className="card-header">Robots</div>
@@ -93,6 +112,11 @@ function Robots({ accountId }: Props) {
               <tr key={'robot-' + robot.figi}>
                 <td>
                   <Link to={'/' + accountId + '/' + robot.id}>{robot.figi}</Link>
+                </td>
+                <td style={{ textAlign: 'right' }}>
+                  <button type="button" className="btn btn-danger btn-sm" onClick={() => removeRobot(robot.id)}>
+                    Remove
+                  </button>
                 </td>
               </tr>
             ))}

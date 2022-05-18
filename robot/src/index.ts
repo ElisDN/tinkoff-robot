@@ -8,6 +8,8 @@ import AccountsService from './tinkoff/service/accounts'
 import PortfolioService from './tinkoff/service/portfolio'
 import RobotsService from './robot/robotsService'
 import { v4 } from 'uuid'
+import { FileRobotsStorage } from './robot/robotsStorage'
+import * as path from 'path'
 
 dotenv.config()
 
@@ -31,7 +33,8 @@ const client = createSdk('invest-public-api.tinkoff.ru:443', tinkoffToken, 'Elis
 const accountsService = new AccountsService(client)
 const portfolioService = new PortfolioService(client)
 
-const robots = new RobotsService()
+const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../var/robots'))
+const robotsService = new RobotsService(robotsStorage)
 
 const app = express()
 
@@ -108,7 +111,7 @@ app.get('/api/accounts/:account/portfolio', async function (req, res) {
 
 app.get('/api/accounts/:account/robots', async function (req, res) {
   res.json(
-    robots.getAll(req.params.account).map((robot) => ({
+    robotsService.getAll(req.params.account).map((robot) => ({
       id: robot.getId(),
       figi: robot.getFigi(),
     }))
@@ -118,17 +121,23 @@ app.get('/api/accounts/:account/robots', async function (req, res) {
 app.post('/api/accounts/:account/robots/create', async function (req, res) {
   if (!req.body.figi) {
     res.status(422).json({ message: 'Property figi is empty' })
+    return
   }
-  robots.create(req.params.account, v4(), req.body.figi)
+  await robotsService.create(req.params.account, v4(), req.body.figi)
   res.json()
 })
 
 app.get('/api/accounts/:account/robots/:robot', async function (req, res) {
-  const robot = robots.get(req.params.account, req.params.robot)
+  const robot = robotsService.get(req.params.account, req.params.robot)
   res.json({
     id: robot.getId(),
     figi: robot.getFigi(),
   })
+})
+
+app.delete('/api/accounts/:account/robots/:robot', async function (req, res) {
+  await robotsService.remove(req.params.account, req.params.robot)
+  res.json()
 })
 
 app.listen(process.env.PORT, () => {
