@@ -78,17 +78,17 @@ app.get('/api/accounts', async function (req, res) {
   res.json(accounts)
 })
 
-app.post('/api/accounts/open-sandbox', async function (req, res) {
-  await accountsService.openSandboxAccount()
-  res.json()
-})
-
 app.get('/api/accounts/:account', async function (req, res) {
   const account = await accountsService.get(req.params.account)
   res.json(account)
 })
 
-app.post('/api/accounts/:account/close-sandbox', async function (req, res) {
+app.post('/api/sandbox/accounts', async function (req, res) {
+  await accountsService.openSandboxAccount()
+  res.json()
+})
+
+app.delete('/api/sandbox/accounts/:account', async function (req, res) {
   await accountsService.closeSandboxAccount(req.params.account)
   res.json()
 })
@@ -108,7 +108,7 @@ app.get('/api/accounts/:account/robots', async function (req, res) {
   )
 })
 
-app.post('/api/accounts/:account/robots/create', async function (req, res) {
+app.post('/api/accounts/:account/robots', async function (req, res) {
   if (!req.body.figi) {
     res.status(422).json({ message: 'Заполните FIGI' })
     return

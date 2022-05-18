@@ -39,7 +39,7 @@ function Accounts() {
     setError(null)
     getToken()
       .then((token) => {
-        fetch(process.env.REACT_APP_API_HOST + '/api/accounts/open-sandbox', {
+        fetch(process.env.REACT_APP_API_HOST + '/api/sandbox/accounts', {
           method: 'POST',
           headers: { Authorization: 'Bearer ' + token },
         })
@@ -59,8 +59,8 @@ function Accounts() {
     setError(null)
     getToken()
       .then((token) => {
-        fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/close-sandbox`, {
-          method: 'POST',
+        fetch(process.env.REACT_APP_API_HOST + `/api/sandbox/accounts/${accountId}`, {
+          method: 'DELETE',
           headers: { Authorization: 'Bearer ' + token },
         })
           .then((response) => {

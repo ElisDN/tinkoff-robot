@@ -53,7 +53,7 @@ function Robots({ accountId }: Props) {
     event.preventDefault()
     setError(null)
     getToken().then((token) => {
-      fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/robots/create`, {
+      fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/robots`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
