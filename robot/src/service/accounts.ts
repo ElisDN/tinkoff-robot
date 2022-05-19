@@ -1,27 +1,27 @@
-import { Account, AccountStatus } from '../tinkoff/contracts/users'
+import { Account as ClientAccount, AccountStatus } from '../tinkoff/contracts/users'
 import { Client } from '../tinkoff/client'
 
-export type AccountsAccount = {
+export type Account = {
   real: boolean
-  account: Account
+  account: ClientAccount
 }
 
 class AccountsService {
   private readonly client: Client
-  private real: AccountsAccount[] | null = null
-  private sandbox: AccountsAccount[] | null = null
+  private real: Account[] | null = null
+  private sandbox: Account[] | null = null
 
   constructor(client: Client) {
     this.client = client
   }
 
-  public async getAll(): Promise<AccountsAccount[]> {
+  public async getAll(): Promise<Account[]> {
     const real = await this.getAllReal()
     const sandbox = await this.getAllSandbox()
     return [...real, ...sandbox]
   }
 
-  public async get(id: string): Promise<AccountsAccount> {
+  public async get(id: string): Promise<Account> {
     const accounts = await this.getAll()
     const account = accounts.find((account) => account.account.id === id)
     if (account) {
@@ -40,22 +40,22 @@ class AccountsService {
     this.sandbox = null
   }
 
-  private async getAllReal(): Promise<AccountsAccount[]> {
+  private async getAllReal(): Promise<Account[]> {
     if (this.real === null) {
       const real = await this.client.users.getAccounts({})
       this.real = real.accounts
         .filter((account) => account.status === AccountStatus.ACCOUNT_STATUS_OPEN)
-        .map<AccountsAccount>((account) => ({ real: true, account }))
+        .map<Account>((account) => ({ real: true, account }))
     }
     return this.real || []
   }
 
-  private async getAllSandbox(): Promise<AccountsAccount[]> {
+  private async getAllSandbox(): Promise<Account[]> {
     if (this.sandbox === null) {
       const sandbox = await this.client.sandbox.getSandboxAccounts({})
       this.sandbox = sandbox.accounts
         .filter((account) => account.status === AccountStatus.ACCOUNT_STATUS_OPEN)
-        .map<AccountsAccount>((account) => ({ real: false, account }))
+        .map<Account>((account) => ({ real: false, account }))
     }
     return this.sandbox || []
   }

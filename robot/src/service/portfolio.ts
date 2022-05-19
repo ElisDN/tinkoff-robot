@@ -1,6 +1,6 @@
 import { Client } from '../tinkoff/client'
 import { PortfolioPosition } from '../tinkoff/contracts/operations'
-import { AccountsAccount } from './accounts'
+import { Account } from './accounts'
 
 class PortfolioService {
   private readonly client: Client
@@ -9,7 +9,7 @@ class PortfolioService {
     this.client = client
   }
 
-  public async getPositions(account: AccountsAccount): Promise<PortfolioPosition[]> {
+  public async getPositions(account: Account): Promise<PortfolioPosition[]> {
     let response
     if (account.real) {
       response = await this.client.operations.getPortfolio({ accountId: account.account.id })
