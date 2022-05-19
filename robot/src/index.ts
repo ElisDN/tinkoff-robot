@@ -35,7 +35,7 @@ const accountsService = new AccountsService(client)
 const portfolioService = new PortfolioService(client)
 const candlesService = new CandlesService(client)
 
-const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../var/robots'))
+const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'))
 const robotsService = new RobotsService(robotsStorage)
 
 const app = express()
