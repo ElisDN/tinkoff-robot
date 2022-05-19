@@ -8,6 +8,8 @@ import { OrdersServiceDefinition, OrdersStreamServiceDefinition } from './contra
 import { SandboxServiceDefinition } from './contracts/sandbox'
 import { credentials, Metadata } from '@grpc/grpc-js'
 import { createChannel } from 'nice-grpc'
+import createLoggingMiddleware from './middleware/logging'
+import { Logger } from 'winston'
 
 const makeChannel = (token: string, appName: string, url: string) => {
   const metadata = new Metadata()
@@ -23,10 +25,10 @@ const makeChannel = (token: string, appName: string, url: string) => {
   return createChannel(url, sslCred)
 }
 
-const createSdk = (url: string, token: string, appName: string) => {
+const createSdk = (url: string, token: string, appName: string, logger: Logger) => {
   const channel = makeChannel(token, appName, url)
 
-  const clientFactory = createClientFactory()
+  const clientFactory = createClientFactory().use(createLoggingMiddleware(logger))
 
   return {
     instruments: clientFactory.create(InstrumentsServiceDefinition, channel),

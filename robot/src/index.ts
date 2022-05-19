@@ -48,7 +48,7 @@ const logger = winston.createLogger({
   ],
 })
 
-const client = createSdk('invest-public-api.tinkoff.ru:443', tinkoffToken, 'ElisDN')
+const client = createSdk('invest-public-api.tinkoff.ru:443', tinkoffToken, 'ElisDN', logger)
 
 const accountsService = new AccountsService(client)
 const portfolioService = new PortfolioService(client)
