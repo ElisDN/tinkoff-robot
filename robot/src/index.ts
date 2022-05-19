@@ -3,6 +3,8 @@ import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
+import winston from 'winston'
+import 'winston-daily-rotate-file'
 import createSdk from './tinkoff/client'
 import AccountsService from './service/accounts'
 import PortfolioService from './service/portfolio'
@@ -32,6 +34,19 @@ if (!tinkoffToken) {
 }
 
 // Services
+
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.DailyRotateFile({
+      dirname: path.resolve(__dirname, '../var/log'),
+      filename: 'app-%DATE%.log',
+      datePattern: 'YYYY-MM-DD-HH',
+      maxSize: '20m',
+      maxFiles: '14d',
+    }),
+  ],
+})
 
 const client = createSdk('invest-public-api.tinkoff.ru:443', tinkoffToken, 'ElisDN')
 
@@ -145,5 +160,5 @@ app.get('/api/accounts/:account/robots/:robot/candles', async function (req, res
 })
 
 app.listen(process.env.PORT, () => {
-  console.log('Listening on port ' + process.env.PORT)
+  logger.info('Listening on port ' + process.env.PORT)
 })
