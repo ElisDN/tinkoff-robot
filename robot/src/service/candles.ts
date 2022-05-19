@@ -1,5 +1,5 @@
-import { Client } from '../client'
-import { CandleInterval, HistoricCandle } from '../contracts/marketdata'
+import { Client } from '../tinkoff/client'
+import { CandleInterval, HistoricCandle } from '../tinkoff/contracts/marketdata'
 
 class CandlesService {
   private readonly client: Client

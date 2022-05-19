@@ -1,5 +1,5 @@
-import { Client } from '../client'
-import { PortfolioPosition } from '../contracts/operations'
+import { Client } from '../tinkoff/client'
+import { PortfolioPosition } from '../tinkoff/contracts/operations'
 import { AccountsAccount } from './accounts'
 
 class PortfolioService {

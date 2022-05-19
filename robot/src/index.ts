@@ -4,13 +4,13 @@ import jwt from 'jsonwebtoken'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import createSdk from './tinkoff/client'
-import AccountsService from './tinkoff/service/accounts'
-import PortfolioService from './tinkoff/service/portfolio'
+import AccountsService from './service/accounts'
+import PortfolioService from './service/portfolio'
 import RobotsService from './robot/robotsService'
 import { v4 } from 'uuid'
 import { FileRobotsStorage } from './robot/robotsStorage'
 import * as path from 'path'
-import CandlesService from './tinkoff/service/candles'
+import CandlesService from './service/candles'
 
 dotenv.config()
 
