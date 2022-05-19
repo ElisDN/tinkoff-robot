@@ -12,6 +12,8 @@ import { FileRobotsStorage } from './robot/robotsStorage'
 import * as path from 'path'
 import CandlesService from './service/candles'
 
+// Configuration
+
 dotenv.config()
 
 const authSecret = process.env.AUTH_SECRET
@@ -29,6 +31,8 @@ if (!tinkoffToken) {
   throw new Error('TINKOFF_TOKEN env is not set')
 }
 
+// Services
+
 const client = createSdk('invest-public-api.tinkoff.ru:443', tinkoffToken, 'ElisDN')
 
 const accountsService = new AccountsService(client)
@@ -37,6 +41,8 @@ const candlesService = new CandlesService(client)
 
 const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'))
 const robotsService = new RobotsService(robotsStorage)
+
+// HTTP API Server
 
 const app = express()
 
