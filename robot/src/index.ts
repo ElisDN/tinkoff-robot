@@ -45,30 +45,22 @@ app.use(bodyParser.json())
 
 app.post('/auth', (req, res) => {
   if (!req.body.password) {
-    res.status(422).json({ message: 'Заполните пароль' })
-    return
+    return res.status(422).json({ message: 'Заполните пароль' })
   }
-  if (req.body.password === authPassword) {
-    const expires = 3600 * 4
-    const token = jwt.sign({ id: 0 }, authSecret, { expiresIn: expires })
-    return res.status(200).json({ token, expires })
+  if (req.body.password !== authPassword) {
+    return res.status(409).json({ message: 'Неверный пароль' })
   }
-  return res.status(409).json({ message: 'Неверный пароль' })
+  const expires = 3600 * 4
+  const token = jwt.sign({}, authSecret, { expiresIn: expires })
+  res.status(200).json({ token, expires })
 })
 
 app.use('/api', (req, res, next) => {
   if (!req.headers.authorization) {
-    res.status(401).json({ message: 'Not authorized' })
-    return
+    return res.status(401)
   }
   const token = req.headers.authorization.split(' ')[1]
-  jwt.verify(token, authSecret, (err) => {
-    if (err) {
-      res.status(401).json({ message: 'Not authorized' })
-    } else {
-      next()
-    }
-  })
+  jwt.verify(token, authSecret, (err) => (err ? res.status(401) : next()))
 })
 
 app.get('/api', function (req, res) {
@@ -87,12 +79,12 @@ app.get('/api/accounts/:account', async function (req, res) {
 
 app.post('/api/sandbox/accounts', async function (req, res) {
   await accountsService.openSandboxAccount()
-  res.json()
+  res.status(201)
 })
 
 app.delete('/api/sandbox/accounts/:account', async function (req, res) {
   await accountsService.closeSandboxAccount(req.params.account)
-  res.json()
+  res.status(204)
 })
 
 app.get('/api/accounts/:account/portfolio', async function (req, res) {
@@ -102,8 +94,9 @@ app.get('/api/accounts/:account/portfolio', async function (req, res) {
 })
 
 app.get('/api/accounts/:account/robots', async function (req, res) {
+  const robots = robotsService.getAll(req.params.account)
   res.json(
-    robotsService.getAll(req.params.account).map((robot) => ({
+    robots.map((robot) => ({
       id: robot.getId(),
       figi: robot.getFigi(),
     }))
@@ -112,12 +105,11 @@ app.get('/api/accounts/:account/robots', async function (req, res) {
 
 app.post('/api/accounts/:account/robots', async function (req, res) {
   if (!req.body.figi) {
-    res.status(422).json({ message: 'Заполните FIGI' })
-    return
+    return res.status(422).json({ message: 'Заполните FIGI' })
   }
   robotsService
     .create(req.params.account, v4(), req.body.figi)
-    .then(() => res.json())
+    .then(() => res.status(201))
     .catch((err) => res.status(400).json({ message: err.message }))
 })
 
@@ -132,7 +124,7 @@ app.get('/api/accounts/:account/robots/:robot', async function (req, res) {
 app.delete('/api/accounts/:account/robots/:robot', async function (req, res) {
   robotsService
     .remove(req.params.account, req.params.robot)
-    .then(() => res.json())
+    .then(() => res.status(204))
     .catch((err) => res.status(400).json({ message: err.message }))
 })
 
@@ -143,7 +135,7 @@ app.get('/api/accounts/:account/robots/:robot/candles', async function (req, res
   candlesService
     .getFrom(robot.getFigi(), date)
     .then((candles) => res.json(candles))
-    .catch((err) => res.status(400).json({ message: err.message }))
+    .catch((err) => res.status(500).json({ message: err.message }))
 })
 
 app.listen(process.env.PORT, () => {

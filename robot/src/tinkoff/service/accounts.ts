@@ -27,7 +27,7 @@ class AccountsService {
     if (account) {
       return account
     }
-    return Promise.reject(new Error('Счёт не найден'))
+    throw new Error('Счёт не найден')
   }
 
   public async openSandboxAccount() {
