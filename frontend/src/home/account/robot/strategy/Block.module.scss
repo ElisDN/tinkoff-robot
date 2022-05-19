@@ -1,0 +1,18 @@
+.area {
+  display: flex;
+  flex-flow: row nowrap;
+
+  .block {
+    display: flex;
+    margin: 1rem;
+
+    .card {
+      display: flex;
+      border: 1px solid #aaa;
+      background: #eee;
+      padding: 1rem;
+
+      .name {}
+    }
+  }
+}

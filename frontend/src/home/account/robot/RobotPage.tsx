@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import useAuth from '../../../auth/useAuth'
 import { Link, useParams } from 'react-router-dom'
 import Candles from './Candles'
+import StrategyEditor from './strategy/StrategyEditor'
 
 type AccountResponse = {
   real: boolean
@@ -73,6 +74,7 @@ function RobotPage() {
           </table>
         ) : null}
       </div>
+      <StrategyEditor accountId={accountId || ''} robotId={robotId || ''} />
       <Candles accountId={accountId || ''} robotId={robotId || ''} />
     </div>
   )

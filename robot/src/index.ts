@@ -151,6 +151,11 @@ app.delete('/api/accounts/:account/robots/:robot', async function (req, res) {
     .catch((err) => res.status(400).json({ message: err.message }))
 })
 
+app.get('/api/accounts/:account/robots/:robot/strategy', async function (req, res) {
+  const robot = robotsService.get(req.params.account, req.params.robot)
+  res.json(robot.getStrategy())
+})
+
 app.get('/api/accounts/:account/robots/:robot/candles', async function (req, res) {
   const robot = robotsService.get(req.params.account, req.params.robot)
   const date = new Date()
