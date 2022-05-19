@@ -4,27 +4,23 @@
 }
 
 .bar {
-  fill: #8d8d8d;
-}
-
-.bar.bar-up {
-  fill: #239532;
-}
-
-.bar.bar-down {
-  fill: #e32020;
+  fill: #ffffff;
 }
 
 .bar:hover {
+  fill: #e5e5e5;
+}
+
+.candle {
   fill: #333;
 }
 
-svg text {
-  display: none;
+.candle.candle-up {
+  fill: #239532;
 }
 
-svg g:hover text {
-  display: block;
+.candle.candle-down {
+  fill: #e32020;
 }
 
 .axis {

@@ -71,27 +71,38 @@ function Candles({ accountId, robotId }: Props) {
       {error ? <div className="alert alert-danger my-0">{error}</div> : null}
       {candles !== null ? (
         <div className="area">
-          <svg width={candles.length * barWidth} height={height + 20}>
+          <svg width={candles.length * barWidth} height={height}>
             {candles.map((candle, index) => {
               return (
-                <g key={candle.time}>
+                <g key={candle.time} className="bar">
+                  <rect x={index * barWidth} width={barWidth} y={0} height={height} />
                   <rect
-                    className="bar"
-                    x={index * barWidth + barWidth / 2 - 1}
-                    width={2}
-                    y={(max - calcPrice(candle.high)) * verticalScale + 20}
+                    className="candle"
+                    x={index * barWidth + barWidth / 2 - barWidth / 20}
+                    width={Math.max(barWidth / 10, 1)}
+                    y={(max - calcPrice(candle.high)) * verticalScale}
                     height={Math.abs(calcPrice(candle.high) - calcPrice(candle.low)) * verticalScale}
                   />
                   <rect
-                    className={calcPrice(candle.open) <= calcPrice(candle.close) ? 'bar bar-up' : 'bar bar-down'}
+                    className={
+                      calcPrice(candle.open) <= calcPrice(candle.close) ? 'candle candle-up' : 'candle candle-down'
+                    }
                     x={index * barWidth}
                     width={barWidth}
-                    y={(max - Math.max(calcPrice(candle.open), calcPrice(candle.close))) * verticalScale + 20}
+                    y={(max - Math.max(calcPrice(candle.open), calcPrice(candle.close))) * verticalScale}
                     height={Math.abs(calcPrice(candle.open) - calcPrice(candle.close)) * verticalScale}
                   />
-                  <text x={index * barWidth} y="20">
-                    {formatPrice(candle.close)}
-                  </text>
+                  <title>
+                    {new Date(candle.time).toUTCString()}
+                    {'\n\n'}
+                    Открытие: {formatPrice(candle.open)}
+                    {'\n'}
+                    Закрытие: {formatPrice(candle.close)}
+                    {'\n\n'}
+                    Масимум: &nbsp;{formatPrice(candle.high)}
+                    {'\n'}
+                    Минимум: &nbsp;{formatPrice(candle.low)}
+                  </title>
                 </g>
               )
             })}
