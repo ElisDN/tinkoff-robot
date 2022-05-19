@@ -28,6 +28,8 @@ if (!authPassword) {
   throw new Error('AUTH_PASSWORD env is not set')
 }
 
+const tinkoffHost = 'invest-public-api.tinkoff.ru:443'
+const tinkoffApp = 'ElisDN'
 const tinkoffToken = process.env.TINKOFF_TOKEN
 if (!tinkoffToken) {
   throw new Error('TINKOFF_TOKEN env is not set')
@@ -48,7 +50,7 @@ const logger = winston.createLogger({
   ],
 })
 
-const client = createSdk('invest-public-api.tinkoff.ru:443', tinkoffToken, 'ElisDN', logger)
+const client = createSdk(tinkoffHost, tinkoffToken, tinkoffApp, logger)
 
 const accountsService = new AccountsService(client)
 const portfolioService = new PortfolioService(client)
