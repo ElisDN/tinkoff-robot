@@ -23,6 +23,7 @@ if (!authSecret) {
   throw new Error('AUTH_SECRET env is not set')
 }
 
+const authTimeout = 3600 * 4
 const authPassword = process.env.AUTH_PASSWORD
 if (!authPassword) {
   throw new Error('AUTH_PASSWORD env is not set')
@@ -73,9 +74,8 @@ app.post('/auth', (req, res) => {
   if (req.body.password !== authPassword) {
     return res.status(409).json({ message: 'Неверный пароль' })
   }
-  const expires = 3600 * 4
-  const token = jwt.sign({}, authSecret, { expiresIn: expires })
-  res.status(200).json({ token, expires })
+  const token = jwt.sign({}, authSecret, { expiresIn: authTimeout })
+  res.status(200).json({ token, expires: authTimeout })
 })
 
 app.use('/api', (req, res, next) => {
