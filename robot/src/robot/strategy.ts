@@ -1,12 +1,4 @@
-type CriteriaSchema = {
-  type: string
-  name: string
-}
-
-export interface Criteria {
-  getSchema(): CriteriaSchema
-  evaluate(): number | number[] | boolean
-}
+import { Criteria } from './criteria/criteria'
 
 export class Strategy {
   public readonly sell: Criteria | null
