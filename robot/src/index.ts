@@ -6,7 +6,7 @@ import createSdk from './tinkoff/client'
 import AccountsService from './service/accounts'
 import PortfolioService from './service/portfolio'
 import RobotsService from './robot/robotsService'
-import { v4 } from 'uuid'
+import { v4 as uuid } from 'uuid'
 import { FileRobotsStorage } from './robot/robotsStorage'
 import * as path from 'path'
 import CandlesService from './service/candles'
@@ -107,7 +107,7 @@ app.post('/api/accounts/:account/robots', async function (req, res) {
     return res.status(422).json({ message: 'Заполните FIGI' })
   }
   robotsService
-    .create(req.params.account, v4(), req.body.figi)
+    .create(req.params.account, uuid(), req.body.figi)
     .then(() => res.status(201).end())
     .catch((err) => res.status(400).json({ message: err.message }))
 })
