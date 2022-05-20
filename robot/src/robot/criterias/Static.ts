@@ -25,6 +25,11 @@ class Static implements Criteria {
     }
   }
 
+  static fromJSON(data: JsonView) {
+    const value = data.params.find((input) => input.type === 'value')
+    return new Static(value?.value || 0, data.id)
+  }
+
   toJSON(): JsonView {
     return {
       id: this.id,

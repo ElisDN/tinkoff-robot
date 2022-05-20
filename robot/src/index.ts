@@ -12,12 +12,12 @@ import * as path from 'path'
 import CandlesService from './service/candles'
 import createLogger from './logger'
 import { createAuthAction, createAuthMiddleware } from './http/auth'
-import { Schema } from './robot/criteria'
 import Greater from './robot/criterias/Greater'
 import None from './robot/criterias/None'
 import Static from './robot/criterias/Static'
 import Price from './robot/criterias/Price'
 import Less from './robot/criterias/Less'
+import { CriteriasService } from './robot/criteriasService'
 
 // Configuration
 
@@ -54,16 +54,16 @@ const accountsService = new AccountsService(client)
 const portfolioService = new PortfolioService(client)
 const candlesService = new CandlesService(client)
 
-const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'))
-const robotsService = new RobotsService(robotsStorage)
+const criteriasService = new CriteriasService([
+  { schema: None.getSchema(), factory: None.fromJSON },
+  { schema: Static.getSchema(), factory: Static.fromJSON },
+  { schema: Price.getSchema(), factory: Price.fromJSON },
+  { schema: Greater.getSchema(), factory: Greater.fromJSON },
+  { schema: Less.getSchema(), factory: Less.fromJSON },
+])
 
-const criterias: Schema[] = [
-  None.getSchema(),
-  Static.getSchema(),
-  Price.getSchema(),
-  Greater.getSchema(),
-  Less.getSchema(),
-]
+const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), criteriasService)
+const robotsService = new RobotsService(robotsStorage)
 
 // HTTP API Server
 
@@ -142,7 +142,7 @@ app.delete('/api/accounts/:account/robots/:robot', async function (req, res) {
 })
 
 app.get('/api/criterias', async function (req, res) {
-  res.json(criterias)
+  res.json(criteriasService.getAvailableSchemas())
 })
 
 app.get('/api/accounts/:account/robots/:robot/strategy', async function (req, res) {

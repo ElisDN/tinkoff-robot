@@ -3,6 +3,7 @@ import { promises } from 'fs'
 import * as path from 'path'
 import * as fs from 'fs'
 import { Strategy } from './strategy'
+import { CriteriasService } from './criteriasService'
 
 interface RobotsStorage {
   readAll(): Robot[]
@@ -12,9 +13,11 @@ interface RobotsStorage {
 
 export class FileRobotsStorage implements RobotsStorage {
   private readonly path: string
+  private readonly criteriasService: CriteriasService
 
-  constructor(path: string) {
+  constructor(path: string, criteriasService: CriteriasService) {
     this.path = path
+    this.criteriasService = criteriasService
   }
 
   readAll(): Robot[] {
@@ -24,7 +27,15 @@ export class FileRobotsStorage implements RobotsStorage {
       .map((file) => {
         const content = fs.readFileSync(path.resolve(this.path, file))
         const data = JSON.parse(content.toString())
-        return new Robot(data.id, data.accountId, data.figi, Strategy.example())
+        return new Robot(
+          data.id,
+          data.accountId,
+          data.figi,
+          new Strategy(
+            this.criteriasService.restoreCriteria(data.strategy.buy),
+            this.criteriasService.restoreCriteria(data.strategy.sell)
+          )
+        )
       })
   }
 
@@ -35,6 +46,7 @@ export class FileRobotsStorage implements RobotsStorage {
         id: robot.getId(),
         accountId: robot.getAccountId(),
         figi: robot.getFigi(),
+        strategy: robot.getStrategy(),
       })
     )
   }

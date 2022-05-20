@@ -1,8 +1,8 @@
 import { Criteria } from './criteria'
 import Less from './criterias/Less'
-import Price from './criterias/Price';
-import Static from './criterias/Static';
-import Greater from './criterias/Greater';
+import Price from './criterias/Price'
+import Static from './criterias/Static'
+import Greater from './criterias/Greater'
 
 export class Strategy {
   public readonly buy: Criteria

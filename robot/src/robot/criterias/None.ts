@@ -18,6 +18,10 @@ class None implements Criteria {
     }
   }
 
+  static fromJSON(data: JsonView) {
+    return new None(data.id)
+  }
+
   toJSON(): JsonView {
     return {
       id: this.id,

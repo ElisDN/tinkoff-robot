@@ -1,6 +1,6 @@
 import Robot from './robot'
 import RobotsStorage from './robotsStorage'
-import { Strategy } from "./strategy";
+import { Strategy } from './strategy'
 
 class RobotsService {
   private readonly storage: RobotsStorage

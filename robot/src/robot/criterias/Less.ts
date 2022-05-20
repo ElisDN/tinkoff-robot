@@ -33,6 +33,14 @@ class Less implements Criteria {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  static fromJSON(data: JsonView, next: Function) {
+    const that = data.input.find((input) => input.type === 'that')
+    const than = data.input.find((input) => input.type === 'than')
+
+    return new Less(next(that?.value || null), next(than?.value || null), data.id)
+  }
+
   toJSON(): JsonView {
     return {
       id: this.id,

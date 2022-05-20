@@ -1,5 +1,5 @@
-import { Criteria, JsonView, Schema } from '../criteria'
-import { v4 } from "uuid";
+import { Criteria, JsonView, Schema} from '../criteria'
+import { v4 } from 'uuid'
 
 class Greater implements Criteria {
   private readonly id: string
@@ -31,6 +31,14 @@ class Greater implements Criteria {
         },
       ],
     }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  static fromJSON(data: JsonView, next: Function) {
+    const that = data.input.find((input) => input.type === 'that')
+    const than = data.input.find((input) => input.type === 'than')
+
+    return new Greater(next(that?.value || null), next(than?.value || null), data.id)
   }
 
   toJSON(): JsonView {

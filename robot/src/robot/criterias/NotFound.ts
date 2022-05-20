@@ -1,7 +1,7 @@
 import { Criteria, JsonView, Schema } from '../criteria'
 import { v4 } from 'uuid'
 
-class Price implements Criteria {
+class NotFound implements Criteria {
   private readonly id: string
 
   constructor(id: string = v4()) {
@@ -10,8 +10,8 @@ class Price implements Criteria {
 
   static getSchema(): Schema {
     return {
-      type: 'price',
-      name: 'Цена',
+      type: 'not-found',
+      name: 'Не найдено',
       multiple: false,
       params: [],
       input: [],
@@ -19,17 +19,17 @@ class Price implements Criteria {
   }
 
   static fromJSON(data: JsonView) {
-    return new Price(data.id)
+    return new NotFound(data.id)
   }
 
   toJSON(): JsonView {
     return {
       id: this.id,
-      type: 'price',
+      type: 'not-found',
       params: [],
       input: [],
     }
   }
 }
 
-export default Price
+export default NotFound
