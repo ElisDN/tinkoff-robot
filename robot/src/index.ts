@@ -3,8 +3,6 @@ import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
-import winston from 'winston'
-import 'winston-daily-rotate-file'
 import createSdk from './tinkoff/client'
 import AccountsService from './service/accounts'
 import PortfolioService from './service/portfolio'
@@ -13,6 +11,7 @@ import { v4 } from 'uuid'
 import { FileRobotsStorage } from './robot/robotsStorage'
 import * as path from 'path'
 import CandlesService from './service/candles'
+import createLogger from './logger'
 
 // Configuration
 
@@ -41,18 +40,7 @@ if (!tinkoffToken) {
 
 // Services
 
-const logger = winston.createLogger({
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.DailyRotateFile({
-      dirname: path.resolve(__dirname, '../var/log'),
-      filename: 'app-%DATE%.log',
-      datePattern: 'YYYY-MM-DD-HH',
-      maxSize: '20m',
-      maxFiles: '14d',
-    }),
-  ],
-})
+const logger = createLogger()
 
 const client = createSdk(tinkoffHost, tinkoffToken, tinkoffApp, logger)
 
