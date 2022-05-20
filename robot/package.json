@@ -9,9 +9,8 @@
   },
   "main": "./src/index.ts",
   "scripts": {
-    "dev": "nodemon -e ts,js ./src/index.ts",
+    "start": "nodemon -e ts,js ./src/index.ts",
     "build": "tsc",
-    "start": "node ./build/index.js",
     "test": "jest",
     "lint": "eslint . --ext .js,.ts",
     "lint-fix": "eslint . --fix --ext .js,.ts",

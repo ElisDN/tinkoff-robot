@@ -37,7 +37,7 @@
     "typescript": "^4.6.4"
   },
   "scripts": {
-    "dev": "react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eslint": "eslint --ext .js,.ts,.jsx,.tsx src",
