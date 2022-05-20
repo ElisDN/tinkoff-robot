@@ -1,18 +1,65 @@
+$box-border-color: #aaa;
+$box-background: #eee;
+
 .area {
   display: flex;
   flex-flow: row nowrap;
 
   .block {
     display: flex;
-    margin: 1rem;
 
     .card {
-      display: flex;
-      border: 1px solid #aaa;
-      background: #eee;
-      padding: 1rem;
+      border: 1px solid $box-border-color;
+      background: $box-background;
+      padding: 0.6rem 0.8rem;
 
-      .name {}
+      .name {
+        font-weight: bold;
+      }
+
+      .params {
+        .param {
+          margin: 0.3rem 0;
+
+          label, input {
+            display: block;
+            width: 100%;
+          }
+          input {
+            border: 1px solid $box-border-color;
+          }
+        }
+      }
+    }
+  }
+
+  .inputs {
+    display: flex;
+    flex-flow: column nowrap;
+
+    .input {
+      display: flex;
+      flex-flow: row nowrap;
+      padding-bottom: 1rem;
+
+      .inputCard {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        margin: 0 -1px;
+        z-index: 2;
+
+        .inputName {
+          background: $box-background;
+          padding: 0.2rem 0.2rem;
+          border-top: 1px solid $box-border-color;
+          border-bottom: 1px solid $box-border-color;
+        }
+      }
+
+      &:last-child {
+        padding-bottom: 0;
+      }
     }
   }
 }

@@ -12,6 +12,12 @@ import * as path from 'path'
 import CandlesService from './service/candles'
 import createLogger from './logger'
 import { createAuthAction, createAuthMiddleware } from './http/auth'
+import { Schema } from './robot/criteria'
+import Greater from './robot/criterias/Greater'
+import None from './robot/criterias/None'
+import Static from './robot/criterias/Static'
+import Price from './robot/criterias/Price'
+import Less from './robot/criterias/Less'
 
 // Configuration
 
@@ -50,6 +56,14 @@ const candlesService = new CandlesService(client)
 
 const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'))
 const robotsService = new RobotsService(robotsStorage)
+
+const criterias: Schema[] = [
+  None.getSchema(),
+  Static.getSchema(),
+  Price.getSchema(),
+  Greater.getSchema(),
+  Less.getSchema(),
+]
 
 // HTTP API Server
 
@@ -125,6 +139,10 @@ app.delete('/api/accounts/:account/robots/:robot', async function (req, res) {
     .remove(req.params.account, req.params.robot)
     .then(() => res.status(204).end())
     .catch((err) => res.status(400).json({ message: err.message }))
+})
+
+app.get('/api/criterias', async function (req, res) {
+  res.json(criterias)
 })
 
 app.get('/api/accounts/:account/robots/:robot/strategy', async function (req, res) {

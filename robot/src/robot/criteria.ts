@@ -18,6 +18,7 @@ export type Schema = {
 }
 
 export type JsonView = {
+  id: string
   type: string
   params: JsonParamView[]
   input: JsonInputView[]

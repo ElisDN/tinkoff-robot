@@ -1,10 +1,13 @@
-import {Criteria, JsonView, Schema} from '../criteria'
+import { Criteria, JsonView, Schema } from '../criteria'
+import { v4 } from 'uuid'
 
 class Less implements Criteria {
+  private readonly id: string
   private readonly that: Criteria
   private readonly than: Criteria
 
-  constructor(that: Criteria, than: Criteria) {
+  constructor(that: Criteria, than: Criteria, id: string = v4()) {
+    this.id = id
     this.that = that
     this.than = than
   }
@@ -18,12 +21,12 @@ class Less implements Criteria {
       input: [
         {
           type: 'that',
-          name: 'Что',
+          name: 'что',
           multiple: false,
         },
         {
           type: 'than',
-          name: 'Чего',
+          name: 'чего',
           multiple: false,
         },
       ],
@@ -32,6 +35,7 @@ class Less implements Criteria {
 
   toJSON(): JsonView {
     return {
+      id: this.id,
       type: 'less',
       params: [],
       input: [
