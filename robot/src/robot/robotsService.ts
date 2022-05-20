@@ -1,5 +1,6 @@
 import Robot from './robot'
 import RobotsStorage from './robotsStorage'
+import { Strategy } from "./strategy";
 
 class RobotsService {
   private readonly storage: RobotsStorage
@@ -14,7 +15,7 @@ class RobotsService {
     if (this.robots.find((robot) => robot.isFor(accountId, figi))) {
       throw new Error('Робот для этого инструмента уже есть')
     }
-    const robot = new Robot(id, accountId, figi)
+    const robot = new Robot(id, accountId, figi, Strategy.example())
     this.robots.push(robot)
     await this.storage.save(robot)
   }

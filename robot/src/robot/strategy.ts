@@ -1,16 +1,19 @@
 import { Criteria } from './criteria'
-import None from './criterias/None'
+import Less from './criterias/Less'
+import Price from './criterias/Price';
+import Static from './criterias/Static';
+import Greater from './criterias/Greater';
 
 export class Strategy {
-  public readonly sell: Criteria
   public readonly buy: Criteria
+  public readonly sell: Criteria
 
   constructor(buy: Criteria, sell: Criteria) {
-    this.sell = sell
     this.buy = buy
+    this.sell = sell
   }
 
-  static blank() {
-    return new Strategy(new None(), new None())
+  static example() {
+    return new Strategy(new Less(new Price(), new Static(100)), new Greater(new Price(), new Static(200)))
   }
 }

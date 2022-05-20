@@ -17,6 +17,23 @@ export type Schema = {
   input: Input[]
 }
 
+export type JsonView = {
+  type: string
+  params: JsonParamView[]
+  input: JsonInputView[]
+}
+
+export type JsonParamView = {
+  type: string
+  value: number | null
+}
+
+export type JsonInputView = {
+  type: string
+  value: JsonView | null
+}
+
 export interface Criteria {
   getSchema(): Schema
+  toJSON(): JsonView
 }

@@ -2,6 +2,7 @@ import Robot from './robot'
 import { promises } from 'fs'
 import * as path from 'path'
 import * as fs from 'fs'
+import { Strategy } from './strategy'
 
 interface RobotsStorage {
   readAll(): Robot[]
@@ -23,7 +24,7 @@ export class FileRobotsStorage implements RobotsStorage {
       .map((file) => {
         const content = fs.readFileSync(path.resolve(this.path, file))
         const data = JSON.parse(content.toString())
-        return new Robot(data.id, data.accountId, data.figi)
+        return new Robot(data.id, data.accountId, data.figi, Strategy.example())
       })
   }
 

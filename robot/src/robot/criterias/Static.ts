@@ -1,6 +1,12 @@
-import { Criteria, Schema } from '../criteria'
+import { Criteria, JsonView, Schema } from '../criteria'
 
 class Static implements Criteria {
+  private readonly value: number
+
+  constructor(value: number) {
+    this.value = value
+  }
+
   getSchema(): Schema {
     return {
       type: 'static',
@@ -10,6 +16,19 @@ class Static implements Criteria {
         {
           type: 'value',
           name: 'Равно',
+        },
+      ],
+      input: [],
+    }
+  }
+
+  toJSON(): JsonView {
+    return {
+      type: 'static',
+      params: [
+        {
+          type: 'value',
+          value: this.value,
         },
       ],
       input: [],

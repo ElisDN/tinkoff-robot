@@ -6,11 +6,11 @@ class Robot {
   private readonly figi: string
   private strategy: Strategy
 
-  constructor(id: string, accountId: string, figi: string) {
+  constructor(id: string, accountId: string, figi: string, strategy: Strategy) {
     this.id = id
     this.accountId = accountId
     this.figi = figi
-    this.strategy = Strategy.blank()
+    this.strategy = strategy
   }
 
   isFor(accountId: string, figi: string): boolean {

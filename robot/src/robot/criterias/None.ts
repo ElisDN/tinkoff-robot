@@ -1,4 +1,4 @@
-import { Criteria, Schema } from '../criteria'
+import { Criteria, JsonView, Schema } from '../criteria'
 
 class None implements Criteria {
   getSchema(): Schema {
@@ -6,6 +6,14 @@ class None implements Criteria {
       type: 'none',
       name: 'Нет',
       multiple: false,
+      params: [],
+      input: [],
+    }
+  }
+
+  toJSON(): JsonView {
+    return {
+      type: 'none',
       params: [],
       input: [],
     }
