@@ -17,13 +17,13 @@ export function createAuthAction(password: string, secret: string, timeout: numb
 export function createAuthMiddleware(secret: string) {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
-      return res.status(401).json({ message: 'Не авторизован' })
+      return res.status(401).end()
     }
     const token = req.headers.authorization.split(' ')[1]
     jwt.verify(token, secret, (err) => {
       if (err) {
         console.log(err)
-        res.status(401).json({ message: 'Не авторизован' })
+        res.status(401).end()
       } else {
         next()
       }

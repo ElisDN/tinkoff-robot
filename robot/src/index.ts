@@ -78,12 +78,12 @@ app.get('/api/accounts/:account', async function (req, res) {
 
 app.post('/api/sandbox/accounts', async function (req, res) {
   await accountsService.openSandboxAccount()
-  res.status(201)
+  res.status(201).end()
 })
 
 app.delete('/api/sandbox/accounts/:account', async function (req, res) {
   await accountsService.closeSandboxAccount(req.params.account)
-  res.status(204)
+  res.status(204).end()
 })
 
 app.get('/api/accounts/:account/portfolio', async function (req, res) {
@@ -108,7 +108,7 @@ app.post('/api/accounts/:account/robots', async function (req, res) {
   }
   robotsService
     .create(req.params.account, v4(), req.body.figi)
-    .then(() => res.status(201))
+    .then(() => res.status(201).end())
     .catch((err) => res.status(400).json({ message: err.message }))
 })
 
@@ -123,7 +123,7 @@ app.get('/api/accounts/:account/robots/:robot', async function (req, res) {
 app.delete('/api/accounts/:account/robots/:robot', async function (req, res) {
   robotsService
     .remove(req.params.account, req.params.robot)
-    .then(() => res.status(204))
+    .then(() => res.status(204).end())
     .catch((err) => res.status(400).json({ message: err.message }))
 })
 
