@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from '../../../auth/useAuth'
 import './Candles.css'
+import api from '../../../api/api'
 
 type Props = {
   accountId: string
@@ -31,10 +32,9 @@ function Candles({ accountId, robotId }: Props) {
   useEffect(() => {
     getToken()
       .then((token) => {
-        fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/robots/${robotId}/candles`, {
+        api(`/api/accounts/${accountId}/robots/${robotId}/candles`, {
           headers: { Authorization: 'Bearer ' + token },
         })
-          .then((response) => response.json())
           .then((data) => setCandles(data))
           .catch((error) => setError(error.message || error.statusText))
       })

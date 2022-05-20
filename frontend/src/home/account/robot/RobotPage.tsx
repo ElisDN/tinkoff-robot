@@ -3,6 +3,7 @@ import useAuth from '../../../auth/useAuth'
 import { Link, useParams } from 'react-router-dom'
 import Candles from './Candles'
 import StrategyEditor from './strategy/StrategyEditor'
+import api from '../../../api/api'
 
 type AccountResponse = {
   real: boolean
@@ -27,17 +28,15 @@ function RobotPage() {
   useEffect(() => {
     getToken()
       .then((token) => {
-        fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}`, {
+        api(`/api/accounts/${accountId}`, {
           headers: { Authorization: 'Bearer ' + token },
         })
-          .then((response) => response.json())
           .then((data) => {
             setAccount(data)
 
-            fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/robots/${robotId}`, {
+            api(`/api/accounts/${accountId}/robots/${robotId}`, {
               headers: { Authorization: 'Bearer ' + token },
             })
-              .then((response) => response.json())
               .then((data) => setRobot(data))
               .catch((error) => setError(error.message || error.statusText))
           })

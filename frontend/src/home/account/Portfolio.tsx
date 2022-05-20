@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from '../../auth/useAuth'
+import api from '../../api/api'
 
 type Props = {
   accountId: string
@@ -27,10 +28,9 @@ function Portfolio({ accountId }: Props) {
   const loadPositions = () => {
     getToken()
       .then((token) => {
-        fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/portfolio`, {
+        api(`/api/accounts/${accountId}/portfolio`, {
           headers: { Authorization: 'Bearer ' + token },
         })
-          .then((response) => response.json())
           .then((data) => setPositions(data))
           .catch((error) => setError(error.message || error.statusText))
       })

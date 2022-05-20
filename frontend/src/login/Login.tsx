@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import useAuth from '../auth/useAuth'
 import './Login.css'
+import api from '../api/api'
 
 type FormData = {
   password: string
@@ -26,7 +27,7 @@ function Login() {
 
   const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault()
-    fetch(process.env.REACT_APP_API_HOST + '/auth', {
+    api('/auth', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -34,13 +35,6 @@ function Login() {
       },
       body: JSON.stringify(formData),
     })
-      .then((response) => {
-        if (response.ok) {
-          return response
-        }
-        throw response
-      })
-      .then((response) => response.json())
       .then((data: SuccessResponse) => {
         login(data.token, data.expires)
       })

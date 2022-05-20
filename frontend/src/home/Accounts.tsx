@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from '../auth/useAuth'
 import { Link } from 'react-router-dom'
+import api from '../api/api'
 
 type Account = {
   real: boolean
@@ -19,10 +20,9 @@ function Accounts() {
   const loadAccounts = () => {
     getToken()
       .then((token) => {
-        fetch(process.env.REACT_APP_API_HOST + '/api/accounts', {
+        api('/api/accounts', {
           headers: { Authorization: 'Bearer ' + token },
         })
-          .then((response) => response.json())
           .then((data) => setAccounts(data))
           .catch((error) => setError(error.message || error.statusText))
       })
@@ -39,16 +39,10 @@ function Accounts() {
     setError(null)
     getToken()
       .then((token) => {
-        fetch(process.env.REACT_APP_API_HOST + '/api/sandbox/accounts', {
+        api('/api/sandbox/accounts', {
           method: 'POST',
           headers: { Authorization: 'Bearer ' + token },
         })
-          .then((response) => {
-            if (response.ok) {
-              return response
-            }
-            throw response
-          })
           .then(() => loadAccounts())
           .catch((error) => setError(error.message || error.statusText))
       })
@@ -59,16 +53,10 @@ function Accounts() {
     setError(null)
     getToken()
       .then((token) => {
-        fetch(process.env.REACT_APP_API_HOST + `/api/sandbox/accounts/${accountId}`, {
+        api(`/api/sandbox/accounts/${accountId}`, {
           method: 'DELETE',
           headers: { Authorization: 'Bearer ' + token },
         })
-          .then((response) => {
-            if (response.ok) {
-              return response
-            }
-            throw response
-          })
           .then(() => loadAccounts())
           .catch((error) => setError(error.message || error.statusText))
       })

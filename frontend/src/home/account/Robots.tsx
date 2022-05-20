@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from '../../auth/useAuth'
 import { Link } from 'react-router-dom'
+import api from '../../api/api'
 
 type Props = {
   accountId: string
@@ -33,10 +34,9 @@ function Robots({ accountId }: Props) {
   const loadRobots = () => {
     getToken()
       .then((token) => {
-        fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/robots`, {
+        api(`/api/accounts/${accountId}/robots`, {
           headers: { Authorization: 'Bearer ' + token },
         })
-          .then((response) => response.json())
           .then((data) => setRobots(data))
           .catch((error) => setError(error.message || error.statusText))
       })
@@ -53,7 +53,7 @@ function Robots({ accountId }: Props) {
     event.preventDefault()
     setError(null)
     getToken().then((token) => {
-      fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/robots`, {
+      api(`/api/accounts/${accountId}/robots`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -62,12 +62,6 @@ function Robots({ accountId }: Props) {
         },
         body: JSON.stringify(formData),
       })
-        .then((response) => {
-          if (response.ok) {
-            return response
-          }
-          throw response
-        })
         .then(() => {
           setFormData({ figi: '' })
           loadRobots()
@@ -87,16 +81,10 @@ function Robots({ accountId }: Props) {
     setError(null)
     getToken()
       .then((token) => {
-        fetch(process.env.REACT_APP_API_HOST + `/api/accounts/${accountId}/robots/${robotId}`, {
+        api(`/api/accounts/${accountId}/robots/${robotId}`, {
           method: 'DELETE',
           headers: { Authorization: 'Bearer ' + token },
         })
-          .then((response) => {
-            if (response.ok) {
-              return response
-            }
-            throw response
-          })
           .then(() => loadRobots())
           .catch((error) => setError(error.message || error.statusText))
       })
