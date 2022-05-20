@@ -1,6 +1,10 @@
+type CriteriaSchema = {
+  type: string
+  name: string
+}
+
 export interface Criteria {
-  readonly type: string
-  readonly name: string
+  getSchema(): CriteriaSchema
   evaluate(): number | number[] | boolean
 }
 
