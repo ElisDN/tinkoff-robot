@@ -56,7 +56,6 @@ function Robots({ accountId }: Props) {
       api(`/api/accounts/${accountId}/robots`, {
         method: 'POST',
         headers: {
-          Accept: 'application/json',
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token,
         },
