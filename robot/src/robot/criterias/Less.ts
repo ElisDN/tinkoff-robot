@@ -1,5 +1,6 @@
 import { Criteria, JsonView, Schema } from '../criteria'
 import { v4 } from 'uuid'
+import None from "./None";
 
 class Less implements Criteria {
   private readonly id: string
@@ -57,6 +58,13 @@ class Less implements Criteria {
         },
       ],
     }
+  }
+
+  without(id: string): Criteria {
+    if (this.id === id) {
+      return new None()
+    }
+    return new Less(this.that.without(id), this.than.without(id))
   }
 }
 

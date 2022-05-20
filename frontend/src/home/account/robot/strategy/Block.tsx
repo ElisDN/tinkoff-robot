@@ -4,6 +4,7 @@ import styles from './Block.module.scss'
 type Props = {
   schemas: Schema[]
   criteria: Criteria
+  remove: (id: string) => void
 }
 
 export type SchemaParam = {
@@ -42,7 +43,7 @@ export type CriteriaInput = {
   value: Criteria | null
 }
 
-function Block({ schemas, criteria }: Props) {
+function Block({ schemas, criteria, remove }: Props) {
   const schema = schemas.find((schema) => schema.type === criteria.type)
 
   return (
@@ -64,12 +65,17 @@ function Block({ schemas, criteria }: Props) {
                     return (
                       <div key={'criteria-' + criteria.id + '-param-' + schemaParam.type} className={styles.param}>
                         <label>{schemaParam.name}</label>
-                        <input type="number" name={schemaParam.type} value={value} />
+                        <input type="number" name={schemaParam.type} value={value} onChange={() => null} />
                       </div>
                     )
                   })}
                 </div>
               ) : null}
+              <div className={styles.actions}>
+                <button type="button" title="Удалить" onClick={() => remove(criteria.id)}>
+                  x
+                </button>
+              </div>
             </div>
           </div>
           <div className={styles.inputs}>
@@ -80,7 +86,9 @@ function Block({ schemas, criteria }: Props) {
                   <div className={styles.inputCard}>
                     <div className={styles.inputName}>{schemaInput.name}</div>
                   </div>
-                  {criteriaInput?.value ? <Block schemas={schemas} criteria={criteriaInput.value} /> : null}
+                  {criteriaInput?.value ? (
+                    <Block schemas={schemas} criteria={criteriaInput.value} remove={remove} />
+                  ) : null}
                 </div>
               )
             })}

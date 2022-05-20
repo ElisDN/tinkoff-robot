@@ -30,6 +30,13 @@ class None implements Criteria {
       input: [],
     }
   }
+
+  without(id: string): Criteria {
+    if (this.id === id) {
+      return new None()
+    }
+    return this
+  }
 }
 
 export default None

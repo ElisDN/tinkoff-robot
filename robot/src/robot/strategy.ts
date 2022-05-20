@@ -16,4 +16,8 @@ export class Strategy {
   static example() {
     return new Strategy(new Less(new Price(), new Static(100)), new Greater(new Price(), new Static(200)))
   }
+
+  without(criteriaId: string) {
+    return new Strategy(this.buy.without(criteriaId), this.sell.without(criteriaId))
+  }
 }

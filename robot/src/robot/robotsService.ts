@@ -43,6 +43,16 @@ class RobotsService {
   getAll(accountId: string): Robot[] {
     return this.robots.filter((robot) => robot.getAccountId() === accountId)
   }
+
+  async changeStrategy(accountId: string, id: string, callback: (strategy: Strategy) => Strategy) {
+    const robot = this.robots.find((robot) => robot.getId() === id)
+    if (!robot) {
+      throw new Error('Робот не найден')
+    }
+    const strategy = callback(robot.getStrategy())
+    robot.changeStrategy(strategy)
+    await this.storage.save(robot)
+  }
 }
 
 export default RobotsService

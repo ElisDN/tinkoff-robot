@@ -12,14 +12,20 @@ $box-background: #eee;
       border: 1px solid $box-border-color;
       background: $box-background;
       padding: 0.6rem 0.8rem;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: space-between;
 
       .name {
+        display: flex;
         font-weight: bold;
+        margin-bottom: 0.5rem;
       }
 
       .params {
+        display: flex;
         .param {
-          margin: 0.3rem 0;
+          margin-bottom: 0.5rem;
 
           label, input {
             display: block;
@@ -28,6 +34,19 @@ $box-background: #eee;
           input {
             border: 1px solid $box-border-color;
           }
+        }
+      }
+
+      .actions {
+        display: flex;
+        flex-flow: row nowrap;
+
+        button {
+          margin: 0;
+          padding: 0.1rem 0.4rem;
+          background: #fff;
+          border: 1px solid $box-border-color;
+          line-height: 1;
         }
       }
     }

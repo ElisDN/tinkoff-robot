@@ -35,5 +35,6 @@ export type JsonInputView = {
 }
 
 export interface Criteria {
+  without(id: string): Criteria
   toJSON(): JsonView
 }

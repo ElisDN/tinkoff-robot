@@ -1,5 +1,6 @@
 import { Criteria, JsonView, Schema } from '../criteria'
 import { v4 } from 'uuid'
+import None from "./None";
 
 class Price implements Criteria {
   private readonly id: string
@@ -29,6 +30,13 @@ class Price implements Criteria {
       params: [],
       input: [],
     }
+  }
+
+  without(id: string): Criteria {
+    if (this.id === id) {
+      return new None()
+    }
+    return this
   }
 }
 

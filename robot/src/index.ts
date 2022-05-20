@@ -18,6 +18,7 @@ import Static from './robot/criterias/Static'
 import Price from './robot/criterias/Price'
 import Less from './robot/criterias/Less'
 import { CriteriasService } from './robot/criteriasService'
+import { Strategy } from './robot/strategy'
 
 // Configuration
 
@@ -148,6 +149,13 @@ app.get('/api/criterias', async function (req, res) {
 app.get('/api/accounts/:account/robots/:robot/strategy', async function (req, res) {
   const robot = robotsService.get(req.params.account, req.params.robot)
   res.json(robot.getStrategy())
+})
+
+app.delete('/api/accounts/:account/robots/:robot/strategy/:criteria', async function (req, res) {
+  await robotsService.changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
+    return strategy.without(req.params.criteria)
+  })
+  res.end()
 })
 
 app.get('/api/accounts/:account/robots/:robot/candles', async function (req, res) {

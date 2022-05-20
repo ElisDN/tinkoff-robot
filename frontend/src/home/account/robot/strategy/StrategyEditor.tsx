@@ -20,7 +20,7 @@ function StrategyEditor({ accountId, robotId }: Props) {
   const [strategy, setStrategy] = useState<Strategy | null>(null)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
+  const loadCriterias = () => {
     setError(null)
     getToken()
       .then((token) => {
@@ -29,7 +29,14 @@ function StrategyEditor({ accountId, robotId }: Props) {
         })
           .then((data) => setSchemas(data))
           .catch((error) => setError(error.message || error.statusText))
+      })
+      .catch(() => null)
+  }
 
+  const loadStrategy = () => {
+    setError(null)
+    getToken()
+      .then((token) => {
         api(`/api/accounts/${accountId}/robots/${robotId}/strategy`, {
           headers: { Authorization: 'Bearer ' + token },
         })
@@ -37,6 +44,25 @@ function StrategyEditor({ accountId, robotId }: Props) {
           .catch((error) => setError(error.message || error.statusText))
       })
       .catch(() => null)
+  }
+
+  const removeCriteria = (id: string) => {
+    setError(null)
+    getToken()
+      .then((token) => {
+        api(`/api/accounts/${accountId}/robots/${robotId}/strategy/${id}`, {
+          method: 'DELETE',
+          headers: { Authorization: 'Bearer ' + token },
+        })
+          .then(() => loadStrategy())
+          .catch((error) => setError(error.message || error.statusText))
+      })
+      .catch(() => null)
+  }
+
+  useEffect(() => {
+    loadCriterias()
+    loadStrategy()
   }, [])
 
   return (
@@ -46,13 +72,13 @@ function StrategyEditor({ accountId, robotId }: Props) {
       {strategy !== null ? (
         <div className="card-body">
           <p>Продать:</p>
-          <Block schemas={schemas} criteria={strategy.sell} />
+          <Block schemas={schemas} criteria={strategy.sell} remove={removeCriteria} />
         </div>
       ) : null}
       {strategy !== null ? (
         <div className="card-body">
           <p>Купить:</p>
-          <Block schemas={schemas} criteria={strategy.buy} />
+          <Block schemas={schemas} criteria={strategy.buy} remove={removeCriteria} />
         </div>
       ) : null}
     </div>

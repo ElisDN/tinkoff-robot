@@ -1,5 +1,6 @@
-import { Criteria, JsonView, Schema} from '../criteria'
+import { Criteria, Input, JsonView, Schema } from '../criteria'
 import { v4 } from 'uuid'
+import None from "./None";
 
 class Greater implements Criteria {
   private readonly id: string
@@ -57,6 +58,17 @@ class Greater implements Criteria {
         },
       ],
     }
+  }
+
+  getId(): string {
+    return this.id
+  }
+
+  without(id: string): Criteria {
+    if (this.id === id) {
+      return new None()
+    }
+    return new Greater(this.that.without(id), this.than.without(id))
   }
 }
 

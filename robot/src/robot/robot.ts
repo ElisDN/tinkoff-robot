@@ -17,6 +17,10 @@ class Robot {
     return this.accountId === accountId && this.figi === figi
   }
 
+  changeStrategy(strategy: Strategy): void {
+    this.strategy = strategy
+  }
+
   getId(): string {
     return this.id
   }
