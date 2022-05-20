@@ -20,20 +20,23 @@ dotenv.config()
 
 const authSecret = process.env.AUTH_SECRET
 if (!authSecret) {
-  throw new Error('AUTH_SECRET env is not set')
+  console.error('Укажите любой AUTH_SECRET')
+  process.exit(1)
 }
 
 const authTimeout = 3600 * 4
 const authPassword = process.env.AUTH_PASSWORD
 if (!authPassword) {
-  throw new Error('AUTH_PASSWORD env is not set')
+  console.error('Установите пароль AUTH_PASSWORD')
+  process.exit(1)
 }
 
 const tinkoffHost = 'invest-public-api.tinkoff.ru:443'
 const tinkoffApp = 'ElisDN'
 const tinkoffToken = process.env.TINKOFF_TOKEN
 if (!tinkoffToken) {
-  throw new Error('TINKOFF_TOKEN env is not set')
+  console.error('Укажите TINKOFF_TOKEN')
+  process.exit(1)
 }
 
 // Services
