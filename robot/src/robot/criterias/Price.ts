@@ -1,7 +1,7 @@
 import { Criteria, JsonView, Schema } from '../criteria'
 
 class Price implements Criteria {
-  getSchema(): Schema {
+  static getSchema(): Schema {
     return {
       type: 'price',
       name: 'Цена',

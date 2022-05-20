@@ -34,6 +34,5 @@ export type JsonInputView = {
 }
 
 export interface Criteria {
-  getSchema(): Schema
   toJSON(): JsonView
 }

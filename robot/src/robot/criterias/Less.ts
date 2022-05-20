@@ -9,7 +9,7 @@ class Less implements Criteria {
     this.than = than
   }
 
-  getSchema(): Schema {
+  static getSchema(): Schema {
     return {
       type: 'less',
       name: 'Меньше',

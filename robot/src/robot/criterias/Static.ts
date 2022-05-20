@@ -7,7 +7,7 @@ class Static implements Criteria {
     this.value = value
   }
 
-  getSchema(): Schema {
+  static getSchema(): Schema {
     return {
       type: 'static',
       name: 'Значение',

@@ -1,7 +1,7 @@
 import { Criteria, JsonView, Schema } from '../criteria'
 
 class None implements Criteria {
-  getSchema(): Schema {
+  static getSchema(): Schema {
     return {
       type: 'none',
       name: 'Нет',

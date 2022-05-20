@@ -1,4 +1,4 @@
-import {Criteria, JsonView, Schema} from '../criteria'
+import { Criteria, JsonView, Schema } from '../criteria'
 
 class Greater implements Criteria {
   private readonly that: Criteria
@@ -9,7 +9,7 @@ class Greater implements Criteria {
     this.than = than
   }
 
-  getSchema(): Schema {
+  static getSchema(): Schema {
     return {
       type: 'greater',
       name: 'Больше',
