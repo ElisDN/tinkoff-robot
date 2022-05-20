@@ -29,9 +29,9 @@ $box-background: #eee;
 
           label, input {
             display: block;
-            width: 100%;
           }
           input {
+            width: 8rem;
             border: 1px solid $box-border-color;
           }
         }
