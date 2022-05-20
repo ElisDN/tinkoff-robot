@@ -19,9 +19,9 @@ import Price from './robot/criterias/Price'
 import Less from './robot/criterias/Less'
 import { CriteriasService } from './robot/criteriasService'
 import { Strategy } from './robot/strategy'
-import And from "./robot/criterias/And";
-import Or from "./robot/criterias/Or";
-import Not from "./robot/criterias/Not";
+import And from './robot/criterias/And'
+import Or from './robot/criterias/Or'
+import Not from './robot/criterias/Not'
 
 // Configuration
 
