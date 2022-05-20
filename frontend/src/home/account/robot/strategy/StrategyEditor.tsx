@@ -46,6 +46,11 @@ function StrategyEditor({ accountId, robotId }: Props) {
       .catch(() => null)
   }
 
+  useEffect(() => {
+    loadCriterias()
+    loadStrategy()
+  }, [])
+
   const removeCriteria = (id: string) => {
     setError(null)
     getToken()
@@ -60,10 +65,23 @@ function StrategyEditor({ accountId, robotId }: Props) {
       .catch(() => null)
   }
 
-  useEffect(() => {
-    loadCriterias()
-    loadStrategy()
-  }, [])
+  const replaceCriteria = (id: string, type: string) => {
+    setError(null)
+    getToken()
+      .then((token) => {
+        api(`/api/accounts/${accountId}/robots/${robotId}/strategy/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + token,
+          },
+          body: JSON.stringify({ type }),
+        })
+          .then(() => loadStrategy())
+          .catch((error) => setError(error.message || error.statusText))
+      })
+      .catch(() => null)
+  }
 
   return (
     <div className="card my-3">
@@ -72,13 +90,13 @@ function StrategyEditor({ accountId, robotId }: Props) {
       {strategy !== null ? (
         <div className="card-body">
           <p>Продать:</p>
-          <Block schemas={schemas} criteria={strategy.sell} remove={removeCriteria} />
+          <Block schemas={schemas} criteria={strategy.sell} remove={removeCriteria} replace={replaceCriteria} />
         </div>
       ) : null}
       {strategy !== null ? (
         <div className="card-body">
           <p>Купить:</p>
-          <Block schemas={schemas} criteria={strategy.buy} remove={removeCriteria} />
+          <Block schemas={schemas} criteria={strategy.buy} remove={removeCriteria} replace={replaceCriteria} />
         </div>
       ) : null}
     </div>

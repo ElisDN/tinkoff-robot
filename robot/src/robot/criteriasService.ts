@@ -1,11 +1,12 @@
 import { Criteria, JsonView, Schema } from './criteria'
 import None from './criterias/None'
-import NotFound from "./criterias/NotFound";
+import NotFound from './criterias/NotFound'
 
 export type AvailableCriteria = {
   schema: Schema
   // eslint-disable-next-line @typescript-eslint/ban-types
-  factory: Function
+  fromJSON: Function
+  blank: Function
 }
 
 export class CriteriasService {
@@ -13,6 +14,14 @@ export class CriteriasService {
 
   constructor(available: AvailableCriteria[]) {
     this.available = available
+  }
+
+  createCriteria(type: string): Criteria {
+    const root = this.available.find((available) => available.schema.type === type)
+    if (!root) {
+      return new NotFound()
+    }
+    return root.blank()
   }
 
   restoreCriteria(data: JsonView | null): Criteria {
@@ -23,7 +32,7 @@ export class CriteriasService {
     if (!root) {
       return new NotFound(data.id)
     }
-    return root.factory(data, this.restoreCriteria.bind(this))
+    return root.fromJSON(data, this.restoreCriteria.bind(this))
   }
 
   getAvailableSchemas(): Schema[] {

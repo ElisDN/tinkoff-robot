@@ -1,6 +1,6 @@
 import { Criteria, JsonView, Schema } from '../criteria'
 import { v4 } from 'uuid'
-import None from "./None";
+import None from './None'
 
 class Static implements Criteria {
   private readonly id: string
@@ -26,6 +26,10 @@ class Static implements Criteria {
     }
   }
 
+  static blank() {
+    return new Static(0)
+  }
+
   static fromJSON(data: JsonView) {
     const value = data.params.find((input) => input.type === 'value')
     return new Static(value?.value || 0, data.id)
@@ -48,6 +52,13 @@ class Static implements Criteria {
   without(id: string): Criteria {
     if (this.id === id) {
       return new None()
+    }
+    return this
+  }
+
+  with(id: string, criteria: Criteria): Criteria {
+    if (this.id === id) {
+      return criteria
     }
     return this
   }

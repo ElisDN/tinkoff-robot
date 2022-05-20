@@ -56,11 +56,11 @@ const portfolioService = new PortfolioService(client)
 const candlesService = new CandlesService(client)
 
 const criteriasService = new CriteriasService([
-  { schema: None.getSchema(), factory: None.fromJSON },
-  { schema: Static.getSchema(), factory: Static.fromJSON },
-  { schema: Price.getSchema(), factory: Price.fromJSON },
-  { schema: Greater.getSchema(), factory: Greater.fromJSON },
-  { schema: Less.getSchema(), factory: Less.fromJSON },
+  { schema: None.getSchema(), fromJSON: None.fromJSON, blank: None.blank },
+  { schema: Static.getSchema(), fromJSON: Static.fromJSON, blank: Static.blank },
+  { schema: Price.getSchema(), fromJSON: Price.fromJSON, blank: Price.blank },
+  { schema: Greater.getSchema(), fromJSON: Greater.fromJSON, blank: Greater.blank },
+  { schema: Less.getSchema(), fromJSON: Less.fromJSON, blank: Less.blank },
 ])
 
 const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), criteriasService)
@@ -156,6 +156,17 @@ app.delete('/api/accounts/:account/robots/:robot/strategy/:criteria', async func
     return strategy.without(req.params.criteria)
   })
   res.end()
+})
+
+app.put('/api/accounts/:account/robots/:robot/strategy/:criteria', async function (req, res) {
+  if (!req.body.type) {
+    return res.status(422).json({ message: 'Укажите тип критерия' })
+  }
+  const criteria = criteriasService.createCriteria(req.body.type)
+  await robotsService.changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
+    return strategy.with(req.params.criteria, criteria)
+  })
+  res.status(201).end()
 })
 
 app.get('/api/accounts/:account/robots/:robot/candles', async function (req, res) {

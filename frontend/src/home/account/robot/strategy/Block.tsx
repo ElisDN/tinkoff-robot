@@ -5,6 +5,7 @@ type Props = {
   schemas: Schema[]
   criteria: Criteria
   remove: (id: string) => void
+  replace: (id: string, type: string) => void
 }
 
 export type SchemaParam = {
@@ -43,7 +44,11 @@ export type CriteriaInput = {
   value: Criteria | null
 }
 
-function Block({ schemas, criteria, remove }: Props) {
+function Block({ schemas, criteria, remove, replace }: Props) {
+  const handleTypeChange = (event: React.FormEvent<HTMLSelectElement>) => {
+    replace(criteria.id, event.currentTarget.value)
+  }
+
   const schema = schemas.find((schema) => schema.type === criteria.type)
 
   return (
@@ -75,6 +80,13 @@ function Block({ schemas, criteria, remove }: Props) {
                 <button type="button" title="Удалить" onClick={() => remove(criteria.id)}>
                   x
                 </button>
+                <select name="type" value={criteria.type} onChange={handleTypeChange}>
+                  {schemas.map((schema) => (
+                    <option key={'criteria-' + criteria.id + '-type-' + schema.type} value={schema.type}>
+                      {schema.name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>
@@ -87,7 +99,7 @@ function Block({ schemas, criteria, remove }: Props) {
                     <div className={styles.inputName}>{schemaInput.name}</div>
                   </div>
                   {criteriaInput?.value ? (
-                    <Block schemas={schemas} criteria={criteriaInput.value} remove={remove} />
+                    <Block schemas={schemas} criteria={criteriaInput.value} remove={remove} replace={replace} />
                   ) : null}
                 </div>
               )

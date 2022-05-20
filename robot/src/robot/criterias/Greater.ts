@@ -1,6 +1,6 @@
-import { Criteria, Input, JsonView, Schema } from '../criteria'
+import { Criteria, JsonView, Schema } from '../criteria'
 import { v4 } from 'uuid'
-import None from "./None";
+import None from './None'
 
 class Greater implements Criteria {
   private readonly id: string
@@ -34,6 +34,10 @@ class Greater implements Criteria {
     }
   }
 
+  static blank() {
+    return new Greater(new None(), new None())
+  }
+
   // eslint-disable-next-line @typescript-eslint/ban-types
   static fromJSON(data: JsonView, next: Function) {
     const that = data.input.find((input) => input.type === 'that')
@@ -60,15 +64,18 @@ class Greater implements Criteria {
     }
   }
 
-  getId(): string {
-    return this.id
-  }
-
   without(id: string): Criteria {
     if (this.id === id) {
       return new None()
     }
     return new Greater(this.that.without(id), this.than.without(id))
+  }
+
+  with(id: string, criteria: Criteria): Criteria {
+    if (this.id === id) {
+      return criteria
+    }
+    return new Greater(this.that.with(id, criteria), this.than.with(id, criteria))
   }
 }
 

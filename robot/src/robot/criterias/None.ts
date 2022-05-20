@@ -18,6 +18,10 @@ class None implements Criteria {
     }
   }
 
+  static blank() {
+    return new None()
+  }
+
   static fromJSON(data: JsonView) {
     return new None(data.id)
   }
@@ -34,6 +38,13 @@ class None implements Criteria {
   without(id: string): Criteria {
     if (this.id === id) {
       return new None()
+    }
+    return this
+  }
+
+  with(id: string, criteria: Criteria): Criteria {
+    if (this.id === id) {
+      return criteria
     }
     return this
   }

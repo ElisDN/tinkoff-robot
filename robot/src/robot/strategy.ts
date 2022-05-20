@@ -20,4 +20,8 @@ export class Strategy {
   without(criteriaId: string) {
     return new Strategy(this.buy.without(criteriaId), this.sell.without(criteriaId))
   }
+
+  with(criteriaId: string, criteria: Criteria) {
+    return new Strategy(this.buy.with(criteriaId, criteria), this.sell.with(criteriaId, criteria))
+  }
 }
