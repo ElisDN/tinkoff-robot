@@ -27,6 +27,7 @@ function Login() {
 
   const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault()
+    setError(null)
     api('/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

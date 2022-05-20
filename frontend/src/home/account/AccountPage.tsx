@@ -22,6 +22,7 @@ function AccountPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    setError(null)
     getToken()
       .then((token) => {
         api(`/api/accounts/${accountId}`, {

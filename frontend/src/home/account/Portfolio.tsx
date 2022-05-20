@@ -26,6 +26,7 @@ function Portfolio({ accountId }: Props) {
   const [error, setError] = useState(null)
 
   const loadPositions = () => {
+    setError(null)
     getToken()
       .then((token) => {
         api(`/api/accounts/${accountId}/portfolio`, {

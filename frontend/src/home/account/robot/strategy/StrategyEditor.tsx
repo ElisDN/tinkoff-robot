@@ -20,6 +20,7 @@ function StrategyEditor({ accountId, robotId }: Props) {
   const [error, setError] = useState(null)
 
   useEffect(() => {
+    setError(null)
     getToken()
       .then((token) => {
         api(`/api/accounts/${accountId}/robots/${robotId}/strategy`, {

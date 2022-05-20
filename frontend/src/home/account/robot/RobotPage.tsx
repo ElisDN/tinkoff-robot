@@ -26,6 +26,7 @@ function RobotPage() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
+    setError(null)
     getToken()
       .then((token) => {
         api(`/api/accounts/${accountId}`, {

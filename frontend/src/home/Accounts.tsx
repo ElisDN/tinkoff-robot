@@ -18,6 +18,7 @@ function Accounts() {
   const [error, setError] = useState(null)
 
   const loadAccounts = () => {
+    setError(null)
     getToken()
       .then((token) => {
         api('/api/accounts', {

@@ -32,6 +32,7 @@ function Robots({ accountId }: Props) {
   }
 
   const loadRobots = () => {
+    setError(null)
     getToken()
       .then((token) => {
         api(`/api/accounts/${accountId}/robots`, {
