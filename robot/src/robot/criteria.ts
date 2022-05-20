@@ -19,5 +19,4 @@ export type Schema = {
 
 export interface Criteria {
   getSchema(): Schema
-  evaluate(): number | number[] | boolean
 }

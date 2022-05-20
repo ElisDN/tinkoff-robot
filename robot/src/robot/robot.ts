@@ -10,7 +10,7 @@ class Robot {
     this.id = id
     this.accountId = accountId
     this.figi = figi
-    this.strategy = new Strategy(null, null)
+    this.strategy = Strategy.blank()
   }
 
   isFor(accountId: string, figi: string): boolean {
