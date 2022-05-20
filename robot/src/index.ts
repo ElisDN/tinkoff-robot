@@ -19,6 +19,9 @@ import Price from './robot/criterias/Price'
 import Less from './robot/criterias/Less'
 import { CriteriasService } from './robot/criteriasService'
 import { Strategy } from './robot/strategy'
+import And from "./robot/criterias/And";
+import Or from "./robot/criterias/Or";
+import Not from "./robot/criterias/Not";
 
 // Configuration
 
@@ -56,6 +59,9 @@ const portfolioService = new PortfolioService(client)
 const candlesService = new CandlesService(client)
 
 const criteriasService = new CriteriasService([
+  { schema: And.getSchema(), fromJSON: And.fromJSON, blank: And.blank },
+  { schema: Or.getSchema(), fromJSON: Or.fromJSON, blank: Or.blank },
+  { schema: Not.getSchema(), fromJSON: Not.fromJSON, blank: Not.blank },
   { schema: None.getSchema(), fromJSON: None.fromJSON, blank: None.blank },
   { schema: Static.getSchema(), fromJSON: Static.fromJSON, blank: Static.blank },
   { schema: Price.getSchema(), fromJSON: Price.fromJSON, blank: Price.blank },
