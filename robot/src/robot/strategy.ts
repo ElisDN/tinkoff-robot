@@ -1,8 +1,5 @@
 import { Criteria } from './criteria'
-import Less from './criterias/Less'
-import Price from './criterias/Price'
-import Static from './criterias/Static'
-import Greater from './criterias/Greater'
+import None from './criterias/None'
 
 export class Strategy {
   public readonly buy: Criteria
@@ -13,8 +10,8 @@ export class Strategy {
     this.sell = sell
   }
 
-  static example() {
-    return new Strategy(new Less(new Price(), new Static(100)), new Greater(new Price(), new Static(200)))
+  static blank() {
+    return new Strategy(new None(), new None())
   }
 
   without(criteriaId: string) {

@@ -15,7 +15,7 @@ class RobotsService {
     if (this.robots.find((robot) => robot.isFor(accountId, figi))) {
       throw new Error('Робот для этого инструмента уже есть')
     }
-    const robot = new Robot(id, accountId, figi, Strategy.example())
+    const robot = new Robot(id, accountId, figi, Strategy.blank())
     this.robots.push(robot)
     await this.storage.save(robot)
   }
