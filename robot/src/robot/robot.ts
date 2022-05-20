@@ -1,4 +1,4 @@
-import { NoneCriteria, Strategy } from './strategy'
+import { Strategy } from './strategy'
 
 class Robot {
   private readonly id: string
@@ -10,7 +10,7 @@ class Robot {
     this.id = id
     this.accountId = accountId
     this.figi = figi
-    this.strategy = new Strategy(new NoneCriteria(), new NoneCriteria())
+    this.strategy = new Strategy(null, null)
   }
 
   isFor(accountId: string, figi: string): boolean {

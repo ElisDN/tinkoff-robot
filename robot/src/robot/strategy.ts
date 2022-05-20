@@ -4,19 +4,11 @@ export interface Criteria {
   evaluate(): number | number[] | boolean
 }
 
-export class NoneCriteria implements Criteria {
-  public readonly type: string = 'none'
-  public readonly name: string = 'Нет'
-  evaluate(): number | number[] | boolean {
-    return false
-  }
-}
-
 export class Strategy {
-  public readonly sell: Criteria
-  public readonly buy: Criteria
+  public readonly sell: Criteria | null
+  public readonly buy: Criteria | null
 
-  constructor(buy: Criteria, sell: Criteria) {
+  constructor(buy: Criteria | null, sell: Criteria | null) {
     this.sell = sell
     this.buy = buy
   }

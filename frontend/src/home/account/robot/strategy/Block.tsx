@@ -6,12 +6,12 @@ export type Criteria = {
   name: string
 }
 
-function Block({ criteria }: { criteria: Criteria }) {
+function Block({ criteria }: { criteria: Criteria | null }) {
   return (
     <div className={styles.area}>
       <div className={styles.block}>
         <div className={styles.card}>
-          <div className={styles.name}>{criteria.name}</div>
+          <div className={styles.name}>{criteria ? criteria.name : 'Нет'}</div>
         </div>
       </div>
     </div>
