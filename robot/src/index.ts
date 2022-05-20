@@ -1,6 +1,5 @@
 import express from 'express'
 import cors from 'cors'
-import jwt from 'jsonwebtoken'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 import createSdk from './tinkoff/client'
@@ -12,6 +11,7 @@ import { FileRobotsStorage } from './robot/robotsStorage'
 import * as path from 'path'
 import CandlesService from './service/candles'
 import createLogger from './logger'
+import { createAuthAction, createAuthMiddleware } from './http/auth'
 
 // Configuration
 
@@ -58,24 +58,9 @@ const app = express()
 app.use(cors())
 app.use(bodyParser.json())
 
-app.post('/auth', (req, res) => {
-  if (!req.body.password) {
-    return res.status(422).json({ message: 'Заполните пароль' })
-  }
-  if (req.body.password !== authPassword) {
-    return res.status(409).json({ message: 'Неверный пароль' })
-  }
-  const token = jwt.sign({}, authSecret, { expiresIn: authTimeout })
-  res.status(200).json({ token, expires: authTimeout })
-})
+app.post('/auth', createAuthAction(authPassword, authSecret, authTimeout))
 
-app.use('/api', (req, res, next) => {
-  if (!req.headers.authorization) {
-    return res.status(401)
-  }
-  const token = req.headers.authorization.split(' ')[1]
-  jwt.verify(token, authSecret, (err) => (err ? res.status(401) : next()))
-})
+app.use('/api', createAuthMiddleware(authSecret))
 
 app.get('/api', function (req, res) {
   res.json('API')
