@@ -59,7 +59,7 @@ function Candles({ accountId, robotId }: Props) {
   return (
     <div className="card my-3">
       <div className="card-header">
-        Цены
+        История
         <div className="btn-group float-end">
           <button type="button" className="btn btn-sm btn-outline-dark" onClick={() => setBarWidth(barWidth * 2)}>
             +
