@@ -74,6 +74,13 @@ function Candles({ accountId, robotId }: Props) {
         <div className="area">
           <svg width={candles.length * barWidth} height={height}>
             {candles.map((candle, index) => {
+              let candleClass = 'candle'
+              if (calcPrice(candle.open) < calcPrice(candle.close)) {
+                candleClass += ' candle-up'
+              }
+              if (calcPrice(candle.open) > calcPrice(candle.close)) {
+                candleClass += ' candle-down'
+              }
               return (
                 <g key={candle.time} className="bar">
                   <rect x={index * barWidth} width={barWidth} y={0} height={height} />
@@ -85,13 +92,11 @@ function Candles({ accountId, robotId }: Props) {
                     height={Math.abs(calcPrice(candle.high) - calcPrice(candle.low)) * verticalScale}
                   />
                   <rect
-                    className={
-                      calcPrice(candle.open) <= calcPrice(candle.close) ? 'candle candle-up' : 'candle candle-down'
-                    }
+                    className={candleClass}
                     x={index * barWidth}
                     width={barWidth}
                     y={(max - Math.max(calcPrice(candle.open), calcPrice(candle.close))) * verticalScale}
-                    height={Math.abs(calcPrice(candle.open) - calcPrice(candle.close)) * verticalScale}
+                    height={Math.max(1, Math.abs(calcPrice(candle.open) - calcPrice(candle.close)) * verticalScale)}
                   />
                   <title>
                     {new Date(candle.time).toUTCString()}
