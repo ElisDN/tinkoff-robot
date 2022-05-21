@@ -59,12 +59,12 @@ function Login() {
               onChange={handleChange}
               className="form-control"
               id="floatingPassword"
-              placeholder="Password"
+              placeholder="Пароль"
             />
-            <label htmlFor="floatingPassword">Password</label>
+            <label htmlFor="floatingPassword">Пароль</label>
           </div>
           <button className="w-100 btn btn-lg btn-primary" type="submit">
-            Log in
+            Войти
           </button>
         </form>
       </main>
