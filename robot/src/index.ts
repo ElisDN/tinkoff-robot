@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 import createSdk from './tinkoff/client'
 import AccountsService from './service/accounts'
 import PortfolioService from './service/portfolio'
-import RobotsService from './robot/robotsService'
+import RobotsPool from './robot/robotsPool'
 import { v4 as uuid } from 'uuid'
 import { FileRobotsStorage } from './robot/robotsStorage'
 import * as path from 'path'
@@ -70,7 +70,7 @@ const criteriasService = new CriteriasService([
 ])
 
 const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), criteriasService)
-const robotsService = new RobotsService(robotsStorage)
+const robotsService = new RobotsPool(robotsStorage)
 
 // HTTP API Server
 
@@ -128,7 +128,7 @@ app.post('/api/accounts/:account/robots', async function (req, res) {
     return res.status(422).json({ message: 'Заполните FIGI' })
   }
   robotsService
-    .create(req.params.account, uuid(), req.body.figi)
+    .add(req.params.account, uuid(), req.body.figi)
     .then(() => res.status(201).end())
     .catch((err) => res.status(400).json({ message: err.message }))
 })
