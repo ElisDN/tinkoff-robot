@@ -58,7 +58,7 @@ const accountsService = new AccountsService(client)
 const portfolioService = new PortfolioService(client)
 const candlesService = new CandlesService(client)
 
-const criteriasService = new CriteriaCreator([
+const criteriaCreator = new CriteriaCreator([
   { schema: And.getSchema(), fromJSON: And.fromJSON, blank: And.blank },
   { schema: Or.getSchema(), fromJSON: Or.fromJSON, blank: Or.blank },
   { schema: Not.getSchema(), fromJSON: Not.fromJSON, blank: Not.blank },
@@ -69,7 +69,7 @@ const criteriasService = new CriteriaCreator([
   { schema: Less.getSchema(), fromJSON: Less.fromJSON, blank: Less.blank },
 ])
 
-const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), criteriasService)
+const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), criteriaCreator)
 const robotsService = new RobotsPool(robotsStorage)
 
 // HTTP API Server
@@ -141,7 +141,7 @@ app.delete('/api/accounts/:account/robots/:robot', async function (req, res) {
 })
 
 app.get('/api/criterias', async function (req, res) {
-  res.json(criteriasService.getAvailableSchemas())
+  res.json(criteriaCreator.getAvailableSchemas())
 })
 
 app.get('/api/accounts/:account/robots/:robot/strategy', async function (req, res) {
@@ -160,7 +160,7 @@ app.put('/api/accounts/:account/robots/:robot/strategy/:criteria', async functio
   if (!req.body.type) {
     return res.status(422).json({ message: 'Укажите тип критерия' })
   }
-  const criteria = criteriasService.createCriteria(req.body.type)
+  const criteria = criteriaCreator.createCriteria(req.body.type)
   await robotsService.changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
     return strategy.with(req.params.criteria, criteria)
   })
