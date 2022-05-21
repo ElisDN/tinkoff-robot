@@ -22,13 +22,10 @@ class CandlesService {
     const candles: HistoricCandle[] = []
 
     const fromDate = new Date(from)
-    fromDate.setDate(fromDate.getDate() - 1)
 
     while (fromDate <= to) {
-      fromDate.setHours(23, 59, 59, 999)
       const toDate = new Date(fromDate)
       toDate.setDate(fromDate.getDate() + 1)
-      toDate.setHours(23, 59, 59, 999)
       const response = await this.client.marketData.getCandles({
         figi,
         from: fromDate,
