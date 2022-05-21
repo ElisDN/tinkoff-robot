@@ -1,6 +1,6 @@
 import { Criteria, JsonView, Schema } from './criteria'
-import None from './criterias/None'
-import NotFound from './criterias/NotFound'
+import NotFound from '../criterias/NotFound'
+import None from '../criterias/None'
 
 export type AvailableCriteria = {
   schema: Schema
@@ -9,7 +9,7 @@ export type AvailableCriteria = {
   blank: Function
 }
 
-export class CriteriasService {
+export class CriteriaCreator {
   private readonly available: AvailableCriteria[]
 
   constructor(available: AvailableCriteria[]) {

@@ -12,16 +12,16 @@ import * as path from 'path'
 import CandlesService from './service/candles'
 import createLogger from './logger'
 import { createAuthAction, createAuthMiddleware } from './auth'
-import Greater from './robot/criterias/Greater'
-import None from './robot/criterias/None'
-import Static from './robot/criterias/Static'
-import Price from './robot/criterias/Price'
-import Less from './robot/criterias/Less'
-import { CriteriasService } from './robot/criteriasService'
+import Greater from './criterias/Greater'
+import None from './criterias/None'
+import Static from './criterias/Static'
+import Price from './criterias/Price'
+import Less from './criterias/Less'
+import { CriteriaCreator } from './robot/criteriaCreator'
 import { Strategy } from './robot/strategy'
-import And from './robot/criterias/And'
-import Or from './robot/criterias/Or'
-import Not from './robot/criterias/Not'
+import And from './criterias/And'
+import Or from './criterias/Or'
+import Not from './criterias/Not'
 
 // Configuration
 
@@ -58,7 +58,7 @@ const accountsService = new AccountsService(client)
 const portfolioService = new PortfolioService(client)
 const candlesService = new CandlesService(client)
 
-const criteriasService = new CriteriasService([
+const criteriasService = new CriteriaCreator([
   { schema: And.getSchema(), fromJSON: And.fromJSON, blank: And.blank },
   { schema: Or.getSchema(), fromJSON: Or.fromJSON, blank: Or.blank },
   { schema: Not.getSchema(), fromJSON: Not.fromJSON, blank: Not.blank },

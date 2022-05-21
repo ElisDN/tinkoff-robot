@@ -1,5 +1,5 @@
 import { Criteria } from './criteria'
-import None from './criterias/None'
+import None from '../criterias/None'
 
 export class Strategy {
   public readonly buy: Criteria

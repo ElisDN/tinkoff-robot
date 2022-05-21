@@ -1,4 +1,4 @@
-import { Criteria, JsonView, Schema } from '../criteria'
+import { Criteria, JsonView, Schema } from '../robot/criteria'
 import { v4 } from 'uuid'
 import None from './None'
 

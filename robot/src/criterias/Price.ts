@@ -1,7 +1,8 @@
-import { Criteria, JsonView, Schema } from '../criteria'
+import { Criteria, JsonView, Schema } from '../robot/criteria'
 import { v4 } from 'uuid'
+import None from './None'
 
-class None implements Criteria {
+class Price implements Criteria {
   private readonly id: string
 
   constructor(id: string = v4()) {
@@ -10,8 +11,8 @@ class None implements Criteria {
 
   static getSchema(): Schema {
     return {
-      type: 'none',
-      name: 'Нет',
+      type: 'price',
+      name: 'Цена',
       multiple: false,
       params: [],
       input: [],
@@ -19,17 +20,17 @@ class None implements Criteria {
   }
 
   static blank() {
-    return new None()
+    return new Price()
   }
 
   static fromJSON(data: JsonView) {
-    return new None(data.id)
+    return new Price(data.id)
   }
 
   toJSON(): JsonView {
     return {
       id: this.id,
-      type: 'none',
+      type: 'price',
       params: [],
       input: [],
     }
@@ -50,4 +51,4 @@ class None implements Criteria {
   }
 }
 
-export default None
+export default Price
