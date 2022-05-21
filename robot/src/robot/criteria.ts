@@ -35,19 +35,20 @@ export type JsonInputView = {
 }
 
 export class Data {
-  constructor(public readonly price: number) {}
+  constructor(public readonly date: Date, public readonly price: number) {}
 
-  static blank(): Data {
-    return new Data(0)
+  static blank(date: Date = new Date()): Data {
+    return new Data(date, 0)
   }
 
   withPrice(price: number) {
-    return new Data(price)
+    return new Data(this.date, price)
   }
 }
 
-type Metric = {
-  type: string
+export type Metric = {
+  id: string
+  name: string
   value: number
 }
 
@@ -72,8 +73,8 @@ export class Result {
     return new Result(value, this.metrics)
   }
 
-  withMetric(metric: Metric): Result {
-    return new Result(this.value, [...this.metrics, metric])
+  withMetric(id: string, name: string, value: number): Result {
+    return new Result(this.value, [...this.metrics, { id, name, value }])
   }
 }
 

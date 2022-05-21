@@ -10,7 +10,7 @@ class Price implements Criteria {
   }
 
   eval(data: Data, result: Result): Result {
-    return result.withValue(data.price)
+    return result.withValue(data.price).withMetric(this.id, 'Цена', data.price)
   }
 
   static getSchema(): Schema {
