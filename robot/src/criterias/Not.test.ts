@@ -1,6 +1,12 @@
 import Not from './Not'
 import Static from './Static'
-import { Data, Result } from '../robot/criteria'
+import { Data, Metric, Result } from '../robot/criteria'
+
+test('not metrics', () => {
+  const criteria = new Not(new Static(11, 'id-1'))
+  const result = criteria.eval(Data.blank(), Result.of(5))
+  expect(result.metrics).toEqual<Metric[]>([{ id: 'id-1', name: 'Значение', value: 11 }])
+})
 
 test('not true', () => {
   const criteria = new Not(new Static(1))

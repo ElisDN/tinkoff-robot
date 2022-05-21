@@ -90,6 +90,10 @@ export class Result {
   withMetric(id: string, name: string, value: number): Result {
     return new Result(this.value, [...this.metrics, { id, name, value }])
   }
+
+  withMetrics(metrics: Metric[]): Result {
+    return new Result(this.value, [...this.metrics, ...metrics])
+  }
 }
 
 export interface Criteria {

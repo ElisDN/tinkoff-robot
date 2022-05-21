@@ -12,7 +12,7 @@ class Static implements Criteria {
   }
 
   eval(data: Data, result: Result): Result {
-    return result.withValue(this.value)
+    return result.withValue(this.value).withMetric(this.id, 'Значение', this.value)
   }
 
   static getSchema(): Schema {

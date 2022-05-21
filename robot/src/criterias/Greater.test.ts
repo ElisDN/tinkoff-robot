@@ -1,6 +1,15 @@
 import Static from './Static'
-import { Data, Result } from '../robot/criteria'
+import { Data, Metric, Result } from '../robot/criteria'
 import Greater from './Greater'
+
+test('greater metrics', () => {
+  const criteria = new Greater(new Static(11, 'id-1'), new Static(22, 'id-2'))
+  const result = criteria.eval(Data.blank(), Result.of(5))
+  expect(result.metrics).toEqual<Metric[]>([
+    { id: 'id-1', name: 'Значение', value: 11 },
+    { id: 'id-2', name: 'Значение', value: 22 },
+  ])
+})
 
 test('greater true', () => {
   const criteria = new Greater(new Static(5.2), new Static(3.6))

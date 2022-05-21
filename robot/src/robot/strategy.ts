@@ -14,7 +14,7 @@ export class OrderRequest {
 }
 
 export type TickResult = {
-  orderRequest: OrderRequest | null
+  request: OrderRequest | null
   metrics: Metric[]
 }
 
@@ -49,7 +49,7 @@ export class Strategy {
     }
 
     return {
-      orderRequest: request,
+      request: request,
       metrics: [...buyResult.metrics, ...sellResult.metrics],
     }
   }

@@ -12,7 +12,8 @@ class Not implements Criteria {
   }
 
   eval(data: Data, result: Result): Result {
-    return result.withValue(!this.that.eval(data, result).value ? 1 : 0)
+    const that = this.that.eval(data, result)
+    return result.withValue(!that.value ? 1 : 0).withMetrics(that.metrics)
   }
 
   static getSchema(): Schema {

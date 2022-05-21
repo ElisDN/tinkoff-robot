@@ -14,7 +14,12 @@ class Greater implements Criteria {
   }
 
   eval(data: Data, result: Result): Result {
-    return result.withValue(this.that.eval(data, result).value > this.than.eval(data, result).value ? 1 : 0)
+    const that = this.that.eval(data, result)
+    const than = this.than.eval(data, result)
+    return result
+      .withValue(that.value > than.value ? 1 : 0)
+      .withMetrics(that.metrics)
+      .withMetrics(than.metrics)
   }
 
   static getSchema(): Schema {

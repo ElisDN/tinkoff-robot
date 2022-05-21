@@ -1,6 +1,15 @@
 import Static from './Static'
-import { Data, Result } from '../robot/criteria'
+import { Data, Metric, Result } from '../robot/criteria'
 import Less from './Less'
+
+test('less metrics', () => {
+  const criteria = new Less(new Static(11, 'id-1'), new Static(22, 'id-2'))
+  const result = criteria.eval(Data.blank(), Result.of(5))
+  expect(result.metrics).toEqual<Metric[]>([
+    { id: 'id-1', name: 'Значение', value: 11 },
+    { id: 'id-2', name: 'Значение', value: 22 },
+  ])
+})
 
 test('less true', () => {
   const criteria = new Less(new Static(2.1), new Static(3.6))
