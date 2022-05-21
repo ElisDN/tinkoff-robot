@@ -34,7 +34,7 @@ class Or implements Criteria {
     }
   }
 
-  static blank() {
+  static fromJSONParams() {
     return new Or(new None(), new None())
   }
 

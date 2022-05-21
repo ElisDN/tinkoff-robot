@@ -27,7 +27,7 @@ class Not implements Criteria {
     }
   }
 
-  static blank() {
+  static fromJSONParams() {
     return new Not(new None())
   }
 

@@ -34,7 +34,7 @@ class Greater implements Criteria {
     }
   }
 
-  static blank() {
+  static fromJSONParams() {
     return new Greater(new None(), new None())
   }
 

@@ -1,4 +1,4 @@
-import { Criteria, JsonView, Schema } from '../robot/criteria'
+import { Criteria, JsonParamView, JsonView, Param, Schema } from '../robot/criteria'
 import { v4 } from 'uuid'
 import None from './None'
 
@@ -26,12 +26,13 @@ class Static implements Criteria {
     }
   }
 
-  static blank() {
-    return new Static(0)
+  static fromJSONParams(params: JsonParamView[]) {
+    const value = params.find((param) => param.type === 'value')
+    return new Static(value?.value || 0)
   }
 
   static fromJSON(data: JsonView) {
-    const value = data.params.find((input) => input.type === 'value')
+    const value = data.params.find((param) => param.type === 'value')
     return new Static(value?.value || 0, data.id)
   }
 

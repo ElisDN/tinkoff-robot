@@ -34,7 +34,7 @@ class And implements Criteria {
     }
   }
 
-  static blank() {
+  static fromJSONParams() {
     return new And(new None(), new None())
   }
 

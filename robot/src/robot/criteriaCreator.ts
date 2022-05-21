@@ -1,4 +1,4 @@
-import { Criteria, JsonView, Schema } from './criteria'
+import { Criteria, JsonParamView, JsonView, Schema } from './criteria'
 import NotFound from '../criterias/NotFound'
 import None from '../criterias/None'
 
@@ -7,7 +7,7 @@ export type AvailableCriteria = {
   // eslint-disable-next-line @typescript-eslint/ban-types
   fromJSON: Function
   // eslint-disable-next-line @typescript-eslint/ban-types
-  blank: Function
+  fromJSONParams: Function
 }
 
 export class CriteriaCreator {
@@ -17,12 +17,12 @@ export class CriteriaCreator {
     this.available = available
   }
 
-  createCriteria(type: string): Criteria {
+  createCriteria(type: string, params: JsonParamView[]): Criteria {
     const root = this.available.find((available) => available.schema.type === type)
     if (!root) {
       return new NotFound()
     }
-    return root.blank()
+    return root.fromJSONParams(params)
   }
 
   restoreCriteria(data: JsonView | null): Criteria {

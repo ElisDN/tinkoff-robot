@@ -34,7 +34,7 @@ class Less implements Criteria {
     }
   }
 
-  static blank() {
+  static fromJSONParams() {
     return new Less(new None(), new None())
   }
 

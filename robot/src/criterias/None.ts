@@ -18,7 +18,7 @@ class None implements Criteria {
     }
   }
 
-  static blank() {
+  static fromJSONParams() {
     return new None()
   }
 

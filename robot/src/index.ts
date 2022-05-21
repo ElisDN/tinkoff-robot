@@ -62,14 +62,14 @@ const portfolioService = new PortfolioService(client)
 const candlesService = new CandlesService(client, cache)
 
 const criteriaCreator = new CriteriaCreator([
-  { schema: And.getSchema(), fromJSON: And.fromJSON, blank: And.blank },
-  { schema: Or.getSchema(), fromJSON: Or.fromJSON, blank: Or.blank },
-  { schema: Not.getSchema(), fromJSON: Not.fromJSON, blank: Not.blank },
-  { schema: None.getSchema(), fromJSON: None.fromJSON, blank: None.blank },
-  { schema: Static.getSchema(), fromJSON: Static.fromJSON, blank: Static.blank },
-  { schema: Price.getSchema(), fromJSON: Price.fromJSON, blank: Price.blank },
-  { schema: Greater.getSchema(), fromJSON: Greater.fromJSON, blank: Greater.blank },
-  { schema: Less.getSchema(), fromJSON: Less.fromJSON, blank: Less.blank },
+  { schema: And.getSchema(), fromJSON: And.fromJSON, fromJSONParams: And.fromJSONParams },
+  { schema: Or.getSchema(), fromJSON: Or.fromJSON, fromJSONParams: Or.fromJSONParams },
+  { schema: Not.getSchema(), fromJSON: Not.fromJSON, fromJSONParams: Not.fromJSONParams },
+  { schema: None.getSchema(), fromJSON: None.fromJSON, fromJSONParams: None.fromJSONParams },
+  { schema: Static.getSchema(), fromJSON: Static.fromJSON, fromJSONParams: Static.fromJSONParams },
+  { schema: Price.getSchema(), fromJSON: Price.fromJSON, fromJSONParams: Price.fromJSONParams },
+  { schema: Greater.getSchema(), fromJSON: Greater.fromJSON, fromJSONParams: Greater.fromJSONParams },
+  { schema: Less.getSchema(), fromJSON: Less.fromJSON, fromJSONParams: Less.fromJSONParams },
 ])
 
 const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), criteriaCreator)
@@ -163,7 +163,7 @@ app.put('/api/accounts/:account/robots/:robot/strategy/:criteria', async functio
   if (!req.body.type) {
     return res.status(422).json({ message: 'Укажите тип критерия' })
   }
-  const criteria = criteriaCreator.createCriteria(req.body.type)
+  const criteria = criteriaCreator.createCriteria(req.body.type, req.body.params || [])
   await robotsService.changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
     return strategy.with(req.params.criteria, criteria)
   })

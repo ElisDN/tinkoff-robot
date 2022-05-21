@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Block, { Criteria, Schema } from './Block'
+import Block, { Criteria, CriteriaParam, Schema } from './Block'
 import useAuth from '../../../../auth/useAuth'
 import api from '../../../../api/api'
 
@@ -65,7 +65,7 @@ function StrategyEditor({ accountId, robotId }: Props) {
       .catch(() => null)
   }
 
-  const replaceCriteria = (id: string, type: string) => {
+  const replaceCriteria = (id: string, type: string, params: CriteriaParam[]) => {
     setError(null)
     getToken()
       .then((token) => {
@@ -75,7 +75,7 @@ function StrategyEditor({ accountId, robotId }: Props) {
             'Content-Type': 'application/json',
             Authorization: 'Bearer ' + token,
           },
-          body: JSON.stringify({ type }),
+          body: JSON.stringify({ type, params }),
         })
           .then(() => loadStrategy())
           .catch((error) => setError(error.message || error.statusText))

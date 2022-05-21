@@ -19,7 +19,7 @@ class NotFound implements Criteria {
     }
   }
 
-  static blank() {
+  static fromJSONParams() {
     return new NotFound()
   }
 

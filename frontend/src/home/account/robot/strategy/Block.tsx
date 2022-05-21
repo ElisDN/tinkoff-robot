@@ -5,7 +5,7 @@ type Props = {
   schemas: Schema[]
   criteria: Criteria
   remove: (id: string) => void
-  replace: (id: string, type: string) => void
+  replace: (id: string, type: string, params: CriteriaParam[]) => void
 }
 
 export type SchemaParam = {
@@ -58,8 +58,12 @@ function Block({ schemas, criteria, remove, replace }: Props) {
     )
   }
 
+  const handleParamReady = () => {
+    replace(criteria.id, criteria.type, paramsFormData)
+  }
+
   const handleTypeChange = (event: React.FormEvent<HTMLSelectElement>) => {
-    replace(criteria.id, event.currentTarget.value)
+    replace(criteria.id, event.currentTarget.value, criteria.params)
   }
 
   const schema = schemas.find((schema) => schema.type === criteria.type)
@@ -85,6 +89,7 @@ function Block({ schemas, criteria, remove, replace }: Props) {
                           name={schemaParam.type}
                           value={formParam?.value?.toString()}
                           onChange={handleParamChange}
+                          onBlur={handleParamReady}
                         />
                       </div>
                     )

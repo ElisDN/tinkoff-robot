@@ -19,7 +19,7 @@ class Price implements Criteria {
     }
   }
 
-  static blank() {
+  static fromJSONParams() {
     return new Price()
   }
 
