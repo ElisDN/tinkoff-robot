@@ -12,8 +12,8 @@
     "start": "nodemon -e ts,js ./src/index.ts",
     "build": "tsc",
     "test": "jest",
-    "lint": "eslint . --ext .js,.ts",
-    "lint-fix": "eslint . --fix --ext .js,.ts",
+    "eslint": "eslint . --ext .js,.ts",
+    "eslint-fix": "eslint . --fix --ext .js,.ts",
     "prettier": "prettier --write \"**/*.+(js|jsx|ts|tsx|json|css|md)\"",
     "proto": "grpc_tools_node_protoc --ts_proto_opt=esModuleInterop=true --ts_proto_out=./src/tinkoff/contracts --ts_proto_opt=outputServices=generic-definitions,useExactTypes=false -I ./protos/ ./protos/*.proto"
   },

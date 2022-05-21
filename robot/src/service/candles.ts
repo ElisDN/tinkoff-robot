@@ -1,6 +1,6 @@
 import { Client } from '../sdk/client'
 import { CandleInterval, HistoricCandle } from '../sdk/contracts/marketdata'
-import { CacheContainer } from "node-ts-cache";
+import { CacheContainer } from 'node-ts-cache'
 
 class CandlesService {
   private readonly client: Client
@@ -19,9 +19,9 @@ class CandlesService {
       return cached
     }
 
-    let candles:HistoricCandle[] = []
+    const candles: HistoricCandle[] = []
 
-    let fromDate = new Date(from)
+    const fromDate = new Date(from)
     fromDate.setDate(fromDate.getDate() - 1)
 
     while (fromDate <= to) {
@@ -40,7 +40,7 @@ class CandlesService {
     }
 
     await this.cache.setItem(cacheKey, candles, {
-      ttl: 10
+      ttl: 10,
     })
 
     return candles

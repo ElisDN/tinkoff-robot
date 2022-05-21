@@ -22,8 +22,8 @@ import { Strategy } from './robot/strategy'
 import And from './criterias/And'
 import Or from './criterias/Or'
 import Not from './criterias/Not'
-import { CacheContainer } from "node-ts-cache";
-import { MemoryStorage } from "node-ts-cache-storage-memory";
+import { CacheContainer } from 'node-ts-cache'
+import { MemoryStorage } from 'node-ts-cache-storage-memory'
 
 // Configuration
 

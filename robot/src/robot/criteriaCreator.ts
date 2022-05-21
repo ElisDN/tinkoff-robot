@@ -6,6 +6,7 @@ export type AvailableCriteria = {
   schema: Schema
   // eslint-disable-next-line @typescript-eslint/ban-types
   fromJSON: Function
+  // eslint-disable-next-line @typescript-eslint/ban-types
   blank: Function
 }
 
