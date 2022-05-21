@@ -169,10 +169,10 @@ app.put('/api/accounts/:account/robots/:robot/strategy/:criteria', async functio
 
 app.get('/api/accounts/:account/robots/:robot/candles', async function (req, res) {
   const robot = robotsService.view(req.params.account, req.params.robot)
-  const date = new Date()
-  date.setDate(date.getDate() - 1)
+  const from = new Date()
+  from.setDate(from.getDate() - 5)
   candlesService
-    .getFrom(robot.figi, date)
+    .get(robot.figi, from, new Date())
     .then((candles) => res.json(candles))
     .catch((err) => res.status(500).json({ message: err.message }))
 })

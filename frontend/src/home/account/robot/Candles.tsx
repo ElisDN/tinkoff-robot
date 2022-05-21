@@ -25,7 +25,7 @@ interface Candle {
 function Candles({ accountId, robotId }: Props) {
   const { getToken } = useAuth()
 
-  const [barWidth, setBarWidth] = useState<number>(2)
+  const [barWidth, setBarWidth] = useState<number>(1)
   const [candles, setCandles] = useState<Candle[] | null>(null)
   const [error, setError] = useState(null)
 
