@@ -1,5 +1,22 @@
-import { Criteria } from './criteria'
+import { Criteria, Data, Metric, Result } from './criteria'
 import None from '../criterias/None'
+
+export class OrderRequest {
+  constructor(public readonly buy: boolean) {}
+
+  static buy() {
+    return new OrderRequest(true)
+  }
+
+  static sell() {
+    return new OrderRequest(false)
+  }
+}
+
+export type TickResult = {
+  orderRequest: OrderRequest | null
+  metrics: Metric[]
+}
 
 export class Strategy {
   public readonly buy: Criteria
@@ -12,6 +29,29 @@ export class Strategy {
 
   static blank() {
     return new Strategy(new None(), new None())
+  }
+
+  eval(data: Data): TickResult {
+    const buyResult = this.buy.eval(data, Result.blank())
+    const sellResult = this.sell.eval(data, Result.blank())
+
+    const isNeededBuy = (!data.order || !data.order.buy) && buyResult.value
+    const isNeededSell = data.order && data.order.buy && sellResult.value
+
+    let request: OrderRequest | null = null
+
+    if (isNeededBuy) {
+      request = OrderRequest.buy()
+    }
+
+    if (isNeededSell) {
+      request = OrderRequest.sell()
+    }
+
+    return {
+      orderRequest: request,
+      metrics: [...buyResult.metrics, ...sellResult.metrics],
+    }
   }
 
   without(criteriaId: string) {

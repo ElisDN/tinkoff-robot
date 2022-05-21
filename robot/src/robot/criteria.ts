@@ -1,3 +1,5 @@
+import { OrderState } from '../sdk/contracts/orders'
+
 export type Param = {
   type: string
   name: string
@@ -34,15 +36,27 @@ export type JsonInputView = {
   value: JsonView | null
 }
 
+type Order = {
+  id: string
+  date: Date
+  buy: boolean
+  lots: number
+  price: number
+}
+
 export class Data {
-  constructor(public readonly date: Date, public readonly price: number) {}
+  constructor(public readonly date: Date, public readonly price: number, public readonly order: Order | null) {}
 
   static blank(date: Date = new Date()): Data {
-    return new Data(date, 0)
+    return new Data(date, 0, null)
   }
 
   withPrice(price: number) {
-    return new Data(this.date, price)
+    return new Data(this.date, price, this.order)
+  }
+
+  withOrder(order: Order) {
+    return new Data(this.date, this.price, order)
   }
 }
 

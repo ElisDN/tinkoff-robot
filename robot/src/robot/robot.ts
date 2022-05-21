@@ -1,4 +1,5 @@
-import { Strategy } from './strategy'
+import { Strategy, TickResult } from './strategy'
+import { Data } from './criteria'
 
 class Robot {
   private readonly id: string
@@ -11,6 +12,10 @@ class Robot {
     this.accountId = accountId
     this.figi = figi
     this.strategy = strategy
+  }
+
+  tick(data: Data): TickResult {
+    return this.strategy.eval(data)
   }
 
   is(accountId: string, id: string): boolean {
