@@ -1,4 +1,4 @@
-import { Criteria, JsonView, Schema } from '../robot/criteria'
+import { Criteria, Data, JsonView, Result, Schema } from '../robot/criteria'
 import { v4 } from 'uuid'
 import None from './None'
 
@@ -9,6 +9,10 @@ class Not implements Criteria {
   constructor(that: Criteria, id: string = v4()) {
     this.id = id
     this.that = that
+  }
+
+  eval(data: Data, result: Result): Result {
+    return result.withValue(!this.that.eval(data, result).value ? 1 : 0)
   }
 
   static getSchema(): Schema {

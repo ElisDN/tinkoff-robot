@@ -1,4 +1,4 @@
-import { Criteria, JsonView, Schema } from '../robot/criteria'
+import { Criteria, Data, JsonView, Result, Schema } from '../robot/criteria'
 import { v4 } from 'uuid'
 import None from './None'
 
@@ -11,6 +11,10 @@ class Or implements Criteria {
     this.id = id
     this.one = one
     this.two = two
+  }
+
+  eval(data: Data, result: Result): Result {
+    return result.withValue(this.one.eval(data, result).value || this.two.eval(data, result).value ? 1 : 0)
   }
 
   static getSchema(): Schema {
