@@ -22,6 +22,8 @@ import { Strategy } from './robot/strategy'
 import And from './criterias/And'
 import Or from './criterias/Or'
 import Not from './criterias/Not'
+import { CacheContainer } from "node-ts-cache";
+import { MemoryStorage } from "node-ts-cache-storage-memory";
 
 // Configuration
 
@@ -51,12 +53,13 @@ if (!tinkoffToken) {
 // Services
 
 const logger = createLogger()
+const cache = new CacheContainer(new MemoryStorage())
 
 const client = createSdk(tinkoffHost, tinkoffToken, tinkoffApp, logger)
 
 const accountsService = new AccountsService(client)
 const portfolioService = new PortfolioService(client)
-const candlesService = new CandlesService(client)
+const candlesService = new CandlesService(client, cache)
 
 const criteriaCreator = new CriteriaCreator([
   { schema: And.getSchema(), fromJSON: And.fromJSON, blank: And.blank },
