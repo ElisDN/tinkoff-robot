@@ -2,6 +2,11 @@ import Robot from './robot'
 import RobotsStorage from './robotsStorage'
 import { Strategy } from './strategy'
 
+type RobotView = {
+  id: string
+  figi: string
+}
+
 class RobotsPool {
   private readonly storage: RobotsStorage
   private robots: Robot[] = []
@@ -21,10 +26,7 @@ class RobotsPool {
   }
 
   async remove(accountId: string, id: string) {
-    const robot = this.robots.find((robot) => robot.getId() === id)
-    if (!robot) {
-      throw new Error('Робот не найден')
-    }
+    const robot = this.get(accountId, id)
     const index = this.robots.indexOf(robot)
     if (index > -1) {
       this.robots.splice(index, 1)
@@ -33,25 +35,40 @@ class RobotsPool {
   }
 
   async changeStrategy(accountId: string, id: string, callback: (strategy: Strategy) => Strategy) {
-    const robot = this.robots.find((robot) => robot.getId() === id)
-    if (!robot) {
-      throw new Error('Робот не найден')
-    }
+    const robot = this.get(accountId, id)
     const strategy = callback(robot.getStrategy())
     robot.changeStrategy(strategy)
     await this.storage.save(robot)
   }
 
-  get(accountId: string, id: string): Robot {
-    const robot = this.robots.find((robot) => robot.getId() === id)
+  view(accountId: string, id: string): RobotView {
+    const robot = this.get(accountId, id)
+    return {
+      id: robot.getId(),
+      figi: robot.getFigi(),
+    }
+  }
+
+  viewAll(accountId: string): RobotView[] {
+    return this.robots
+      .filter((robot) => robot.getAccountId() === accountId)
+      .map((robot) => ({
+        id: robot.getId(),
+        figi: robot.getFigi(),
+      }))
+  }
+
+  viewStrategy(accountId: string, id: string): Strategy {
+    const robot = this.get(accountId, id)
+    return robot.getStrategy()
+  }
+
+  private get(accountId: string, id: string): Robot {
+    const robot = this.robots.find((robot) => robot.is(accountId, id))
     if (!robot) {
       throw new Error('Робот не найден')
     }
     return robot
-  }
-
-  getAll(accountId: string): Robot[] {
-    return this.robots.filter((robot) => robot.getAccountId() === accountId)
   }
 }
 

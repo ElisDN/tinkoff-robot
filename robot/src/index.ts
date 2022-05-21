@@ -114,13 +114,8 @@ app.get('/api/accounts/:account/portfolio', async function (req, res) {
 })
 
 app.get('/api/accounts/:account/robots', async function (req, res) {
-  const robots = robotsService.getAll(req.params.account)
-  res.json(
-    robots.map((robot) => ({
-      id: robot.getId(),
-      figi: robot.getFigi(),
-    }))
-  )
+  const robots = robotsService.viewAll(req.params.account)
+  res.json(robots)
 })
 
 app.post('/api/accounts/:account/robots', async function (req, res) {
@@ -134,11 +129,8 @@ app.post('/api/accounts/:account/robots', async function (req, res) {
 })
 
 app.get('/api/accounts/:account/robots/:robot', async function (req, res) {
-  const robot = robotsService.get(req.params.account, req.params.robot)
-  res.json({
-    id: robot.getId(),
-    figi: robot.getFigi(),
-  })
+  const robot = robotsService.view(req.params.account, req.params.robot)
+  res.json(robot)
 })
 
 app.delete('/api/accounts/:account/robots/:robot', async function (req, res) {
@@ -153,8 +145,8 @@ app.get('/api/criterias', async function (req, res) {
 })
 
 app.get('/api/accounts/:account/robots/:robot/strategy', async function (req, res) {
-  const robot = robotsService.get(req.params.account, req.params.robot)
-  res.json(robot.getStrategy())
+  const strategy = robotsService.viewStrategy(req.params.account, req.params.robot)
+  res.json(strategy)
 })
 
 app.delete('/api/accounts/:account/robots/:robot/strategy/:criteria', async function (req, res) {
@@ -176,11 +168,11 @@ app.put('/api/accounts/:account/robots/:robot/strategy/:criteria', async functio
 })
 
 app.get('/api/accounts/:account/robots/:robot/candles', async function (req, res) {
-  const robot = robotsService.get(req.params.account, req.params.robot)
+  const robot = robotsService.view(req.params.account, req.params.robot)
   const date = new Date()
   date.setDate(date.getDate() - 1)
   candlesService
-    .getFrom(robot.getFigi(), date)
+    .getFrom(robot.figi, date)
     .then((candles) => res.json(candles))
     .catch((err) => res.status(500).json({ message: err.message }))
 })

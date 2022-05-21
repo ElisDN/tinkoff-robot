@@ -13,6 +13,10 @@ class Robot {
     this.strategy = strategy
   }
 
+  is(accountId: string, id: string): boolean {
+    return this.accountId === accountId && this.id === id
+  }
+
   isFor(accountId: string, figi: string): boolean {
     return this.accountId === accountId && this.figi === figi
   }
