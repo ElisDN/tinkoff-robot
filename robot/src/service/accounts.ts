@@ -1,5 +1,5 @@
-import { Account as ClientAccount, AccountStatus } from '../tinkoff/contracts/users'
-import { Client } from '../tinkoff/client'
+import { Account as ClientAccount, AccountStatus } from '../sdk/contracts/users'
+import { Client } from '../sdk/client'
 
 export type Account = {
   real: boolean
