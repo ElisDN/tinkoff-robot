@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './Block.module.scss'
 
 type Props = {
@@ -45,6 +45,19 @@ export type CriteriaInput = {
 }
 
 function Block({ schemas, criteria, remove, replace }: Props) {
+  const [paramsFormData, setParamsFormData] = useState<CriteriaParam[]>(criteria.params)
+
+  const handleParamChange = (event: React.FormEvent<HTMLInputElement>) => {
+    setParamsFormData(
+      paramsFormData.map((data) => {
+        if (data.type === event.currentTarget.name) {
+          return { ...data, value: parseFloat(event.currentTarget.value) }
+        }
+        return data
+      })
+    )
+  }
+
   const handleTypeChange = (event: React.FormEvent<HTMLSelectElement>) => {
     replace(criteria.id, event.currentTarget.value)
   }
@@ -62,15 +75,17 @@ function Block({ schemas, criteria, remove, replace }: Props) {
               {schema.params ? (
                 <div className={styles.params}>
                   {schema.params.map((schemaParam) => {
-                    const criteriaParam = criteria.params.find(
-                      (criteriaParam) => criteriaParam.type === schemaParam.type
-                    )
-                    const value = criteriaParam?.value?.toString()
+                    const formParam = paramsFormData.find((field) => field.type === schemaParam.type)
 
                     return (
                       <div key={'criteria-' + criteria.id + '-param-' + schemaParam.type} className={styles.param}>
                         <label>{schemaParam.name}</label>
-                        <input type="number" name={schemaParam.type} value={value} onChange={() => null} />
+                        <input
+                          type="number"
+                          name={schemaParam.type}
+                          value={formParam?.value?.toString()}
+                          onChange={handleParamChange}
+                        />
                       </div>
                     )
                   })}
