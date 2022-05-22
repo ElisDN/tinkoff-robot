@@ -61,7 +61,7 @@ const client = createSdk(tinkoffHost, tinkoffToken, tinkoffApp, logger)
 
 const accountsService = new AccountsService(client)
 const instrumentsService = new InstrumentsService(client, cache)
-const portfolioService = new PortfolioService(client, instrumentsService)
+const portfolioService = new PortfolioService(client)
 const candlesService = new CandlesService(client, cache)
 
 const availableCriterias = new AvailableCriterias([
@@ -116,7 +116,20 @@ app.delete('/api/sandbox/accounts/:account', async function (req, res) {
 app.get('/api/accounts/:account/portfolio', async function (req, res) {
   const account = await accountsService.get(req.params.account)
   const positions = await portfolioService.getPositions(account)
-  res.json(positions)
+  res.json(
+    (
+      await Promise.all(
+        positions.map(async (position) => {
+          const instrument = await instrumentsService.getByFigi(position.figi)
+          return {
+            ...position,
+            name: instrument.name,
+            ticker: instrument.ticker,
+          }
+        })
+      )
+    ).sort((a, b) => a.name.localeCompare(b.name))
+  )
 })
 
 app.get('/api/accounts/:account/robots', async function (req, res) {
