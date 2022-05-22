@@ -74,7 +74,7 @@ const availableCriterias = new AvailableCriterias([
 ])
 
 const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), availableCriterias)
-const robotsService = new RobotsPool(robotsStorage)
+const robotsPool = new RobotsPool(robotsStorage)
 
 // HTTP API Server
 
@@ -118,7 +118,7 @@ app.get('/api/accounts/:account/portfolio', async function (req, res) {
 })
 
 app.get('/api/accounts/:account/robots', async function (req, res) {
-  const robots = robotsService.viewAll(req.params.account)
+  const robots = robotsPool.viewAll(req.params.account)
   res.json(robots)
 })
 
@@ -126,19 +126,19 @@ app.post('/api/accounts/:account/robots', async function (req, res) {
   if (!req.body.figi) {
     return res.status(422).json({ message: 'Заполните FIGI' })
   }
-  robotsService
+  robotsPool
     .add(req.params.account, uuid(), req.body.figi)
     .then(() => res.status(201).end())
     .catch((err) => res.status(400).json({ message: err.message }))
 })
 
 app.get('/api/accounts/:account/robots/:robot', async function (req, res) {
-  const robot = robotsService.view(req.params.account, req.params.robot)
+  const robot = robotsPool.view(req.params.account, req.params.robot)
   res.json(robot)
 })
 
 app.delete('/api/accounts/:account/robots/:robot', async function (req, res) {
-  robotsService
+  robotsPool
     .remove(req.params.account, req.params.robot)
     .then(() => res.status(204).end())
     .catch((err) => res.status(400).json({ message: err.message }))
@@ -149,12 +149,12 @@ app.get('/api/criterias', async function (req, res) {
 })
 
 app.get('/api/accounts/:account/robots/:robot/strategy', async function (req, res) {
-  const strategy = robotsService.viewStrategy(req.params.account, req.params.robot)
+  const strategy = robotsPool.viewStrategy(req.params.account, req.params.robot)
   res.json(strategy)
 })
 
 app.delete('/api/accounts/:account/robots/:robot/strategy/:criteria', async function (req, res) {
-  await robotsService.changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
+  await robotsPool.changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
     return strategy.remove(req.params.criteria)
   })
   res.end()
@@ -165,14 +165,14 @@ app.put('/api/accounts/:account/robots/:robot/strategy/:criteria', async functio
     return res.status(422).json({ message: 'Укажите тип критерия' })
   }
   const criteria = availableCriterias.get(req.body.type)
-  await robotsService.changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
+  await robotsPool.changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
     return strategy.replace(req.params.criteria, criteria, Params.fromJSON(req.body.params || []))
   })
   res.status(201).end()
 })
 
 app.get('/api/accounts/:account/robots/:robot/candles', async function (req, res) {
-  const robot = robotsService.view(req.params.account, req.params.robot)
+  const robot = robotsPool.view(req.params.account, req.params.robot)
   const from = new Date()
   from.setDate(from.getDate() - 4)
   candlesService
