@@ -8,6 +8,8 @@ type Props = {
 
 type Position = {
   figi: string
+  name: string
+  ticker: string
   quantity: number | null
   currentPrice: number | null
   quantityLots: number | null
@@ -52,6 +54,8 @@ function Portfolio({ accountId }: Props) {
           <thead>
             <tr>
               <th>FIGI</th>
+              <th>Тикер</th>
+              <th>Имя</th>
               <th style={{ textAlign: 'right' }}>Лотов</th>
               <th style={{ textAlign: 'right' }}>Цена</th>
               <th style={{ textAlign: 'right' }}>Единиц</th>
@@ -62,6 +66,8 @@ function Portfolio({ accountId }: Props) {
             {positions.map((position) => (
               <tr key={'position-' + position.figi}>
                 <td>{position.figi}</td>
+                <td>{position.ticker}</td>
+                <td>{position.name}</td>
                 <td style={{ textAlign: 'right' }}>{position.quantityLots}</td>
                 <td style={{ textAlign: 'right' }}>
                   {position.currentPrice ? formatPrice(position.currentPrice) : ''}

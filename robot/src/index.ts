@@ -25,6 +25,7 @@ import Not from './criterias/Not'
 import { CacheContainer } from 'node-ts-cache'
 import { MemoryStorage } from 'node-ts-cache-storage-memory'
 import { Params } from './robot/node'
+import InstrumentsService from './service/instruments'
 
 // Configuration
 
@@ -59,7 +60,8 @@ const cache = new CacheContainer(new MemoryStorage())
 const client = createSdk(tinkoffHost, tinkoffToken, tinkoffApp, logger)
 
 const accountsService = new AccountsService(client)
-const portfolioService = new PortfolioService(client)
+const instrumentsService = new InstrumentsService(client, cache)
+const portfolioService = new PortfolioService(client, instrumentsService)
 const candlesService = new CandlesService(client, cache)
 
 const availableCriterias = new AvailableCriterias([
