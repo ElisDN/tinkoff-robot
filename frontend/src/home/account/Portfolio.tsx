@@ -51,7 +51,7 @@ function Portfolio({ accountId }: Props) {
       <div className="card-header">Портфолио</div>
       {error ? <div className="alert alert-danger my-0">{error}</div> : null}
       {positions !== null ? (
-        <table className="table table-striped my-0">
+        <table className="table table-striped align-middle my-0">
           <thead>
             <tr>
               <th>FIGI</th>

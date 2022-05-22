@@ -99,7 +99,7 @@ function Robots({ accountId }: Props) {
       <div className="card-header">Роботы</div>
       {error ? <div className="alert alert-danger my-0">{error}</div> : null}
       {robots !== null ? (
-        <table className="table my-0">
+        <table className="table align-middle my-0">
           <tbody>
             {robots.map((robot) => (
               <tr key={'robot-' + robot.id}>

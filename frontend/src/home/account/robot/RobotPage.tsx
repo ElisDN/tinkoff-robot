@@ -65,7 +65,7 @@ function RobotPage() {
         <div className="card-header">Робот</div>
         {error ? <div className="alert alert-danger my-0">{error}</div> : null}
         {robot !== null ? (
-          <table className="table my-0">
+          <table className="table align-middle my-0">
             <tbody>
               <tr>
                 <td>{robot.name}</td>

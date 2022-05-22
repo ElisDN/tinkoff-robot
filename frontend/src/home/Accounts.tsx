@@ -67,7 +67,7 @@ function Accounts() {
       <div className="card-header">Счета</div>
       {error ? <div className="alert alert-danger my-0">{error}</div> : null}
       {accounts !== null ? (
-        <table className="table my-0">
+        <table className="table align-middle my-0">
           <tbody>
             {accounts.map((account) => (
               <tr key={'account-' + account.id}>
