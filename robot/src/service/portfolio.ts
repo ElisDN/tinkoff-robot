@@ -30,7 +30,7 @@ class PortfolioService {
     } else {
       response = await this.client.sandbox.getSandboxPortfolio({ accountId: account.id })
     }
-    return Promise.all(
+    const positions = await Promise.all<Position>(
       response.positions.map<Promise<Position>>(async (position) => {
         const instrument = await this.instruments.getByFigi(position.figi)
 
@@ -49,6 +49,8 @@ class PortfolioService {
         }
       })
     )
+
+    return positions.sort((a, b) => a.name.localeCompare(b.name))
   }
 }
 
