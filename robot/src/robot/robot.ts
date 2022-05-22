@@ -3,12 +3,14 @@ import { Data } from './trading'
 
 class Robot {
   private readonly id: string
+  private readonly name: string
   private readonly accountId: string
   private readonly figi: string
   private strategy: Strategy
 
-  constructor(id: string, accountId: string, figi: string, strategy: Strategy) {
+  constructor(id: string, name: string, accountId: string, figi: string, strategy: Strategy) {
     this.id = id
+    this.name = name
     this.accountId = accountId
     this.figi = figi
     this.strategy = strategy
@@ -40,6 +42,10 @@ class Robot {
 
   getFigi(): string {
     return this.figi
+  }
+
+  getName(): string {
+    return this.name
   }
 
   getStrategy(): Strategy {

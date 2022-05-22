@@ -139,9 +139,8 @@ app.get('/api/accounts/:account/robots', async function (req, res) {
       robots.map(async (robot) => {
         const instrument = await instrumentsService.getByFigi(robot.figi)
         return {
-          id: robot.id,
-          figi: robot.figi,
-          name: instrument.name,
+          ...robot,
+          instrument: instrument.name,
         }
       })
     )
@@ -152,8 +151,11 @@ app.post('/api/accounts/:account/robots', async function (req, res) {
   if (!req.body.figi) {
     return res.status(422).json({ message: 'Заполните FIGI' })
   }
+  if (!req.body.name) {
+    return res.status(422).json({ message: 'Заполните имя' })
+  }
   robotsPool
-    .add(req.params.account, uuid(), req.body.figi)
+    .add(req.params.account, req.body.name, uuid(), req.body.figi)
     .then(() => res.status(201).end())
     .catch((err) => res.status(400).json({ message: err.message }))
 })
@@ -162,9 +164,8 @@ app.get('/api/accounts/:account/robots/:robot', async function (req, res) {
   const robot = robotsPool.view(req.params.account, req.params.robot)
   const instrument = await instrumentsService.getByFigi(robot.figi)
   res.json({
-    id: robot.id,
-    figi: robot.figi,
-    name: instrument.name,
+    ...robot,
+    instrument: instrument.name,
   })
 })
 

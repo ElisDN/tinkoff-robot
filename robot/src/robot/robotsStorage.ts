@@ -30,6 +30,7 @@ export class FileRobotsStorage implements RobotsStorage {
         const data = JSON.parse(content.toString())
         return new Robot(
           data.id,
+          data.name,
           data.accountId,
           data.figi,
           new Strategy(
@@ -45,6 +46,7 @@ export class FileRobotsStorage implements RobotsStorage {
       path.resolve(this.path, robot.getId() + '.json'),
       JSON.stringify({
         id: robot.getId(),
+        name: robot.getName(),
         accountId: robot.getAccountId(),
         figi: robot.getFigi(),
         strategy: robot.getStrategy(),

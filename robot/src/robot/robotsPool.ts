@@ -5,6 +5,7 @@ import { Strategy } from './strategy'
 type RobotView = {
   id: string
   figi: string
+  name: string
 }
 
 class RobotsPool {
@@ -16,11 +17,8 @@ class RobotsPool {
     this.robots = storage.readAll()
   }
 
-  async add(accountId: string, robotId: string, figi: string) {
-    if (this.robots.find((robot) => robot.isFor(accountId, figi))) {
-      throw new Error('Робот для этого инструмента уже есть')
-    }
-    const robot = new Robot(robotId, accountId, figi, Strategy.blank())
+  async add(accountId: string, name: string, robotId: string, figi: string) {
+    const robot = new Robot(robotId, name, accountId, figi, Strategy.blank())
     this.robots.push(robot)
     await this.storage.save(robot)
   }
@@ -46,6 +44,7 @@ class RobotsPool {
     return {
       id: robot.getId(),
       figi: robot.getFigi(),
+      name: robot.getName(),
     }
   }
 
@@ -55,6 +54,7 @@ class RobotsPool {
       .map((robot) => ({
         id: robot.getId(),
         figi: robot.getFigi(),
+        name: robot.getName(),
       }))
   }
 

@@ -11,10 +11,12 @@ type Robot = {
   id: string
   figi: string
   name: string
+  instrument: string
 }
 
 type FormData = {
   figi: string
+  name: string
 }
 
 function Robots({ accountId }: Props) {
@@ -23,7 +25,7 @@ function Robots({ accountId }: Props) {
   const [robots, setRobots] = useState<Robot[] | null>(null)
   const [error, setError] = useState(null)
 
-  const [formData, setFormData] = useState<FormData>({ figi: '' })
+  const [formData, setFormData] = useState<FormData>({ figi: '', name: '' })
 
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
     setFormData({
@@ -64,7 +66,7 @@ function Robots({ accountId }: Props) {
         body: JSON.stringify(formData),
       })
         .then(() => {
-          setFormData({ figi: '' })
+          setFormData({ figi: '', name: '' })
           loadRobots()
         })
         .catch(async (error) => {
@@ -100,11 +102,12 @@ function Robots({ accountId }: Props) {
         <table className="table my-0">
           <tbody>
             {robots.map((robot) => (
-              <tr key={'robot-' + robot.figi}>
+              <tr key={'robot-' + robot.id}>
                 <td>
-                  <Link to={'/' + accountId + '/' + robot.id}>{robot.figi}</Link>
+                  <Link to={'/' + accountId + '/' + robot.id}>{robot.name}</Link>
                 </td>
-                <td>{robot.name}</td>
+                <td>{robot.figi}</td>
+                <td>{robot.instrument}</td>
                 <td style={{ textAlign: 'right' }}>
                   <button type="button" className="btn btn-danger btn-sm" onClick={() => removeRobot(robot.id)}>
                     Удалить
@@ -119,6 +122,16 @@ function Robots({ accountId }: Props) {
         <div className="card-footer">
           <form method="post" onSubmit={handleSubmit}>
             <div className="row">
+              <div className="col-auto">
+                <input
+                  type="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="Название"
+                />
+              </div>
               <div className="col-auto">
                 <input
                   type="figi"

@@ -14,6 +14,7 @@ type AccountResponse = {
 type Robot = {
   figi: string
   name: string
+  instrument: string
 }
 
 function RobotPage() {
@@ -57,7 +58,7 @@ function RobotPage() {
               <Link to={'/' + account.id}>{account.name}</Link>
             </li>
           ) : null}
-          {robot !== null ? <li className="breadcrumb-item active">{robot.figi}</li> : null}
+          {robot !== null ? <li className="breadcrumb-item active">{robot.name}</li> : null}
         </ol>
       </nav>
       <div className="card my-3">
@@ -67,8 +68,9 @@ function RobotPage() {
           <table className="table my-0">
             <tbody>
               <tr>
-                <td>{robot.figi}</td>
                 <td>{robot.name}</td>
+                <td>{robot.figi}</td>
+                <td>{robot.instrument}</td>
               </tr>
             </tbody>
           </table>
