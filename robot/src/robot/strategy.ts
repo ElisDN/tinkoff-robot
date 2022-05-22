@@ -1,5 +1,5 @@
 import { Criteria, Data, Metric } from './criteria'
-import None from '../criterias/None'
+import { Node, Params } from './node'
 
 export class OrderRequest {
   constructor(public readonly buy: boolean) {}
@@ -19,16 +19,16 @@ export type TickResult = {
 }
 
 export class Strategy {
-  public readonly buy: Criteria
-  public readonly sell: Criteria
+  public readonly buy: Node
+  public readonly sell: Node
 
-  constructor(buy: Criteria, sell: Criteria) {
+  constructor(buy: Node, sell: Node) {
     this.buy = buy
     this.sell = sell
   }
 
   static blank() {
-    return new Strategy(new None(), new None())
+    return new Strategy(Node.forNone(), Node.forNone())
   }
 
   eval(data: Data): TickResult {
@@ -54,11 +54,11 @@ export class Strategy {
     }
   }
 
-  without(criteriaId: string) {
-    return new Strategy(this.buy.without(criteriaId), this.sell.without(criteriaId))
+  remove(criteriaId: string) {
+    return new Strategy(this.buy.remove(criteriaId), this.sell.remove(criteriaId))
   }
 
-  with(criteriaId: string, criteria: Criteria) {
-    return new Strategy(this.buy.with(criteriaId, criteria), this.sell.with(criteriaId, criteria))
+  replace(criteriaId: string, criteria: Criteria, params: Params) {
+    return new Strategy(this.buy.replace(criteriaId, criteria, params), this.sell.replace(criteriaId, criteria, params))
   }
 }

@@ -2,8 +2,9 @@ import Robot from './robot'
 import { promises } from 'fs'
 import * as path from 'path'
 import * as fs from 'fs'
+import { Node } from './node'
 import { Strategy } from './strategy'
-import { CriteriaCreator } from './criteriaCreator'
+import { AvailableCriterias } from './availableCriterias'
 
 interface RobotsStorage {
   readAll(): Robot[]
@@ -13,11 +14,11 @@ interface RobotsStorage {
 
 export class FileRobotsStorage implements RobotsStorage {
   private readonly path: string
-  private readonly criteriaCreator: CriteriaCreator
+  private readonly criterias: AvailableCriterias
 
-  constructor(path: string, criteriaCreator: CriteriaCreator) {
+  constructor(path: string, criterias: AvailableCriterias) {
     this.path = path
-    this.criteriaCreator = criteriaCreator
+    this.criterias = criterias
   }
 
   readAll(): Robot[] {
@@ -32,8 +33,8 @@ export class FileRobotsStorage implements RobotsStorage {
           data.accountId,
           data.figi,
           new Strategy(
-            this.criteriaCreator.restoreCriteria(data.strategy.buy),
-            this.criteriaCreator.restoreCriteria(data.strategy.sell)
+            Node.fromJSON(data.strategy.buy, this.criterias),
+            Node.fromJSON(data.strategy.sell, this.criterias)
           )
         )
       })

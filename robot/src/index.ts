@@ -17,13 +17,14 @@ import None from './criterias/None'
 import Static from './criterias/Static'
 import Price from './criterias/Price'
 import Less from './criterias/Less'
-import { CriteriaCreator } from './robot/criteriaCreator'
+import { AvailableCriterias } from './robot/availableCriterias'
 import { Strategy } from './robot/strategy'
 import And from './criterias/And'
 import Or from './criterias/Or'
 import Not from './criterias/Not'
 import { CacheContainer } from 'node-ts-cache'
 import { MemoryStorage } from 'node-ts-cache-storage-memory'
+import { Params } from './robot/node'
 
 // Configuration
 
@@ -61,18 +62,18 @@ const accountsService = new AccountsService(client)
 const portfolioService = new PortfolioService(client)
 const candlesService = new CandlesService(client, cache)
 
-const criteriaCreator = new CriteriaCreator([
-  { schema: And.getSchema(), fromJSON: And.fromJSON, fromJSONParams: And.fromJSONParams },
-  { schema: Or.getSchema(), fromJSON: Or.fromJSON, fromJSONParams: Or.fromJSONParams },
-  { schema: Not.getSchema(), fromJSON: Not.fromJSON, fromJSONParams: Not.fromJSONParams },
-  { schema: None.getSchema(), fromJSON: None.fromJSON, fromJSONParams: None.fromJSONParams },
-  { schema: Static.getSchema(), fromJSON: Static.fromJSON, fromJSONParams: Static.fromJSONParams },
-  { schema: Price.getSchema(), fromJSON: Price.fromJSON, fromJSONParams: Price.fromJSONParams },
-  { schema: Greater.getSchema(), fromJSON: Greater.fromJSON, fromJSONParams: Greater.fromJSONParams },
-  { schema: Less.getSchema(), fromJSON: Less.fromJSON, fromJSONParams: Less.fromJSONParams },
+const availableCriterias = new AvailableCriterias([
+  new And(),
+  new Or(),
+  new Not(),
+  new None(),
+  new Static(),
+  new Price(),
+  new Greater(),
+  new Less(),
 ])
 
-const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), criteriaCreator)
+const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), availableCriterias)
 const robotsService = new RobotsPool(robotsStorage)
 
 // HTTP API Server
@@ -144,7 +145,7 @@ app.delete('/api/accounts/:account/robots/:robot', async function (req, res) {
 })
 
 app.get('/api/criterias', async function (req, res) {
-  res.json(criteriaCreator.getAvailableSchemas())
+  res.json(availableCriterias.getAllSchemas())
 })
 
 app.get('/api/accounts/:account/robots/:robot/strategy', async function (req, res) {
@@ -154,7 +155,7 @@ app.get('/api/accounts/:account/robots/:robot/strategy', async function (req, re
 
 app.delete('/api/accounts/:account/robots/:robot/strategy/:criteria', async function (req, res) {
   await robotsService.changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
-    return strategy.without(req.params.criteria)
+    return strategy.remove(req.params.criteria)
   })
   res.end()
 })
@@ -163,9 +164,9 @@ app.put('/api/accounts/:account/robots/:robot/strategy/:criteria', async functio
   if (!req.body.type) {
     return res.status(422).json({ message: 'Укажите тип критерия' })
   }
-  const criteria = criteriaCreator.createCriteria(req.body.type, req.body.params || [])
+  const criteria = availableCriterias.get(req.body.type)
   await robotsService.changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
-    return strategy.with(req.params.criteria, criteria)
+    return strategy.replace(req.params.criteria, criteria, Params.fromJSON(req.body.params || []))
   })
   res.status(201).end()
 })

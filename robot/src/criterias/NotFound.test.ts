@@ -1,4 +1,3 @@
-import { Data } from '../robot/criteria'
 import NotFound from './NotFound'
 
 test('not found', () => {

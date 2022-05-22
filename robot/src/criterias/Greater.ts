@@ -1,31 +1,14 @@
-import { Criteria, Data, JsonView, Result, Schema } from '../robot/criteria'
-import { v4 } from 'uuid'
-import None from './None'
+import { Criteria, Data, Result, Schema } from '../robot/criteria'
+import { Inputs, Params } from '../robot/node'
 
 class Greater implements Criteria {
-  private readonly id: string
-  private readonly that: Criteria
-  private readonly than: Criteria
-
-  constructor(that: Criteria, than: Criteria, id: string = v4()) {
-    this.id = id
-    this.that = that
-    this.than = than
-  }
-
-  eval(data: Data): Result {
-    const that = this.that.eval(data)
-    const than = this.than.eval(data)
-    return new Result(that.value > than.value ? 1 : 0, [...that.metrics, ...than.metrics])
-  }
-
-  static getSchema(): Schema {
+  getSchema(): Schema {
     return {
       type: 'greater',
       name: 'Больше',
       multiple: false,
       params: [],
-      input: [
+      inputs: [
         {
           type: 'that',
           name: 'что',
@@ -40,48 +23,10 @@ class Greater implements Criteria {
     }
   }
 
-  static fromJSONParams() {
-    return new Greater(new None(), new None())
-  }
-
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  static fromJSON(data: JsonView, next: Function) {
-    const that = data.input.find((input) => input.type === 'that')
-    const than = data.input.find((input) => input.type === 'than')
-
-    return new Greater(next(that?.value || null), next(than?.value || null), data.id)
-  }
-
-  toJSON(): JsonView {
-    return {
-      id: this.id,
-      type: 'greater',
-      params: [],
-      input: [
-        {
-          type: 'that',
-          value: this.that.toJSON(),
-        },
-        {
-          type: 'than',
-          value: this.than.toJSON(),
-        },
-      ],
-    }
-  }
-
-  without(id: string): Criteria {
-    if (this.id === id) {
-      return new None()
-    }
-    return new Greater(this.that.without(id), this.than.without(id))
-  }
-
-  with(id: string, criteria: Criteria): Criteria {
-    if (this.id === id) {
-      return criteria
-    }
-    return new Greater(this.that.with(id, criteria), this.than.with(id, criteria))
+  eval(id: string, data: Data, params: Params, inputs: Inputs): Result {
+    const that = inputs.get('that', data)
+    const than = inputs.get('than', data)
+    return new Result(that.value > than.value ? 1 : 0, [...that.metrics, ...than.metrics])
   }
 }
 

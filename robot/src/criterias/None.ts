@@ -1,56 +1,18 @@
-import { Criteria, JsonView, Result, Schema } from '../robot/criteria'
-import { v4 } from 'uuid'
+import { Criteria, Result, Schema } from '../robot/criteria'
 
 class None implements Criteria {
-  private readonly id: string
-
-  constructor(id: string = v4()) {
-    this.id = id
-  }
-
-  eval(): Result {
-    return new Result(0, [])
-  }
-
-  static getSchema(): Schema {
+  getSchema(): Schema {
     return {
       type: 'none',
       name: 'Нет',
       multiple: false,
       params: [],
-      input: [],
+      inputs: [],
     }
   }
 
-  static fromJSONParams() {
-    return new None()
-  }
-
-  static fromJSON(data: JsonView) {
-    return new None(data.id)
-  }
-
-  toJSON(): JsonView {
-    return {
-      id: this.id,
-      type: 'none',
-      params: [],
-      input: [],
-    }
-  }
-
-  without(id: string): Criteria {
-    if (this.id === id) {
-      return new None()
-    }
-    return this
-  }
-
-  with(id: string, criteria: Criteria): Criteria {
-    if (this.id === id) {
-      return criteria
-    }
-    return this
+  eval(): Result {
+    return new Result(0, [])
   }
 }
 

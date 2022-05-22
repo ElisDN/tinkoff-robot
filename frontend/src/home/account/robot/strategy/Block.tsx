@@ -24,14 +24,14 @@ export type Schema = {
   name: string
   multiple: boolean
   params: SchemaParam[]
-  input: SchemaInput[]
+  inputs: SchemaInput[]
 }
 
 export type Criteria = {
   id: string
   type: string
   params: CriteriaParam[]
-  input: CriteriaInput[]
+  inputs: CriteriaInput[]
 }
 
 export type CriteriaParam = {
@@ -111,8 +111,8 @@ function Block({ schemas, criteria, remove, replace }: Props) {
             </div>
           </div>
           <div className={styles.inputs}>
-            {schema.input.map((schemaInput) => {
-              const criteriaInput = criteria.input.find((criteriaInput) => criteriaInput.type === schemaInput.type)
+            {schema.inputs.map((schemaInput) => {
+              const criteriaInput = criteria.inputs.find((criteriaInput) => criteriaInput.type === schemaInput.type)
               return (
                 <div key={'criteria-' + criteria.id + '-input-' + schemaInput.type} className={styles.input}>
                   <div className={styles.inputCard}>

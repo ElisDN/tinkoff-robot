@@ -1,21 +1,8 @@
-import { Criteria, Data, JsonParamView, JsonView, Metric, Result, Schema } from '../robot/criteria'
-import { v4 } from 'uuid'
-import None from './None'
+import { Criteria, Data, Metric, Result, Schema } from '../robot/criteria'
+import { Params } from '../robot/node'
 
 class Static implements Criteria {
-  private readonly id: string
-  private readonly value: number
-
-  constructor(value: number, id: string = v4()) {
-    this.id = id
-    this.value = value
-  }
-
-  eval(): Result {
-    return new Result(this.value, [new Metric(this.id, 'Значение', this.value)])
-  }
-
-  static getSchema(): Schema {
+  getSchema(): Schema {
     return {
       type: 'static',
       name: 'Значение',
@@ -26,46 +13,13 @@ class Static implements Criteria {
           name: 'Равно',
         },
       ],
-      input: [],
+      inputs: [],
     }
   }
 
-  static fromJSONParams(params: JsonParamView[]) {
-    const value = params.find((param) => param.type === 'value')
-    return new Static(value?.value || 0)
-  }
-
-  static fromJSON(data: JsonView) {
-    const value = data.params.find((param) => param.type === 'value')
-    return new Static(value?.value || 0, data.id)
-  }
-
-  toJSON(): JsonView {
-    return {
-      id: this.id,
-      type: 'static',
-      params: [
-        {
-          type: 'value',
-          value: this.value,
-        },
-      ],
-      input: [],
-    }
-  }
-
-  without(id: string): Criteria {
-    if (this.id === id) {
-      return new None()
-    }
-    return this
-  }
-
-  with(id: string, criteria: Criteria): Criteria {
-    if (this.id === id) {
-      return criteria
-    }
-    return this
+  eval(id: string, data: Data, params: Params): Result {
+    const value = params.get('value')
+    return new Result(value, [new Metric(id, 'Значение', value)])
   }
 }
 

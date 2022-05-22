@@ -1,57 +1,18 @@
-import { Criteria, Data, JsonView, Metric, Result, Schema } from '../robot/criteria'
-import { v4 } from 'uuid'
-import None from './None'
+import { Criteria, Data, Metric, Result, Schema } from '../robot/criteria'
 
 class Price implements Criteria {
-  private readonly id: string
-
-  constructor(id: string = v4()) {
-    this.id = id
-  }
-
-  eval(data: Data): Result {
-    return new Result(data.price, [new Metric(this.id, 'Цена', data.price)])
-  }
-
-  static getSchema(): Schema {
+  getSchema(): Schema {
     return {
       type: 'price',
       name: 'Цена',
       multiple: false,
       params: [],
-      input: [],
+      inputs: [],
     }
   }
 
-  static fromJSONParams() {
-    return new Price()
-  }
-
-  static fromJSON(data: JsonView) {
-    return new Price(data.id)
-  }
-
-  toJSON(): JsonView {
-    return {
-      id: this.id,
-      type: 'price',
-      params: [],
-      input: [],
-    }
-  }
-
-  without(id: string): Criteria {
-    if (this.id === id) {
-      return new None()
-    }
-    return this
-  }
-
-  with(id: string, criteria: Criteria): Criteria {
-    if (this.id === id) {
-      return criteria
-    }
-    return this
+  eval(id: string, data: Data): Result {
+    return new Result(data.price, [new Metric(id, 'Цена', data.price)])
   }
 }
 

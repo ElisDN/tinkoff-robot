@@ -1,3 +1,5 @@
+import { Inputs, Params } from './node'
+
 export type SchemaParam = {
   type: string
   name: string
@@ -14,24 +16,7 @@ export type Schema = {
   name: string
   multiple: boolean
   params: SchemaParam[]
-  input: SchemaInput[]
-}
-
-export type JsonView = {
-  id: string
-  type: string
-  params: JsonParamView[]
-  input: JsonInputView[]
-}
-
-export type JsonParamView = {
-  type: string
-  value: number | null
-}
-
-export type JsonInputView = {
-  type: string
-  value: JsonView | null
+  inputs: SchemaInput[]
 }
 
 type Order = {
@@ -73,8 +58,6 @@ export class Result {
 }
 
 export interface Criteria {
-  without(id: string): Criteria
-  with(id: string, criteria: Criteria): Criteria
-  toJSON(): JsonView
-  eval(data: Data): Result
+  getSchema(): Schema
+  eval(id: string, data: Data, params: Params, inputs: Inputs): Result
 }
