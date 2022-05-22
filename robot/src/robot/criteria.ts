@@ -1,11 +1,9 @@
-import { OrderState } from '../sdk/contracts/orders'
-
-export type Param = {
+export type SchemaParam = {
   type: string
   name: string
 }
 
-export type Input = {
+export type SchemaInput = {
   type: string
   name: string
   multiple: boolean
@@ -15,8 +13,8 @@ export type Schema = {
   type: string
   name: string
   multiple: boolean
-  params: Param[]
-  input: Input[]
+  params: SchemaParam[]
+  input: SchemaInput[]
 }
 
 export type JsonView = {
