@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from '../../../auth/useAuth'
-import './Candles.css'
+import './Chart.css'
 import api from '../../../api/api'
 
 type Props = {
@@ -22,7 +22,7 @@ interface Candle {
   time: string
 }
 
-function Candles({ accountId, robotId }: Props) {
+function Chart({ accountId, robotId }: Props) {
   const { getToken } = useAuth()
 
   const [barWidth, setBarWidth] = useState<number>(1)
@@ -33,7 +33,7 @@ function Candles({ accountId, robotId }: Props) {
     setError(null)
     getToken()
       .then((token) => {
-        api(`/api/accounts/${accountId}/robots/${robotId}/candles`, {
+        api(`/api/accounts/${accountId}/robots/${robotId}/chart`, {
           headers: { Authorization: 'Bearer ' + token },
         })
           .then((data) => setCandles(data))
@@ -59,7 +59,6 @@ function Candles({ accountId, robotId }: Props) {
   return (
     <div className="card my-3">
       <div className="card-header">
-        История
         <div className="btn-group float-end">
           <button type="button" className="btn btn-sm btn-outline-dark" onClick={() => setBarWidth(barWidth * 2)}>
             +
@@ -119,4 +118,4 @@ function Candles({ accountId, robotId }: Props) {
   )
 }
 
-export default Candles
+export default Chart

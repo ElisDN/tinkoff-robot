@@ -171,7 +171,7 @@ app.put('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria', asy
   res.status(201).end()
 })
 
-app.get('/api/accounts/:account/robots/:robot/candles', async function (req, res) {
+app.get('/api/accounts/:account/robots/:robot/chart', async function (req, res) {
   const robot = robotsPool.view(req.params.account, req.params.robot)
   const from = new Date()
   from.setDate(from.getDate() - 4)

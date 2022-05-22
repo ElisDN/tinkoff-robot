@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from '../../../auth/useAuth'
 import { Link, useParams } from 'react-router-dom'
-import Candles from './Candles'
+import Chart from './Chart'
 import StrategyEditor from './strategy/StrategyEditor'
 import api from '../../../api/api'
 
@@ -75,7 +75,7 @@ function RobotPage() {
         ) : null}
       </div>
       <StrategyEditor accountId={accountId || ''} robotId={robotId || ''} />
-      <Candles accountId={accountId || ''} robotId={robotId || ''} />
+      <Chart accountId={accountId || ''} robotId={robotId || ''} />
     </div>
   )
 }
