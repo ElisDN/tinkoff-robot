@@ -6,17 +6,12 @@ type Props = {
   accountId: string
 }
 
-interface Quantity {
-  units: number
-  nano: number
-}
-
-interface Position {
+type Position = {
   figi: string
-  instrumentType: string
-  quantity: Quantity
-  currentPrice: Quantity
-  quantityLots: Quantity
+  quantity: number | null
+  currentPrice: number | null
+  quantityLots: number | null
+  currentCost: number | null
 }
 
 function Portfolio({ accountId }: Props) {
@@ -44,8 +39,8 @@ function Portfolio({ accountId }: Props) {
     return () => clearInterval(interval)
   }, [])
 
-  const formatPrice = (price: Quantity) => {
-    return (price.units + price.nano / 1000000000).toFixed(2)
+  const formatPrice = (price: number) => {
+    return price.toFixed(2)
   }
 
   return (
@@ -57,22 +52,22 @@ function Portfolio({ accountId }: Props) {
           <thead>
             <tr>
               <th>FIGI</th>
-              <th>Тип</th>
-              <th>Лотов</th>
-              <th>Единиц</th>
+              <th style={{ textAlign: 'right' }}>Лотов</th>
               <th style={{ textAlign: 'right' }}>Цена</th>
+              <th style={{ textAlign: 'right' }}>Единиц</th>
+              <th style={{ textAlign: 'right' }}>Стоимость</th>
             </tr>
           </thead>
           <tbody>
             {positions.map((position) => (
               <tr key={'position-' + position.figi}>
                 <td>{position.figi}</td>
-                <td>{position.instrumentType}</td>
-                <td>{position.quantityLots?.units}</td>
-                <td>{position.quantity.units}</td>
+                <td style={{ textAlign: 'right' }}>{position.quantityLots}</td>
                 <td style={{ textAlign: 'right' }}>
                   {position.currentPrice ? formatPrice(position.currentPrice) : ''}
                 </td>
+                <td style={{ textAlign: 'right' }}>{position.quantity}</td>
+                <td style={{ textAlign: 'right' }}>{position.currentCost ? formatPrice(position.currentCost) : ''}</td>
               </tr>
             ))}
           </tbody>
