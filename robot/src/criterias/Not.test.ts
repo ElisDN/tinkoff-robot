@@ -1,6 +1,6 @@
 import Not from './Not'
-import { Data, Metric } from '../robot/criteria'
 import { Input, Inputs, Params } from '../robot/node'
+import { Data, Metric } from '../robot/trading'
 
 test('not metrics', () => {
   const criteria = new Not()

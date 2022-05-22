@@ -1,8 +1,9 @@
 import { v4 } from 'uuid'
 import None from '../criterias/None'
 import Static from '../criterias/Static'
-import { Criteria, Data, Result } from './criteria'
+import { Criteria, Result } from './criteria'
 import { AvailableCriterias } from './availableCriterias'
+import { Data } from './trading'
 
 export class Param {
   public readonly type: string

@@ -1,6 +1,6 @@
-import { Data, Metric } from '../robot/criteria'
 import Static from './Static'
 import { Param, Params } from '../robot/node'
+import { Data, Metric } from '../robot/trading'
 
 test('static', () => {
   const criteria = new Static()

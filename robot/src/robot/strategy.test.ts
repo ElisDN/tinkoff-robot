@@ -1,9 +1,9 @@
 import { OrderRequest, Strategy } from './strategy'
 import Less from '../criterias/Less'
 import Price from '../criterias/Price'
-import { Data, Metric } from './criteria'
 import Greater from '../criterias/Greater'
 import { Input, Inputs, Node, Params } from './node'
+import { Data, Metric } from './trading'
 
 const strategy = new Strategy(
   new Node(

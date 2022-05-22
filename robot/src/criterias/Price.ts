@@ -1,4 +1,5 @@
-import { Criteria, Data, Metric, Result, Schema } from '../robot/criteria'
+import { Criteria, Result, Schema } from '../robot/criteria'
+import { Data, Metric } from '../robot/trading'
 
 class Price implements Criteria {
   getSchema(): Schema {

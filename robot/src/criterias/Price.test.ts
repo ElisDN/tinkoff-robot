@@ -1,5 +1,5 @@
-import { Data, Metric } from '../robot/criteria'
 import Price from './Price'
+import { Data, Metric } from '../robot/trading'
 
 test('price', () => {
   const criteria = new Price()

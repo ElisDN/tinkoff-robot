@@ -1,6 +1,6 @@
-import { Data, Metric } from '../robot/criteria'
 import Or from './Or'
 import { Input, Inputs, Params } from '../robot/node'
+import { Data, Metric } from '../robot/trading'
 
 test('or metrics', () => {
   const criteria = new Or()

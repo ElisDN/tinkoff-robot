@@ -1,5 +1,6 @@
-import { Criteria, Data, Metric } from './criteria'
+import { Criteria } from './criteria'
 import { Node, Params } from './node'
+import { Data, Metric } from './trading'
 
 export class OrderRequest {
   constructor(public readonly buy: boolean) {}

@@ -1,5 +1,5 @@
 import { Strategy, TickResult } from './strategy'
-import { Data } from './criteria'
+import { Data } from './trading'
 
 class Robot {
   private readonly id: string

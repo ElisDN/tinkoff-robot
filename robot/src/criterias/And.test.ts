@@ -1,6 +1,6 @@
-import { Data, Metric } from '../robot/criteria'
 import And from './And'
 import { Input, Inputs, Params } from '../robot/node'
+import { Data, Metric } from '../robot/trading'
 
 test('and metrics', () => {
   const criteria = new And()

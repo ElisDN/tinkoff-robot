@@ -1,6 +1,6 @@
-import { Data, Metric } from '../robot/criteria'
 import Greater from './Greater'
 import { Input, Inputs, Params } from '../robot/node'
+import { Data, Metric } from '../robot/trading'
 
 test('greater metrics', () => {
   const criteria = new Greater()
