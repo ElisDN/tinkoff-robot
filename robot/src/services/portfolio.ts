@@ -1,7 +1,6 @@
 import { Client } from '../sdk/client'
 import { Account } from './accounts'
 import { moneyToFloat, quotationToFloat } from './convert'
-import InstrumentsService from './instruments'
 
 type Position = {
   figi: string
