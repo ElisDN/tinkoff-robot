@@ -70,14 +70,6 @@ export class Result {
     this.value = value
     this.metrics = metrics
   }
-
-  static blank(): Result {
-    return new Result(0, [])
-  }
-
-  static of(value: number[] | number): Result {
-    return new Result(value, [])
-  }
 }
 
 export interface Criteria {
