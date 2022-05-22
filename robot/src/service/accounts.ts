@@ -56,7 +56,11 @@ class AccountsService {
       const sandbox = await this.client.sandbox.getSandboxAccounts({})
       this.sandbox = sandbox.accounts
         .filter((account) => account.status === AccountStatus.ACCOUNT_STATUS_OPEN)
-        .map<Account>((account) => ({ real: false, id: account.id, name: 'Песочница ' + account.id.slice(0, 4) }))
+        .map<Account>((account) => ({
+          real: false,
+          id: account.id,
+          name: 'Песочница ' + account.id.slice(0, 4).toUpperCase(),
+        }))
     }
     return this.sandbox || []
   }
