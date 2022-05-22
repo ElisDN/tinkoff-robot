@@ -6,11 +6,9 @@ import StrategyEditor from './strategy/StrategyEditor'
 import api from '../../../api/api'
 
 type AccountResponse = {
+  id: string
+  name: string
   real: boolean
-  account: {
-    id: string
-    name: string
-  }
 }
 
 type Robot = {
@@ -55,7 +53,7 @@ function RobotPage() {
           </li>
           {account !== null ? (
             <li className="breadcrumb-item">
-              <Link to={'/' + account.account.id}>{account.account.name || 'Песочница'}</Link>
+              <Link to={'/' + account.id}>{account.name}</Link>
             </li>
           ) : null}
           {robot !== null ? <li className="breadcrumb-item active">{robot.figi}</li> : null}

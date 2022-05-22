@@ -6,11 +6,9 @@ import Robots from './Robots'
 import api from '../../api/api'
 
 type AccountResponse = {
+  id: string
+  name: string
   real: boolean
-  account: {
-    id: string
-    name: string
-  }
 }
 
 function AccountPage() {
@@ -41,12 +39,12 @@ function AccountPage() {
           <li className="breadcrumb-item">
             <Link to="/">Главная</Link>
           </li>
-          {account !== null ? <li className="breadcrumb-item active">{account.account.name || 'Песочница'}</li> : null}
+          {account !== null ? <li className="breadcrumb-item active">{account.name}</li> : null}
         </ol>
       </nav>
       {error ? <div className="alert alert-danger">{error}</div> : null}
-      {account !== null ? <Robots accountId={account.account.id} /> : null}
-      {account !== null ? <Portfolio accountId={account.account.id} /> : null}
+      {account !== null ? <Robots accountId={account.id} /> : null}
+      {account !== null ? <Portfolio accountId={account.id} /> : null}
     </div>
   )
 }

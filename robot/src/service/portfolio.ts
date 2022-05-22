@@ -12,9 +12,9 @@ class PortfolioService {
   public async getPositions(account: Account): Promise<PortfolioPosition[]> {
     let response
     if (account.real) {
-      response = await this.client.operations.getPortfolio({ accountId: account.account.id })
+      response = await this.client.operations.getPortfolio({ accountId: account.id })
     } else {
-      response = await this.client.sandbox.getSandboxPortfolio({ accountId: account.account.id })
+      response = await this.client.sandbox.getSandboxPortfolio({ accountId: account.id })
     }
     return response.positions
   }

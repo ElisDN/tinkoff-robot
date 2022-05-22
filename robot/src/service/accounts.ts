@@ -1,9 +1,10 @@
-import { Account as ClientAccount, AccountStatus } from '../sdk/contracts/users'
+import { AccountStatus } from '../sdk/contracts/users'
 import { Client } from '../sdk/client'
 
 export type Account = {
+  id: string
+  name: string
   real: boolean
-  account: ClientAccount
 }
 
 class AccountsService {
@@ -23,7 +24,7 @@ class AccountsService {
 
   public async get(id: string): Promise<Account> {
     const accounts = await this.getAll()
-    const account = accounts.find((account) => account.account.id === id)
+    const account = accounts.find((account) => account.id === id)
     if (account) {
       return account
     }
@@ -45,7 +46,7 @@ class AccountsService {
       const real = await this.client.users.getAccounts({})
       this.real = real.accounts
         .filter((account) => account.status === AccountStatus.ACCOUNT_STATUS_OPEN)
-        .map<Account>((account) => ({ real: true, account }))
+        .map<Account>((account) => ({ real: true, id: account.id, name: account.name || account.id }))
     }
     return this.real || []
   }
@@ -55,7 +56,7 @@ class AccountsService {
       const sandbox = await this.client.sandbox.getSandboxAccounts({})
       this.sandbox = sandbox.accounts
         .filter((account) => account.status === AccountStatus.ACCOUNT_STATUS_OPEN)
-        .map<Account>((account) => ({ real: false, account }))
+        .map<Account>((account) => ({ real: false, id: account.id, name: 'Песочница ' + account.id.slice(0, 4) }))
     }
     return this.sandbox || []
   }

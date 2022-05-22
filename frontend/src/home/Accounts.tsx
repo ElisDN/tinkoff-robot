@@ -4,11 +4,9 @@ import { Link } from 'react-router-dom'
 import api from '../api/api'
 
 type Account = {
+  id: string
+  name: string
   real: boolean
-  account: {
-    id: string
-    name: string | null
-  }
 }
 
 function Accounts() {
@@ -72,16 +70,16 @@ function Accounts() {
         <table className="table my-0">
           <tbody>
             {accounts.map((account) => (
-              <tr key={'account-' + account.account.id}>
+              <tr key={'account-' + account.id}>
                 <td>
-                  <Link to={'/' + account.account.id}>{account.account.name || 'Песочница'}</Link>
+                  <Link to={'/' + account.id}>{account.name}</Link>
                 </td>
                 <td style={{ textAlign: 'right' }}>
                   {!account.real ? (
                     <button
                       type="button"
                       className="btn btn-danger btn-sm"
-                      onClick={() => closeSandboxAccount(account.account.id)}
+                      onClick={() => closeSandboxAccount(account.id)}
                     >
                       Удалить
                     </button>
