@@ -119,7 +119,13 @@ function Block({ schemas, criteria, remove, replace }: Props) {
                     <div className={styles.inputName}>{schemaInput.name}</div>
                   </div>
                   {criteriaInput?.value ? (
-                    <Block schemas={schemas} criteria={criteriaInput.value} remove={remove} replace={replace} />
+                    <Block
+                      key={'criteria-' + criteriaInput.value.id}
+                      schemas={schemas}
+                      criteria={criteriaInput.value}
+                      remove={remove}
+                      replace={replace}
+                    />
                   ) : null}
                 </div>
               )

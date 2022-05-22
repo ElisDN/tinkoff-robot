@@ -90,10 +90,22 @@ function StrategyEditor({ accountId, robotId }: Props) {
       {strategy !== null ? (
         <div className="card-body overflow-auto">
           <p>Продать:</p>
-          <Block schemas={schemas} criteria={strategy.sell} remove={removeCriteria} replace={replaceCriteria} />
+          <Block
+            key={'criteria-' + strategy.sell.id}
+            schemas={schemas}
+            criteria={strategy.sell}
+            remove={removeCriteria}
+            replace={replaceCriteria}
+          />
           <br />
           <p>Купить:</p>
-          <Block schemas={schemas} criteria={strategy.buy} remove={removeCriteria} replace={replaceCriteria} />
+          <Block
+            key={'criteria-' + strategy.buy.id}
+            schemas={schemas}
+            criteria={strategy.buy}
+            remove={removeCriteria}
+            replace={replaceCriteria}
+          />
         </div>
       ) : null}
     </div>

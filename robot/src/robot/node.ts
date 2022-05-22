@@ -146,7 +146,7 @@ export class Node {
     if (this.id === id) {
       return new Node(v4(), criteria, params, this.inputs)
     }
-    return new Node(this.id, this.criteria, params, this.inputs.replace(id, criteria, params))
+    return new Node(this.id, this.criteria, this.params, this.inputs.replace(id, criteria, params))
   }
 
   toJSON(): JsonNodeView {
