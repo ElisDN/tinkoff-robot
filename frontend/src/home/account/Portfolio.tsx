@@ -7,6 +7,7 @@ type Props = {
 }
 
 type Position = {
+  type: string
   figi: string
   name: string
   ticker: string
@@ -61,21 +62,56 @@ function Portfolio({ accountId }: Props) {
               <th style={{ textAlign: 'right' }}>Единиц</th>
               <th style={{ textAlign: 'right' }}>Стоимость</th>
             </tr>
+            <tr key={'position-currencies'}>
+              <th colSpan={7} style={{ background: '#cae5f9' }}>
+                Валюты
+              </th>
+            </tr>
           </thead>
           <tbody>
-            {positions.map((position) => (
-              <tr key={'position-' + position.figi}>
-                <td>{position.figi}</td>
-                <td>{position.ticker}</td>
-                <td>{position.name}</td>
-                <td style={{ textAlign: 'right' }}>{position.quantityLots}</td>
-                <td style={{ textAlign: 'right' }}>
-                  {position.currentPrice ? formatPrice(position.currentPrice) : ''}
-                </td>
-                <td style={{ textAlign: 'right' }}>{position.quantity}</td>
-                <td style={{ textAlign: 'right' }}>{position.currentCost ? formatPrice(position.currentCost) : ''}</td>
-              </tr>
-            ))}
+            {positions
+              .filter((position) => position.type === 'currency')
+              .map((position) => (
+                <tr key={'position-' + position.figi}>
+                  <td>{position.figi}</td>
+                  <td>{position.ticker}</td>
+                  <td>{position.name}</td>
+                  <td style={{ textAlign: 'right' }}>{position.quantityLots}</td>
+                  <td style={{ textAlign: 'right' }}>
+                    {position.currentPrice ? formatPrice(position.currentPrice) : ''}
+                  </td>
+                  <td style={{ textAlign: 'right' }}>{position.quantity}</td>
+                  <td style={{ textAlign: 'right' }}>
+                    {position.currentCost ? formatPrice(position.currentCost) : ''}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+          <thead>
+            <tr key={'position-instruments'}>
+              <th colSpan={7} style={{ background: '#cae5f9' }}>
+                Инструменты
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {positions
+              .filter((position) => position.type !== 'currency')
+              .map((position) => (
+                <tr key={'position-' + position.figi}>
+                  <td>{position.figi}</td>
+                  <td>{position.ticker}</td>
+                  <td>{position.name}</td>
+                  <td style={{ textAlign: 'right' }}>{position.quantityLots}</td>
+                  <td style={{ textAlign: 'right' }}>
+                    {position.currentPrice ? formatPrice(position.currentPrice) : ''}
+                  </td>
+                  <td style={{ textAlign: 'right' }}>{position.quantity}</td>
+                  <td style={{ textAlign: 'right' }}>
+                    {position.currentCost ? formatPrice(position.currentCost) : ''}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       ) : null}

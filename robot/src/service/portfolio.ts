@@ -4,6 +4,7 @@ import { moneyToFloat, quotationToFloat } from './convert'
 import InstrumentsService from './instruments'
 
 type Position = {
+  type: string
   figi: string
   name: string
   ticker: string
@@ -34,15 +35,16 @@ class PortfolioService {
         const instrument = await this.instruments.getByFigi(position.figi)
 
         return {
+          type: position.instrumentType,
           figi: position.figi,
           name: instrument.name,
           ticker: instrument.ticker,
           quantity: position.quantity ? quotationToFloat(position.quantity) : null,
           quantityLots: position.quantityLots ? quotationToFloat(position.quantityLots) : null,
-          currentPrice: position.averagePositionPrice ? moneyToFloat(position.averagePositionPrice) : null,
+          currentPrice: position.currentPrice ? moneyToFloat(position.currentPrice) : null,
           currentCost:
-            position.currentPrice && position.quantityLots
-              ? moneyToFloat(position.currentPrice) * quotationToFloat(position.quantityLots)
+            position.currentPrice && position.quantity
+              ? moneyToFloat(position.currentPrice) * quotationToFloat(position.quantity)
               : null,
         }
       })
