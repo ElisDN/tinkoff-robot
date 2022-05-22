@@ -121,7 +121,18 @@ app.get('/api/accounts/:account/portfolio', async function (req, res) {
 
 app.get('/api/accounts/:account/robots', async function (req, res) {
   const robots = robotsPool.viewAll(req.params.account)
-  res.json(robots)
+  res.json(
+    await Promise.all(
+      robots.map(async (robot) => {
+        const instrument = await instrumentsService.getByFigi(robot.figi)
+        return {
+          id: robot.id,
+          figi: robot.figi,
+          name: instrument.name,
+        }
+      })
+    )
+  )
 })
 
 app.post('/api/accounts/:account/robots', async function (req, res) {
@@ -136,7 +147,12 @@ app.post('/api/accounts/:account/robots', async function (req, res) {
 
 app.get('/api/accounts/:account/robots/:robot', async function (req, res) {
   const robot = robotsPool.view(req.params.account, req.params.robot)
-  res.json(robot)
+  const instrument = await instrumentsService.getByFigi(robot.figi)
+  res.json({
+    id: robot.id,
+    figi: robot.figi,
+    name: instrument.name,
+  })
 })
 
 app.delete('/api/accounts/:account/robots/:robot', async function (req, res) {

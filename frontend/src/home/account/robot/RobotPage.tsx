@@ -13,6 +13,7 @@ type AccountResponse = {
 
 type Robot = {
   figi: string
+  name: string
 }
 
 function RobotPage() {
@@ -65,8 +66,9 @@ function RobotPage() {
         {robot !== null ? (
           <table className="table my-0">
             <tbody>
-              <tr key={'robot-' + robot.figi}>
+              <tr>
                 <td>{robot.figi}</td>
+                <td>{robot.name}</td>
               </tr>
             </tbody>
           </table>

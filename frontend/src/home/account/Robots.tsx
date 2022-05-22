@@ -10,6 +10,7 @@ type Props = {
 type Robot = {
   id: string
   figi: string
+  name: string
 }
 
 type FormData = {
@@ -103,6 +104,7 @@ function Robots({ accountId }: Props) {
                 <td>
                   <Link to={'/' + accountId + '/' + robot.id}>{robot.figi}</Link>
                 </td>
+                <td>{robot.name}</td>
                 <td style={{ textAlign: 'right' }}>
                   <button type="button" className="btn btn-danger btn-sm" onClick={() => removeRobot(robot.id)}>
                     Удалить
