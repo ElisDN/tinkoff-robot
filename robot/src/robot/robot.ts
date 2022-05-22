@@ -28,6 +28,10 @@ class Robot {
     return this.accountId === accountId && this.figi === figi
   }
 
+  isForAccount(accountId: string) {
+    return this.accountId === accountId
+  }
+
   changeStrategy(strategy: Strategy): void {
     this.strategy = strategy
   }

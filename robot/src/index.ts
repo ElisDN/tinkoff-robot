@@ -109,6 +109,7 @@ app.post('/api/sandbox/accounts', async function (req, res) {
 })
 
 app.delete('/api/sandbox/accounts/:account', async function (req, res) {
+  await robotsPool.removeAllRobotsForAccout(req.params.account)
   await accountsService.closeSandboxAccount(req.params.account)
   res.status(204).end()
 })

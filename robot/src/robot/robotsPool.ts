@@ -32,6 +32,12 @@ class RobotsPool {
     await this.storage.remove(robot)
   }
 
+  async removeAllRobotsForAccout(accountId: string) {
+    this.robots
+      .filter((robot) => robot.isForAccount(accountId))
+      .forEach((robot) => this.remove(accountId, robot.getId()))
+  }
+
   async changeStrategy(accountId: string, robotId: string, callback: (strategy: Strategy) => Strategy) {
     const robot = this.get(accountId, robotId)
     const strategy = callback(robot.getStrategy())
