@@ -1,4 +1,4 @@
-import { Criteria, Data, JsonParamView, JsonView, Result, Schema } from '../robot/criteria'
+import { Criteria, Data, JsonParamView, JsonView, Metric, Result, Schema } from '../robot/criteria'
 import { v4 } from 'uuid'
 import None from './None'
 
@@ -11,8 +11,8 @@ class Static implements Criteria {
     this.value = value
   }
 
-  eval(data: Data, result: Result): Result {
-    return result.withValue(this.value).withMetric(this.id, 'Значение', this.value)
+  eval(): Result {
+    return new Result(this.value, [new Metric(this.id, 'Значение', this.value)])
   }
 
   static getSchema(): Schema {

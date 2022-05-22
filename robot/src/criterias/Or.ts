@@ -13,13 +13,10 @@ class Or implements Criteria {
     this.two = two
   }
 
-  eval(data: Data, result: Result): Result {
-    const one = this.one.eval(data, result)
-    const two = this.two.eval(data, result)
-    return result
-      .withValue(one.value || two.value ? 1 : 0)
-      .withMetrics(one.metrics)
-      .withMetrics(two.metrics)
+  eval(data: Data): Result {
+    const one = this.one.eval(data)
+    const two = this.two.eval(data)
+    return new Result(one.value || two.value ? 1 : 0, [...one.metrics, ...two.metrics])
   }
 
   static getSchema(): Schema {

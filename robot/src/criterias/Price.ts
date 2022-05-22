@@ -1,4 +1,4 @@
-import { Criteria, Data, JsonView, Result, Schema } from '../robot/criteria'
+import { Criteria, Data, JsonView, Metric, Result, Schema } from '../robot/criteria'
 import { v4 } from 'uuid'
 import None from './None'
 
@@ -9,8 +9,8 @@ class Price implements Criteria {
     this.id = id
   }
 
-  eval(data: Data, result: Result): Result {
-    return result.withValue(data.price).withMetric(this.id, 'Цена', data.price)
+  eval(data: Data): Result {
+    return new Result(data.price, [new Metric(this.id, 'Цена', data.price)])
   }
 
   static getSchema(): Schema {

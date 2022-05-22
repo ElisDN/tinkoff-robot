@@ -60,10 +60,8 @@ export class Data {
   }
 }
 
-export type Metric = {
-  id: string
-  name: string
-  value: number
+export class Metric {
+  constructor(public readonly id: string, public readonly name: string, public readonly value: number) {}
 }
 
 export class Result {
@@ -82,23 +80,11 @@ export class Result {
   static of(value: number[] | number): Result {
     return new Result(value, [])
   }
-
-  withValue(value: number[] | number): Result {
-    return new Result(value, this.metrics)
-  }
-
-  withMetric(id: string, name: string, value: number): Result {
-    return new Result(this.value, [...this.metrics, { id, name, value }])
-  }
-
-  withMetrics(metrics: Metric[]): Result {
-    return new Result(this.value, [...this.metrics, ...metrics])
-  }
 }
 
 export interface Criteria {
   without(id: string): Criteria
   with(id: string, criteria: Criteria): Criteria
   toJSON(): JsonView
-  eval(data: Data, result: Result): Result
+  eval(data: Data): Result
 }

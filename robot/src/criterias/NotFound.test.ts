@@ -1,8 +1,8 @@
-import { Data, Result } from '../robot/criteria'
+import { Data } from '../robot/criteria'
 import NotFound from './NotFound'
 
 test('not found', () => {
   const criteria = new NotFound()
-  const result = criteria.eval(Data.blank(), Result.of(5))
+  const result = criteria.eval()
   expect(result.value).toBe(0)
 })

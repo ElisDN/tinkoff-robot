@@ -1,4 +1,4 @@
-import { Criteria, Data, JsonView, Result, Schema } from '../robot/criteria'
+import { Criteria, JsonView, Result, Schema } from '../robot/criteria'
 import { v4 } from 'uuid'
 
 class None implements Criteria {
@@ -8,8 +8,8 @@ class None implements Criteria {
     this.id = id
   }
 
-  eval(data: Data, result: Result): Result {
-    return result.withValue(0)
+  eval(): Result {
+    return new Result(0, [])
   }
 
   static getSchema(): Schema {

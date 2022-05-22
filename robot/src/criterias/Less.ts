@@ -13,13 +13,10 @@ class Less implements Criteria {
     this.than = than
   }
 
-  eval(data: Data, result: Result): Result {
-    const that = this.that.eval(data, result)
-    const than = this.than.eval(data, result)
-    return result
-      .withValue(that.value < than.value ? 1 : 0)
-      .withMetrics(that.metrics)
-      .withMetrics(than.metrics)
+  eval(data: Data): Result {
+    const that = this.that.eval(data)
+    const than = this.than.eval(data)
+    return new Result(that.value < than.value ? 1 : 0, [...that.metrics, ...than.metrics])
   }
 
   static getSchema(): Schema {

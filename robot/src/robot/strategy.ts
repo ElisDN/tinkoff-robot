@@ -1,4 +1,4 @@
-import { Criteria, Data, Metric, Result } from './criteria'
+import { Criteria, Data, Metric } from './criteria'
 import None from '../criterias/None'
 
 export class OrderRequest {
@@ -32,8 +32,8 @@ export class Strategy {
   }
 
   eval(data: Data): TickResult {
-    const buyResult = this.buy.eval(data, Result.blank())
-    const sellResult = this.sell.eval(data, Result.blank())
+    const buyResult = this.buy.eval(data)
+    const sellResult = this.sell.eval(data)
 
     const isNeededBuy = (!data.order || !data.order.buy) && buyResult.value
     const isNeededSell = data.order && data.order.buy && sellResult.value
