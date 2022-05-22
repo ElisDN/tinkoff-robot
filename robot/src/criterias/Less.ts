@@ -1,6 +1,6 @@
-import { Criteria, Result, Schema } from '../robot/criteria'
+import { Criteria, Schema } from '../robot/criteria'
 import { Inputs, Params } from '../robot/node'
-import { Data } from '../robot/trading'
+import { Data, Result } from '../robot/trading'
 
 class Less implements Criteria {
   getSchema(): Schema {

@@ -1,5 +1,5 @@
 import { Inputs, Params } from './node'
-import { Data, Metric } from './trading'
+import { Data, Result } from './trading'
 
 export type SchemaParam = {
   type: string
@@ -18,16 +18,6 @@ export type Schema = {
   multiple: boolean
   params: SchemaParam[]
   inputs: SchemaInput[]
-}
-
-export class Result {
-  public readonly value: number[] | number
-  public readonly metrics: Metric[]
-
-  constructor(value: number[] | number, metrics: Metric[]) {
-    this.value = value
-    this.metrics = metrics
-  }
 }
 
 export interface Criteria {

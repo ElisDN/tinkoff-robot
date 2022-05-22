@@ -1,4 +1,5 @@
-import { Criteria, Result, Schema } from '../robot/criteria'
+import { Criteria, Schema } from '../robot/criteria'
+import { Result } from '../robot/trading'
 
 class None implements Criteria {
   getSchema(): Schema {

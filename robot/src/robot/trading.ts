@@ -41,3 +41,13 @@ export class Metric {
     this.value = value
   }
 }
+
+export class Result {
+  public readonly value: number[] | number
+  public readonly metrics: Metric[]
+
+  constructor(value: number[] | number, metrics: Metric[]) {
+    this.value = value
+    this.metrics = metrics
+  }
+}

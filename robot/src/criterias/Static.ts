@@ -1,6 +1,6 @@
-import { Criteria, Result, Schema } from '../robot/criteria'
+import { Criteria, Schema } from '../robot/criteria'
 import { Params } from '../robot/node'
-import { Data, Metric } from '../robot/trading'
+import { Data, Metric, Result } from '../robot/trading'
 
 class Static implements Criteria {
   getSchema(): Schema {
