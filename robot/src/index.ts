@@ -153,14 +153,14 @@ app.get('/api/accounts/:account/robots/:robot/strategy', async function (req, re
   res.json(strategy)
 })
 
-app.delete('/api/accounts/:account/robots/:robot/strategy/:criteria', async function (req, res) {
+app.delete('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria', async function (req, res) {
   await robotsPool.changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
     return strategy.remove(req.params.criteria)
   })
   res.end()
 })
 
-app.put('/api/accounts/:account/robots/:robot/strategy/:criteria', async function (req, res) {
+app.put('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria', async function (req, res) {
   if (!req.body.type) {
     return res.status(422).json({ message: 'Укажите тип критерия' })
   }

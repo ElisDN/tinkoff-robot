@@ -55,7 +55,7 @@ function StrategyEditor({ accountId, robotId }: Props) {
     setError(null)
     getToken()
       .then((token) => {
-        api(`/api/accounts/${accountId}/robots/${robotId}/strategy/${id}`, {
+        api(`/api/accounts/${accountId}/robots/${robotId}/strategy/criterias/${id}`, {
           method: 'DELETE',
           headers: { Authorization: 'Bearer ' + token },
         })
@@ -69,7 +69,7 @@ function StrategyEditor({ accountId, robotId }: Props) {
     setError(null)
     getToken()
       .then((token) => {
-        api(`/api/accounts/${accountId}/robots/${robotId}/strategy/${id}`, {
+        api(`/api/accounts/${accountId}/robots/${robotId}/strategy/criterias/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
