@@ -63,14 +63,14 @@ const portfolioService = new PortfolioService(client)
 const candlesService = new CandlesService(client, cache)
 
 const availableCriterias = new AvailableCriterias([
+  new None(),
   new And(),
   new Or(),
   new Not(),
-  new None(),
-  new Static(),
-  new Price(),
   new Greater(),
   new Less(),
+  new Static(),
+  new Price(),
 ])
 
 const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), availableCriterias)
