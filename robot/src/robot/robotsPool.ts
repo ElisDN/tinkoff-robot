@@ -16,17 +16,17 @@ class RobotsPool {
     this.robots = storage.readAll()
   }
 
-  async add(accountId: string, id: string, figi: string) {
+  async add(accountId: string, robotId: string, figi: string) {
     if (this.robots.find((robot) => robot.isFor(accountId, figi))) {
       throw new Error('Робот для этого инструмента уже есть')
     }
-    const robot = new Robot(id, accountId, figi, Strategy.blank())
+    const robot = new Robot(robotId, accountId, figi, Strategy.blank())
     this.robots.push(robot)
     await this.storage.save(robot)
   }
 
-  async remove(accountId: string, id: string) {
-    const robot = this.get(accountId, id)
+  async remove(accountId: string, robotId: string) {
+    const robot = this.get(accountId, robotId)
     const index = this.robots.indexOf(robot)
     if (index > -1) {
       this.robots.splice(index, 1)
@@ -34,15 +34,15 @@ class RobotsPool {
     await this.storage.remove(robot)
   }
 
-  async changeStrategy(accountId: string, id: string, callback: (strategy: Strategy) => Strategy) {
-    const robot = this.get(accountId, id)
+  async changeStrategy(accountId: string, robotId: string, callback: (strategy: Strategy) => Strategy) {
+    const robot = this.get(accountId, robotId)
     const strategy = callback(robot.getStrategy())
     robot.changeStrategy(strategy)
     await this.storage.save(robot)
   }
 
-  view(accountId: string, id: string): RobotView {
-    const robot = this.get(accountId, id)
+  view(accountId: string, robotId: string): RobotView {
+    const robot = this.get(accountId, robotId)
     return {
       id: robot.getId(),
       figi: robot.getFigi(),
@@ -58,13 +58,13 @@ class RobotsPool {
       }))
   }
 
-  viewStrategy(accountId: string, id: string): Strategy {
-    const robot = this.get(accountId, id)
+  viewStrategy(accountId: string, robotId: string): Strategy {
+    const robot = this.get(accountId, robotId)
     return robot.getStrategy()
   }
 
-  private get(accountId: string, id: string): Robot {
-    const robot = this.robots.find((robot) => robot.is(accountId, id))
+  private get(accountId: string, robotId: string): Robot {
+    const robot = this.robots.find((robot) => robot.is(accountId, robotId))
     if (!robot) {
       throw new Error('Робот не найден')
     }
