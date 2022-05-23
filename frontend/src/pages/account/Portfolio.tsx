@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from '../../auth/useAuth'
 import api from '../../api/api'
+import PaySandboxAccountForm from './PaySandboxAccountForm'
 
 type Props = {
   accountId: string
@@ -18,15 +19,9 @@ type Position = {
   currentCost: number | null
 }
 
-type FormData = {
-  amount: string
-  currency: string
-}
-
 function Portfolio({ accountId, accountReal }: Props) {
   const { getToken } = useAuth()
 
-  const [payFormData, setPayFormData] = useState<FormData>({ amount: '', currency: '' })
   const [positions, setPositions] = useState<Position[] | null>(null)
   const [error, setError] = useState(null)
 
@@ -48,40 +43,6 @@ function Portfolio({ accountId, accountReal }: Props) {
     const interval = setInterval(loadPositions, 3000)
     return () => clearInterval(interval)
   }, [])
-
-  const payHandleChange = (event: React.FormEvent<HTMLInputElement>) => {
-    setPayFormData({
-      ...payFormData,
-      [event.currentTarget.name]: event.currentTarget.value,
-    })
-  }
-
-  const payHandleSubmit = (event: React.SyntheticEvent) => {
-    event.preventDefault()
-    setError(null)
-    getToken().then((token) => {
-      api(`/api/accounts/${accountId}/portfolio/sandbox-pay`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token,
-        },
-        body: JSON.stringify(payFormData),
-      })
-        .then(() => {
-          setPayFormData({ amount: '', currency: '' })
-          loadPositions()
-        })
-        .catch(async (error) => {
-          if (error instanceof Response) {
-            const data = await error.json()
-            setError(data.message)
-            return
-          }
-          setError(error.message)
-        })
-    })
-  }
 
   const formatPrice = (price: number) => {
     return price.toFixed(2)
@@ -130,37 +91,7 @@ function Portfolio({ accountId, accountReal }: Props) {
             {!accountReal ? (
               <tr key={'position-currencies'}>
                 <th colSpan={7}>
-                  <form method="post" onSubmit={payHandleSubmit}>
-                    <div className="row">
-                      <div className="col-auto">
-                        <input
-                          type="number"
-                          name="amount"
-                          value={payFormData.amount}
-                          onChange={payHandleChange}
-                          className="form-control"
-                          placeholder="Сумма"
-                          required
-                        />
-                      </div>
-                      <div className="col-auto">
-                        <input
-                          type="text"
-                          name="currency"
-                          value={payFormData.currency}
-                          onChange={payHandleChange}
-                          className="form-control"
-                          placeholder="Валюта"
-                          required
-                        />
-                      </div>
-                      <div className="col-auto">
-                        <button className="w-100 btn btn-primary" type="submit">
-                          Пополнить
-                        </button>
-                      </div>
-                    </div>
-                  </form>
+                  <PaySandboxAccountForm accountId={accountId} onPay={loadPositions} />
                 </th>
               </tr>
             ) : null}
