@@ -254,7 +254,7 @@ app.put('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria', asy
 
 app.get('/api/accounts/:account/robots/:robot/chart', async function (req, res) {
   const from = new Date()
-  from.setDate(from.getDate() - 5)
+  from.setDate(from.getDate() - 4)
   return robotsPool
     .backTest(req.params.account, req.params.robot, from)
     .then((results) => res.json(results))
