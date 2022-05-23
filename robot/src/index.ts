@@ -77,7 +77,7 @@ const availableCriterias = new AvailableCriterias([
 ])
 
 const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), availableCriterias)
-const trader = new Trader(candlesService)
+const trader = new Trader(candlesService, instrumentsService)
 const robotsPool = new RobotsPool(robotsStorage, trader)
 
 // HTTP API Server

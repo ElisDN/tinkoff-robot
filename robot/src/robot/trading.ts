@@ -1,7 +1,8 @@
 import CandlesService, { Candle } from '../services/candles'
 import { EvalResult } from './strategy'
+import InstrumentsService from '../services/instruments'
 
-type Order = {
+export type Order = {
   id: string
   date: Date
   buy: boolean
@@ -74,5 +75,5 @@ export type TickResult = {
 }
 
 export class Trader {
-  constructor(public readonly candles: CandlesService) {}
+  constructor(public readonly candles: CandlesService, public readonly instruments: InstrumentsService) {}
 }

@@ -36,11 +36,27 @@ type Tick = {
   eval: Eval
 }
 
+type Result = {
+  ticks: Tick[]
+  summary: {
+    lots: number
+    instrumentLots: number
+    startCost: number
+    endCost: number
+    diffProfit: number
+    ordersCount: number
+    total: number
+    comissions: number
+    tradingPofit: number
+    tradingEndPofit: number
+  }
+}
+
 function BackTest({ accountId, robotId }: Props) {
   const { getToken } = useAuth()
 
   const [barWidth, setBarWidth] = useState<number>(2)
-  const [ticks, setTicks] = useState<Tick[] | null>(null)
+  const [result, setResult] = useState<Result | null>(null)
   const [error, setError] = useState(null)
 
   useEffect(() => {
@@ -50,7 +66,7 @@ function BackTest({ accountId, robotId }: Props) {
         api(`/api/accounts/${accountId}/robots/${robotId}/back-test`, {
           headers: { Authorization: 'Bearer ' + token },
         })
-          .then((data) => setTicks(data))
+          .then((data) => setResult(data))
           .catch((error) => setError(error.message || error.statusText))
       })
       .catch(() => null)
@@ -60,8 +76,8 @@ function BackTest({ accountId, robotId }: Props) {
     return price.toFixed(2)
   }
 
-  const min = ticks ? Math.min(...ticks.map((tick) => tick.candle.low)) : 0
-  const max = ticks ? Math.max(...ticks.map((tick) => tick.candle.high)) : 0
+  const min = result ? Math.min(...result.ticks.map((tick) => tick.candle.low)) : 0
+  const max = result ? Math.max(...result.ticks.map((tick) => tick.candle.high)) : 0
 
   const height = 500
   const verticalScale = height / (max - min)
@@ -83,9 +99,13 @@ function BackTest({ accountId, robotId }: Props) {
           </div>
           {error ? <div className="alert alert-danger my-0">{error}</div> : null}
           <div className="area" style={{ height: height }}>
-            {ticks !== null ? (
-              <svg width={ticks.length * barWidth} height={height} style={{ display: 'block', margin: '0 auto' }}>
-                {ticks.map((tick, index) => {
+            {result !== null ? (
+              <svg
+                width={result.ticks.length * barWidth}
+                height={height}
+                style={{ display: 'block', margin: '0 auto' }}
+              >
+                {result.ticks.map((tick, index) => {
                   let candleClass = 'candle'
                   if (tick.candle.open < tick.candle.close) {
                     candleClass += ' candle-up'
@@ -133,7 +153,7 @@ function BackTest({ accountId, robotId }: Props) {
                     </g>
                   )
                 })}
-                {ticks.map((tick, index) => {
+                {result.ticks.map((tick, index) => {
                   return (
                     <>
                       {tick.eval.metrics.map((metric, i) => {
@@ -165,7 +185,7 @@ function BackTest({ accountId, robotId }: Props) {
                     </>
                   )
                 })}
-                {ticks.map((tick, index) => (
+                {result.ticks.map((tick, index) => (
                   <>
                     {tick.eval.request ? (
                       <g key={'order-' + index}>
@@ -193,15 +213,51 @@ function BackTest({ accountId, robotId }: Props) {
       </div>
       <div className="col-md-4 col-lg-2">
         <div className="card my-3">
-          <div className="card-header">Итог</div>
-          <table className="table my-0">
-            <tbody>
-              <tr>
-                <th>Доход</th>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="card-header">Результат</div>
+          {result !== null ? (
+            <table className="table my-0">
+              <tbody>
+                <tr>
+                  <th>Лоты</th>
+                  <td>
+                    {result.summary.lots} x {result.summary.instrumentLots}{' '}
+                  </td>
+                </tr>
+                <tr>
+                  <th>Стартовая стоимость</th>
+                  <td>{formatPrice(result.summary.startCost)}</td>
+                </tr>
+                <tr>
+                  <th>Конечная стоимость</th>
+                  <td>{formatPrice(result.summary.endCost)}</td>
+                </tr>
+                <tr>
+                  <th>Естественный доход</th>
+                  <td>{formatPrice(result.summary.diffProfit)}</td>
+                </tr>
+                <tr>
+                  <th>Сделок</th>
+                  <td>{result.summary.ordersCount}</td>
+                </tr>
+                <tr>
+                  <th>Оборот</th>
+                  <td>{formatPrice(result.summary.total)}</td>
+                </tr>
+                <tr>
+                  <th>Комиссия</th>
+                  <td>{formatPrice(result.summary.comissions)}</td>
+                </tr>
+                <tr>
+                  <th>Торговый доход</th>
+                  <td>{formatPrice(result.summary.tradingPofit)}</td>
+                </tr>
+                <tr>
+                  <th>Доход если продать</th>
+                  <td>{formatPrice(result.summary.tradingEndPofit)}</td>
+                </tr>
+              </tbody>
+            </table>
+          ) : null}
         </div>
       </div>
     </div>
