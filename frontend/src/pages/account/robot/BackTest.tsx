@@ -190,11 +190,12 @@ function BackTest({ accountId, robotId }: Props) {
                     {tick.eval.request ? (
                       <g key={'order-' + index}>
                         <circle
-                          cx={index * barWidth + barWidth / 2}
+                          cx={index * barWidth + barWidth}
                           cy={(max - tick.candle.close) * verticalScale}
-                          r={8}
+                          r={12}
                           style={{
                             fill: '#faff5d',
+                            fillOpacity: 0.8,
                             stroke: tick.eval.request.buy ? '#af27dc' : '#f35411',
                             strokeWidth: '4px',
                           }}
