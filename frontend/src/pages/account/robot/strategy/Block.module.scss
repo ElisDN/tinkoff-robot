@@ -39,14 +39,15 @@ $box-background: #eee;
 
       .actions {
         display: flex;
-        flex-flow: row nowrap;
+        flex-flow: column nowrap;
 
-        button {
+        button, select {
           margin: 0;
           padding: 0.1rem 0.4rem;
           background: #fff;
           border: 1px solid $box-border-color;
           line-height: 1;
+          font-size: 1rem;
         }
       }
     }

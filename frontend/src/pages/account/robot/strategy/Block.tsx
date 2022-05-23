@@ -6,6 +6,7 @@ type Props = {
   criteria: Criteria
   remove: (id: string) => void
   replace: (id: string, type: string, params: CriteriaParam[]) => void
+  wrap: (id: string, type: string) => void
 }
 
 export type SchemaParam = {
@@ -44,7 +45,7 @@ export type CriteriaInput = {
   value: Criteria | null
 }
 
-function Block({ schemas, criteria, remove, replace }: Props) {
+function Block({ schemas, criteria, remove, replace, wrap }: Props) {
   const [paramsFormData, setParamsFormData] = useState<CriteriaParam[]>(criteria.params)
 
   const handleParamChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -64,6 +65,10 @@ function Block({ schemas, criteria, remove, replace }: Props) {
 
   const handleTypeChange = (event: React.FormEvent<HTMLSelectElement>) => {
     replace(criteria.id, event.currentTarget.value, criteria.params)
+  }
+
+  const handleWrapChange = (event: React.FormEvent<HTMLSelectElement>) => {
+    wrap(criteria.id, event.currentTarget.value)
   }
 
   const schema = schemas.find((schema) => schema.type === criteria.type)
@@ -97,10 +102,20 @@ function Block({ schemas, criteria, remove, replace }: Props) {
                 </div>
               ) : null}
               <div className={styles.actions}>
-                <button type="button" title="Удалить" onClick={() => remove(criteria.id)}>
-                  x
-                </button>
+                <div>
+                  <button type="button" title="Удалить" onClick={() => remove(criteria.id)}>
+                    x
+                  </button>
+                </div>
                 <select name="type" value={criteria.type} onChange={handleTypeChange}>
+                  {schemas.map((schema) => (
+                    <option key={'criteria-' + criteria.id + '-type-' + schema.type} value={schema.type}>
+                      {schema.name}
+                    </option>
+                  ))}
+                </select>
+                <select name="type" onChange={handleWrapChange}>
+                  <option value="">Обернуть</option>
                   {schemas.map((schema) => (
                     <option key={'criteria-' + criteria.id + '-type-' + schema.type} value={schema.type}>
                       {schema.name}
@@ -125,6 +140,7 @@ function Block({ schemas, criteria, remove, replace }: Props) {
                       criteria={criteriaInput.value}
                       remove={remove}
                       replace={replace}
+                      wrap={wrap}
                     />
                   ) : null}
                 </div>

@@ -96,6 +96,10 @@ export class Inputs {
     return new Inputs(this.inputs.map((input) => new Input(input.type, input.value.replace(id, criteria, params))))
   }
 
+  wrap(id: string, criteria: Criteria): Inputs {
+    return new Inputs(this.inputs.map((input) => new Input(input.type, input.value.wrap(id, criteria))))
+  }
+
   toJSON(): JsonInputView[] {
     return this.inputs.map((input) => input.toJSON())
   }
@@ -137,7 +141,7 @@ export class Node {
 
   remove(id: string): Node {
     if (this.id === id) {
-      return new Node(v4(), new None(), new Params([]), new Inputs([]))
+      return this.inputs.getInput('one').value
     }
     return new Node(this.id, this.criteria, this.params, this.inputs.remove(id))
   }
@@ -147,6 +151,13 @@ export class Node {
       return new Node(v4(), criteria, params, this.inputs)
     }
     return new Node(this.id, this.criteria, this.params, this.inputs.replace(id, criteria, params))
+  }
+
+  wrap(id: string, criteria: Criteria) {
+    if (this.id === id) {
+      return new Node(v4(), criteria, Params.blank(), new Inputs([new Input('one', this)]))
+    }
+    return new Node(this.id, this.criteria, this.params, this.inputs.wrap(id, criteria))
   }
 
   toJSON(): JsonNodeView {

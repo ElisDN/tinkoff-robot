@@ -260,6 +260,19 @@ app.put('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria', asy
     .catch((err) => res.status(500).json({ message: err.message }))
 })
 
+app.post('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria/wrap', async function (req, res) {
+  if (!req.body.type) {
+    return res.status(422).json({ message: 'Укажите тип критерия' })
+  }
+  const criteria = availableCriterias.get(req.body.type)
+  return robotsPool
+    .changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
+      return strategy.wrap(req.params.criteria, criteria)
+    })
+    .then(() => res.status(201).end())
+    .catch((err) => res.status(500).json({ message: err.message }))
+})
+
 app.get('/api/accounts/:account/robots/:robot/back-test', async function (req, res) {
   const from = new Date()
   from.setDate(from.getDate() - 4)

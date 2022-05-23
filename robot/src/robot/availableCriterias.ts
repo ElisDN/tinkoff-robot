@@ -1,5 +1,5 @@
 import { Criteria, Schema } from './criteria'
-import NotFound from '../criterias/NotFound'
+import None from '../criterias/None'
 
 export class AvailableCriterias {
   private readonly criterias: Criteria[]
@@ -11,7 +11,7 @@ export class AvailableCriterias {
   get(type: string): Criteria {
     const root = this.criterias.find((available) => available.getSchema().type === type)
     if (!root) {
-      return new NotFound()
+      return new None()
     }
     return root
   }

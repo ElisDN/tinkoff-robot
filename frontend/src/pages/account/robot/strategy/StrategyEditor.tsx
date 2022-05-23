@@ -90,6 +90,27 @@ function StrategyEditor({ accountId, robotId, onChange }: Props) {
       .catch(() => null)
   }
 
+  const wrapCriteria = (id: string, type: string) => {
+    setError(null)
+    getToken()
+      .then((token) => {
+        api(`/api/accounts/${accountId}/robots/${robotId}/strategy/criterias/${id}/wrap`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + token,
+          },
+          body: JSON.stringify({ type }),
+        })
+          .then(() => {
+            loadStrategy()
+            onChange()
+          })
+          .catch((error) => setError(error.message || error.statusText))
+      })
+      .catch(() => null)
+  }
+
   return (
     <div className="card my-3">
       <div className="card-header">Стратегия</div>
@@ -103,6 +124,7 @@ function StrategyEditor({ accountId, robotId, onChange }: Props) {
             criteria={strategy.sell}
             remove={removeCriteria}
             replace={replaceCriteria}
+            wrap={wrapCriteria}
           />
           <br />
           <p>Купить:</p>
@@ -112,6 +134,7 @@ function StrategyEditor({ accountId, robotId, onChange }: Props) {
             criteria={strategy.buy}
             remove={removeCriteria}
             replace={replaceCriteria}
+            wrap={wrapCriteria}
           />
         </div>
       ) : null}

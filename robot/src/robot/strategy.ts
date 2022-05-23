@@ -60,4 +60,8 @@ export class Strategy {
   replace(criteriaId: string, criteria: Criteria, params: Params) {
     return new Strategy(this.buy.replace(criteriaId, criteria, params), this.sell.replace(criteriaId, criteria, params))
   }
+
+  wrap(criteriaId: string, criteria: Criteria) {
+    return new Strategy(this.buy.wrap(criteriaId, criteria), this.sell.wrap(criteriaId, criteria))
+  }
 }
