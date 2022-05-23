@@ -31,19 +31,12 @@ function RobotPage() {
       .then((token) => {
         api(`/api/accounts/${accountId}`, {
           headers: { Authorization: 'Bearer ' + token },
-        })
-          .then((data) => {
-            setAccount(data)
-
-            api(`/api/accounts/${accountId}/robots/${robotId}`, {
-              headers: { Authorization: 'Bearer ' + token },
-            })
-              .then((data) => setRobot(data))
-              .catch((error) => setError(error.message || error.statusText))
-          })
-          .catch((error) => setError(error.message || error.statusText))
+        }).then((data) => setAccount(data))
+        api(`/api/accounts/${accountId}/robots/${robotId}`, {
+          headers: { Authorization: 'Bearer ' + token },
+        }).then((data) => setRobot(data))
       })
-      .catch(() => null)
+      .catch((error) => setError(error.message || error.statusText))
   }, [])
 
   return (
