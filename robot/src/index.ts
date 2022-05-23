@@ -122,6 +122,13 @@ app.get('/api/accounts/:account/portfolio', async function (req, res) {
     (
       await Promise.all(
         positions.map(async (position) => {
+          if (position.figi === 'FG0000000000') {
+            return {
+              ...position,
+              name: '',
+              ticker: '',
+            }
+          }
           return instrumentsService.getByFigi(position.figi).then((instrument) => ({
             ...position,
             name: instrument.name,
@@ -131,6 +138,19 @@ app.get('/api/accounts/:account/portfolio', async function (req, res) {
       )
     ).sort((a, b) => a.name.localeCompare(b.name))
   )
+})
+
+app.post('/api/accounts/:account/portfolio/sandbox-pay', function (req, res) {
+  if (!req.body.amount) {
+    return res.status(422).json({ message: 'Заполните сумму' })
+  }
+  if (!req.body.currency) {
+    return res.status(422).json({ message: 'Заполните валюту' })
+  }
+  accountsService
+    .paySandboxAccount(req.params.account, req.body.amount, req.body.currency)
+    .then(() => res.status(201).end())
+    .catch((err) => res.status(400).json({ message: err.message }))
 })
 
 app.get('/api/robots', async function (req, res) {

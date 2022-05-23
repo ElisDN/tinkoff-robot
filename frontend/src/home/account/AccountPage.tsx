@@ -44,7 +44,7 @@ function AccountPage() {
       </nav>
       {error ? <div className="alert alert-danger">{error}</div> : null}
       {account !== null ? <Robots accountId={account.id} /> : null}
-      {account !== null ? <Portfolio accountId={account.id} /> : null}
+      {account !== null ? <Portfolio accountId={account.id} accountReal={account.real} /> : null}
     </div>
   )
 }

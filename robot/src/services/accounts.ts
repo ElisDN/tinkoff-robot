@@ -1,5 +1,6 @@
 import { AccessLevel, AccountStatus } from '../sdk/contracts/users'
 import { Client } from '../sdk/client'
+import { floatToMoney } from './convert'
 
 export type Account = {
   id: string
@@ -32,6 +33,12 @@ class AccountsService {
 
   public openSandboxAccount() {
     return this.client.sandbox.openSandboxAccount({}).then(() => {
+      this.sandbox = null
+    })
+  }
+
+  paySandboxAccount(accountId: string, amount: number, currency: string) {
+    return this.client.sandbox.sandboxPayIn({ accountId, amount: floatToMoney(amount, currency) }).then(() => {
       this.sandbox = null
     })
   }
