@@ -3,9 +3,9 @@ import useAuth from './auth/useAuth'
 import Login from './login/Login'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import NotFound from './NotFound'
-import AccountPage from './home/account/AccountPage'
-import HomePage from './home/HomePage'
-import RobotPage from './home/account/robot/RobotPage'
+import AccountPage from './pages/account/AccountPage'
+import HomePage from './pages/HomePage'
+import RobotPage from './pages/account/robot/RobotPage'
 
 function App() {
   const { isAuthenticated } = useAuth()
