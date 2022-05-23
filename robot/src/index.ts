@@ -27,6 +27,9 @@ import { MemoryStorage } from 'node-ts-cache-storage-memory'
 import { Params } from './robot/node'
 import InstrumentsService from './services/instruments'
 import { Trader } from './robot/trading'
+import PricesHigh from './criterias/PricesHigh'
+import PricesLow from './criterias/PricesLow'
+import PricesClose from './criterias/PricesClose'
 
 // Configuration
 
@@ -74,6 +77,9 @@ const availableCriterias = new AvailableCriterias([
   new Less(),
   new Static(),
   new Price(),
+  new PricesHigh(),
+  new PricesLow(),
+  new PricesClose(),
 ])
 
 const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), availableCriterias)

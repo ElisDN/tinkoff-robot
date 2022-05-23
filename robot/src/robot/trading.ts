@@ -34,6 +34,7 @@ export class Data {
       high: price,
       low: price,
       close: price,
+      isComplete: true,
     }
     return new Data(this.date, candle, { [new Date().toUTCString()]: candle }, this.order)
   }

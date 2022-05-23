@@ -9,6 +9,7 @@ export type Candle = {
   high: number
   low: number
   close: number
+  isComplete: boolean
 }
 
 class CandlesService {
@@ -57,6 +58,7 @@ class CandlesService {
                     high: candle.high ? quotationToFloat(candle.high) : -1,
                     low: candle.low ? quotationToFloat(candle.low) : -1,
                     close: candle.close ? quotationToFloat(candle.close) : -1,
+                    isComplete: candle.isComplete,
                   }))
               )
           })
