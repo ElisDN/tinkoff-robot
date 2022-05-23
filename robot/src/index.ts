@@ -223,6 +223,12 @@ app.post('/api/accounts/:account/robots', function (req, res) {
   }
   return instrumentsService
     .getByFigi(req.body.figi)
+    .then((instrument) => {
+      if (!instrument.available) {
+        throw new Error('Инструмент недоступен для торгов')
+      }
+      return instrument
+    })
     .then((instrument) =>
       robotsPool.add(req.params.account, req.body.name, uuid(), instrument.figi, req.body.from || null)
     )
