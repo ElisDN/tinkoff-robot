@@ -68,7 +68,7 @@ function Chart({ accountId, robotId }: Props) {
 
   return (
     <div className="row">
-      <div className="col-md-10">
+      <div className="col-md-8 col-lg-10">
         <div className="card my-3">
           <div className="card-header">
             <div className="btn-group float-end">
@@ -174,7 +174,7 @@ function Chart({ accountId, robotId }: Props) {
           </div>
         </div>
       </div>
-      <div className="col-md-2">
+      <div className="col-md-4 col-lg-2">
         <div className="card my-3">
           <div className="card-header">Итог</div>
           <table className="table my-0">
