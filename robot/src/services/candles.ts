@@ -14,33 +14,40 @@ class CandlesService {
   public async get(figi: string, from: Date, to: Date): Promise<HistoricCandle[]> {
     const cacheKey = 'candles-' + figi + '-' + from.toDateString() + '-' + to.toDateString()
 
-    const cached = await this.cache.getItem<HistoricCandle[]>(cacheKey)
-    if (cached) {
-      return cached
-    }
+    return this.cache
+      .getItem<Promise<HistoricCandle[]>>(cacheKey)
+      .then((cached) => {
+        if (cached) {
+          return cached
+        }
 
-    const candles: HistoricCandle[] = []
+        const searches = []
+        const fromDate = new Date(from)
+        while (fromDate <= to) {
+          const toDate = new Date(fromDate)
+          toDate.setDate(fromDate.getDate() + 1)
+          searches.push({ fromDate: new Date(fromDate), toDate: new Date(toDate) })
+          fromDate.setDate(fromDate.getDate() + 1)
+        }
 
-    const fromDate = new Date(from)
-
-    while (fromDate <= to) {
-      const toDate = new Date(fromDate)
-      toDate.setDate(fromDate.getDate() + 1)
-      const response = await this.client.marketData.getCandles({
-        figi,
-        from: fromDate,
-        to: toDate,
-        interval: CandleInterval.CANDLE_INTERVAL_1_MIN,
+        return Promise.all(
+          searches.map((search) => {
+            return this.client.marketData
+              .getCandles({
+                figi,
+                from: search.fromDate,
+                to: search.toDate,
+                interval: CandleInterval.CANDLE_INTERVAL_1_MIN,
+              })
+              .then((response) => response.candles)
+          })
+        ).then((batches) => {
+          return batches.flatMap((batch) => batch)
+        })
       })
-      candles.push(...response.candles)
-      fromDate.setDate(fromDate.getDate() + 1)
-    }
-
-    await this.cache.setItem(cacheKey, candles, {
-      ttl: 10,
-    })
-
-    return candles
+      .then((candles) => {
+        return this.cache.setItem(cacheKey, candles, { ttl: 10 }).then(() => candles)
+      })
   }
 }
 

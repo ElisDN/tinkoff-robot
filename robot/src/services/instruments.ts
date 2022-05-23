@@ -18,35 +18,30 @@ class InstrumentsService {
     this.cache = cache
   }
 
-  public async getByFigi(figi: string): Promise<Instrument> {
+  public getByFigi(figi: string): Promise<Instrument> {
     const cacheKey = 'instrument-' + figi
 
-    const cached = await this.cache.getItem<Instrument>(cacheKey)
-    if (cached) {
-      return cached
-    }
-
-    const response = await this.client.instruments.getInstrumentBy({
-      idType: InstrumentIdType.INSTRUMENT_ID_TYPE_FIGI,
-      id: figi,
+    return this.cache.getItem<Promise<Instrument>>(cacheKey).then((cached) => {
+      if (cached) {
+        return cached
+      }
+      return this.client.instruments
+        .getInstrumentBy({ idType: InstrumentIdType.INSTRUMENT_ID_TYPE_FIGI, id: figi })
+        .then<Instrument>((response) => {
+          if (!response.instrument) {
+            throw new Error('Инструмент ' + figi + ' не найден')
+          }
+          return {
+            figi: response.instrument.figi,
+            ticker: response.instrument.ticker,
+            name: response.instrument.name,
+            lot: response.instrument.lot,
+          }
+        })
+        .then((instrument) => {
+          return this.cache.setItem(cacheKey, instrument, { ttl: 60 }).then(() => instrument)
+        })
     })
-
-    if (!response.instrument) {
-      throw new Error('Инструмент ' + figi + ' не найден')
-    }
-
-    const instrument = {
-      figi: response.instrument.figi,
-      ticker: response.instrument.ticker,
-      name: response.instrument.name,
-      lot: response.instrument.lot,
-    }
-
-    await this.cache.setItem(cacheKey, instrument, {
-      ttl: 60,
-    })
-
-    return instrument
   }
 }
 

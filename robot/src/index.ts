@@ -121,12 +121,11 @@ app.get('/api/accounts/:account/portfolio', async function (req, res) {
     (
       await Promise.all(
         positions.map(async (position) => {
-          const instrument = await instrumentsService.getByFigi(position.figi)
-          return {
+          return instrumentsService.getByFigi(position.figi).then((instrument) => ({
             ...position,
             name: instrument.name,
             ticker: instrument.ticker,
-          }
+          }))
         })
       )
     ).sort((a, b) => a.name.localeCompare(b.name))
@@ -138,17 +137,16 @@ app.get('/api/accounts/:account/robots', async function (req, res) {
   res.json(
     await Promise.all(
       robots.map(async (robot) => {
-        const instrument = await instrumentsService.getByFigi(robot.figi)
-        return {
+        return instrumentsService.getByFigi(robot.figi).then((instrument) => ({
           ...robot,
           instrument: instrument.name,
-        }
+        }))
       })
     )
   )
 })
 
-app.post('/api/accounts/:account/robots', async function (req, res) {
+app.post('/api/accounts/:account/robots', function (req, res) {
   if (!req.body.figi) {
     return res.status(422).json({ message: 'Заполните FIGI' })
   }
@@ -170,18 +168,18 @@ app.get('/api/accounts/:account/robots/:robot', async function (req, res) {
   })
 })
 
-app.delete('/api/accounts/:account/robots/:robot', async function (req, res) {
+app.delete('/api/accounts/:account/robots/:robot', function (req, res) {
   robotsPool
     .remove(req.params.account, req.params.robot)
     .then(() => res.status(204).end())
     .catch((err) => res.status(400).json({ message: err.message }))
 })
 
-app.get('/api/criterias', async function (req, res) {
+app.get('/api/criterias', function (req, res) {
   res.json(availableCriterias.getAllSchemas())
 })
 
-app.get('/api/accounts/:account/robots/:robot/strategy', async function (req, res) {
+app.get('/api/accounts/:account/robots/:robot/strategy', function (req, res) {
   const strategy = robotsPool.viewStrategy(req.params.account, req.params.robot)
   res.json(strategy)
 })

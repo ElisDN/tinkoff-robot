@@ -42,7 +42,7 @@ export class FileRobotsStorage implements RobotsStorage {
   }
 
   async save(robot: Robot) {
-    await fs.writeFileSync(
+    return fs.writeFileSync(
       path.resolve(this.path, robot.getId() + '.json'),
       JSON.stringify({
         id: robot.getId(),
@@ -55,7 +55,7 @@ export class FileRobotsStorage implements RobotsStorage {
   }
 
   async remove(robot: Robot) {
-    await promises.rm(path.resolve(this.path, robot.getId() + '.json'))
+    return promises.rm(path.resolve(this.path, robot.getId() + '.json'))
   }
 }
 

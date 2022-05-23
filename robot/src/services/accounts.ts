@@ -1,4 +1,4 @@
-import { AccessLevel, AccountStatus, AccountType } from '../sdk/contracts/users'
+import { AccessLevel, AccountStatus } from '../sdk/contracts/users'
 import { Client } from '../sdk/client'
 
 export type Account = {
@@ -9,64 +9,67 @@ export type Account = {
 
 class AccountsService {
   private readonly client: Client
-  private real: Account[] | null = null
-  private sandbox: Account[] | null = null
+  private real: Promise<Account[]> | null = null
+  private sandbox: Promise<Account[]> | null = null
 
   constructor(client: Client) {
     this.client = client
   }
 
   public async getAll(): Promise<Account[]> {
-    const real = await this.getAllReal()
-    const sandbox = await this.getAllSandbox()
-    return [...real, ...sandbox]
+    return Promise.all([this.getAllReal(), this.getAllSandbox()]).then(([real, sandbox]) => [...real, ...sandbox])
   }
 
-  public async get(id: string): Promise<Account> {
-    const accounts = await this.getAll()
-    const account = accounts.find((account) => account.id === id)
-    if (account) {
+  public get(id: string): Promise<Account> {
+    return this.getAll().then((accounts) => {
+      const account = accounts.find((account) => account.id === id)
+      if (!account) {
+        throw new Error('Счёт не найден')
+      }
       return account
-    }
-    throw new Error('Счёт не найден')
+    })
   }
 
-  public async openSandboxAccount() {
-    await this.client.sandbox.openSandboxAccount({})
-    this.sandbox = null
+  public openSandboxAccount() {
+    return this.client.sandbox.openSandboxAccount({}).then(() => {
+      this.sandbox = null
+    })
   }
 
-  public async closeSandboxAccount(accountId: string) {
-    await this.client.sandbox.closeSandboxAccount({ accountId })
-    this.sandbox = null
+  public closeSandboxAccount(accountId: string) {
+    return this.client.sandbox.closeSandboxAccount({ accountId }).then(() => {
+      this.sandbox = null
+    })
   }
 
-  private async getAllReal(): Promise<Account[]> {
+  private getAllReal(): Promise<Account[]> {
     if (this.real === null) {
-      const real = await this.client.users.getAccounts({})
-      this.real = real.accounts
-        .filter(
-          (account) =>
-            account.status === AccountStatus.ACCOUNT_STATUS_OPEN &&
-            account.accessLevel === AccessLevel.ACCOUNT_ACCESS_LEVEL_FULL_ACCESS
-        )
-        .map<Account>((account) => ({ real: true, id: account.id, name: account.name || account.id }))
+      this.real = this.client.users.getAccounts({}).then((response) => {
+        return response.accounts
+          .filter(
+            (account) =>
+              account.status === AccountStatus.ACCOUNT_STATUS_OPEN &&
+              account.accessLevel === AccessLevel.ACCOUNT_ACCESS_LEVEL_FULL_ACCESS
+          )
+          .map<Account>((account) => ({ real: true, id: account.id, name: account.name || account.id }))
+      })
     }
-    return this.real || []
+    return this.real
   }
 
-  private async getAllSandbox(): Promise<Account[]> {
+  private getAllSandbox(): Promise<Account[]> {
     if (this.sandbox === null) {
-      const sandbox = await this.client.sandbox.getSandboxAccounts({})
-      this.sandbox = sandbox.accounts
-        .filter((account) => account.status === AccountStatus.ACCOUNT_STATUS_OPEN)
-        .map<Account>((account) => ({
-          real: false,
-          id: account.id,
-          name: 'Песочница ' + account.id.slice(0, 4).toUpperCase(),
-        }))
+      this.sandbox = this.client.sandbox.getSandboxAccounts({}).then((response) => {
+        return response.accounts
+          .filter((account) => account.status === AccountStatus.ACCOUNT_STATUS_OPEN)
+          .map<Account>((account) => ({
+            real: false,
+            id: account.id,
+            name: 'Песочница ' + account.id.slice(0, 4).toUpperCase(),
+          }))
+      })
     }
-    return this.sandbox || []
+    return this.sandbox
   }
 }
 

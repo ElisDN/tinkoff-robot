@@ -20,7 +20,7 @@ class RobotsPool {
   async add(accountId: string, name: string, robotId: string, figi: string) {
     const robot = new Robot(robotId, name, accountId, figi, Strategy.blank())
     this.robots.push(robot)
-    await this.storage.save(robot)
+    return this.storage.save(robot)
   }
 
   async remove(accountId: string, robotId: string) {
@@ -29,7 +29,7 @@ class RobotsPool {
     if (index > -1) {
       this.robots.splice(index, 1)
     }
-    await this.storage.remove(robot)
+    return this.storage.remove(robot)
   }
 
   async removeAllRobotsForAccout(accountId: string) {
@@ -42,7 +42,7 @@ class RobotsPool {
     const robot = this.get(accountId, robotId)
     const strategy = callback(robot.getStrategy())
     robot.changeStrategy(strategy)
-    await this.storage.save(robot)
+    return this.storage.save(robot)
   }
 
   view(accountId: string, robotId: string): RobotView {

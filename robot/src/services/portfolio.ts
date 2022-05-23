@@ -17,16 +17,16 @@ class PortfolioService {
     this.client = client
   }
 
-  public async getPositions(account: Account): Promise<Position[]> {
-    let response
+  public getPositions(account: Account): Promise<Position[]> {
+    let promise
     if (account.real) {
-      response = await this.client.operations.getPortfolio({ accountId: account.id })
+      promise = this.client.operations.getPortfolio({ accountId: account.id })
     } else {
-      response = await this.client.sandbox.getSandboxPortfolio({ accountId: account.id })
+      promise = this.client.sandbox.getSandboxPortfolio({ accountId: account.id })
     }
 
-    return response.positions.map<Position>((position) => {
-      return {
+    return promise.then((response) => {
+      return response.positions.map<Position>((position) => ({
         type: position.instrumentType,
         figi: position.figi,
         quantity: position.quantity ? quotationToFloat(position.quantity) : null,
@@ -36,7 +36,7 @@ class PortfolioService {
           position.currentPrice && position.quantity
             ? moneyToFloat(position.currentPrice) * quotationToFloat(position.quantity)
             : null,
-      }
+      }))
     })
   }
 }
