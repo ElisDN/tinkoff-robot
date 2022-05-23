@@ -39,6 +39,8 @@ import OrdersService from './services/orders'
 import accounts from './services/accounts'
 import operations from './services/operations'
 import OperationsService from './services/operations'
+import LastBuyPrice from './criterias/LastBuyPrice'
+import LastSellPrice from './criterias/LastSellPrice'
 
 // Configuration
 
@@ -95,6 +97,8 @@ const availableCriterias = new AvailableCriterias([
   new PricesHigh(),
   new PricesLow(),
   new PricesClose(),
+  new LastBuyPrice(),
+  new LastSellPrice(),
   new SMA(),
 ])
 

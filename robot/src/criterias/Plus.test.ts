@@ -13,6 +13,7 @@ test('plus metrics', () => {
   expect(result.metrics).toEqual<Metric[]>([
     { id: 'id-2', name: 'Значение', value: 11 },
     { id: 'id-3', name: 'Значение', value: 22 },
+    { id: 'id-1', name: 'Плюс', value: 33 },
   ])
 })
 

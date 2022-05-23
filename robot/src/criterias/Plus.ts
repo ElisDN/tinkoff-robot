@@ -1,6 +1,6 @@
 import { Criteria, Schema } from '../robot/criteria'
 import { Inputs, Params } from '../robot/node'
-import { Data, Result } from '../robot/trading'
+import { Data, Metric, Result } from '../robot/trading'
 
 class Plus implements Criteria {
   getSchema(): Schema {
@@ -36,7 +36,9 @@ class Plus implements Criteria {
       return new Result(null, [...one.metrics, ...two.metrics])
     }
 
-    return new Result(one.value + two.value, [...one.metrics, ...two.metrics])
+    const value = one.value + two.value
+
+    return new Result(value, [...one.metrics, ...two.metrics, new Metric(id, 'Минус', value)])
   }
 }
 
