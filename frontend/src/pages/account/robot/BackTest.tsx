@@ -225,7 +225,7 @@ function BackTest({ accountId, robotId }: Props) {
                   </td>
                 </tr>
                 <tr>
-                  <th>Стартовая стоимость</th>
+                  <th>Начальная стоимость</th>
                   <td>{formatPrice(result.summary.startCost)}</td>
                 </tr>
                 <tr>
@@ -252,10 +252,12 @@ function BackTest({ accountId, robotId }: Props) {
                   <th>Торговый доход</th>
                   <td>{formatPrice(result.summary.tradingPofit)}</td>
                 </tr>
-                <tr>
-                  <th>Доход если продать</th>
-                  <td>{formatPrice(result.summary.tradingEndPofit)}</td>
-                </tr>
+                {result.summary.tradingEndPofit !== result.summary.tradingPofit ? (
+                  <tr>
+                    <th>Доход если продать</th>
+                    <td>{formatPrice(result.summary.tradingEndPofit)}</td>
+                  </tr>
+                ) : null}
               </tbody>
             </table>
           ) : null}
