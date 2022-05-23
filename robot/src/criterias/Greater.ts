@@ -32,7 +32,7 @@ class Greater implements Criteria {
       return new Result(null, [...one.metrics, ...two.metrics])
     }
 
-    return new Result(one.value > two.value ? 1 : 0, [...two.metrics, ...two.metrics])
+    return new Result(one.value > two.value ? 1 : 0, [...one.metrics, ...two.metrics])
   }
 }
 

@@ -7,6 +7,7 @@ type Instrument = {
   ticker: string
   name: string
   lot: number
+  available: boolean
 }
 
 class InstrumentsService {
@@ -25,6 +26,7 @@ class InstrumentsService {
         ticker: '',
         name: '',
         lot: 1,
+        available: true,
       })
     }
 
@@ -45,6 +47,7 @@ class InstrumentsService {
             ticker: response.instrument.ticker,
             name: response.instrument.name,
             lot: response.instrument.lot,
+            available: response.instrument.buyAvailableFlag && response.instrument.buyAvailableFlag,
           }
         })
         .then((instrument) => {
