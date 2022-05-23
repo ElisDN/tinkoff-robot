@@ -11,8 +11,8 @@ const strategy = new Strategy(
     new Less(),
     Params.blank(),
     new Inputs([
-      new Input('that', new Node('id-2', new Price(), Params.blank(), Inputs.blank())),
-      new Input('than', Node.forStatic('id-3', 100)),
+      new Input('one', new Node('id-2', new Price(), Params.blank(), Inputs.blank())),
+      new Input('two', Node.forStatic('id-3', 100)),
     ])
   ),
   new Node(
@@ -20,8 +20,8 @@ const strategy = new Strategy(
     new Greater(),
     Params.blank(),
     new Inputs([
-      new Input('that', new Node('id-5', new Price(), Params.blank(), Inputs.blank())),
-      new Input('than', Node.forStatic('id-6', 200)),
+      new Input('one', new Node('id-5', new Price(), Params.blank(), Inputs.blank())),
+      new Input('two', Node.forStatic('id-6', 200)),
     ])
   )
 )

@@ -11,7 +11,7 @@ class Not implements Criteria {
       params: [],
       inputs: [
         {
-          type: 'that',
+          type: 'one',
           name: 'что',
           multiple: false,
         },
@@ -20,7 +20,7 @@ class Not implements Criteria {
   }
 
   eval(id: string, data: Data, params: Params, inputs: Inputs): Result {
-    const that = inputs.get('that', data)
+    const that = inputs.get('one', data)
 
     if (that.value === null) {
       return new Result(null, [...that.metrics, ...that.metrics])

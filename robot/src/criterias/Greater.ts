@@ -11,12 +11,12 @@ class Greater implements Criteria {
       params: [],
       inputs: [
         {
-          type: 'that',
+          type: 'one',
           name: 'что',
           multiple: false,
         },
         {
-          type: 'than',
+          type: 'two',
           name: 'чего',
           multiple: false,
         },
@@ -25,14 +25,14 @@ class Greater implements Criteria {
   }
 
   eval(id: string, data: Data, params: Params, inputs: Inputs): Result {
-    const that = inputs.get('that', data)
-    const than = inputs.get('than', data)
+    const one = inputs.get('one', data)
+    const two = inputs.get('two', data)
 
-    if (that.value === null || than.value === null) {
-      return new Result(null, [...that.metrics, ...that.metrics])
+    if (one.value === null || two.value === null) {
+      return new Result(null, [...one.metrics, ...two.metrics])
     }
 
-    return new Result(that.value > than.value ? 1 : 0, [...that.metrics, ...than.metrics])
+    return new Result(one.value > two.value ? 1 : 0, [...two.metrics, ...two.metrics])
   }
 }
 

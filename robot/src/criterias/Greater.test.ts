@@ -8,7 +8,7 @@ test('greater metrics', () => {
     'id-1',
     Data.blank(),
     Params.blank(),
-    new Inputs([Input.forStatic('id-2', 'that', 11), Input.forStatic('id-3', 'than', 22)])
+    new Inputs([Input.forStatic('id-2', 'one', 11), Input.forStatic('id-3', 'two', 22)])
   )
   expect(result.metrics).toEqual<Metric[]>([
     { id: 'id-2', name: 'Значение', value: 11 },
@@ -22,7 +22,7 @@ test('greater true', () => {
     'id-1',
     Data.blank(),
     Params.blank(),
-    new Inputs([Input.forStatic('id-2', 'that', 5.2), Input.forStatic('id-3', 'than', 3.6)])
+    new Inputs([Input.forStatic('id-2', 'one', 5.2), Input.forStatic('id-3', 'two', 3.6)])
   )
   expect(result.value).toBe(1)
 })
@@ -33,7 +33,7 @@ test('greater false', () => {
     'id-1',
     Data.blank(),
     Params.blank(),
-    new Inputs([Input.forStatic('id-2', 'that', 4.06), Input.forStatic('id-3', 'than', 6.12)])
+    new Inputs([Input.forStatic('id-2', 'one', 4.06), Input.forStatic('id-3', 'two', 6.12)])
   )
   expect(result.value).toBe(0)
 })
@@ -44,7 +44,7 @@ test('greater equal', () => {
     'id-1',
     Data.blank(),
     Params.blank(),
-    new Inputs([Input.forStatic('id-2', 'that', 4.01), Input.forStatic('id-3', 'than', 4.01)])
+    new Inputs([Input.forStatic('id-2', 'one', 4.01), Input.forStatic('id-3', 'two', 4.01)])
   )
   expect(result.value).toBe(0)
 })
