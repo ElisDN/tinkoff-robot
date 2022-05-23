@@ -20,18 +20,6 @@ class Robot {
     return this.strategy.eval(data)
   }
 
-  is(accountId: string, id: string): boolean {
-    return this.accountId === accountId && this.id === id
-  }
-
-  isFor(accountId: string, figi: string): boolean {
-    return this.accountId === accountId && this.figi === figi
-  }
-
-  isForAccount(accountId: string) {
-    return this.accountId === accountId
-  }
-
   changeStrategy(strategy: Strategy): void {
     this.strategy = strategy
   }

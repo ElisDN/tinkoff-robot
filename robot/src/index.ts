@@ -26,6 +26,7 @@ import { CacheContainer } from 'node-ts-cache'
 import { MemoryStorage } from 'node-ts-cache-storage-memory'
 import { Params } from './robot/node'
 import InstrumentsService from './services/instruments'
+import accounts from './services/accounts'
 
 // Configuration
 
@@ -132,8 +133,25 @@ app.get('/api/accounts/:account/portfolio', async function (req, res) {
   )
 })
 
+app.get('/api/robots', async function (req, res) {
+  const robots = robotsPool.viewAll()
+  res.json(
+    await Promise.all(
+      robots.map(async (robot) => {
+        return accountsService.get(robot.accountId).then((account) => {
+          return instrumentsService.getByFigi(robot.figi).then((instrument) => ({
+            ...robot,
+            accountName: account.name,
+            instrument: instrument.name,
+          }))
+        })
+      })
+    )
+  )
+})
+
 app.get('/api/accounts/:account/robots', async function (req, res) {
-  const robots = robotsPool.viewAll(req.params.account)
+  const robots = robotsPool.viewAllForAccount(req.params.account)
   res.json(
     await Promise.all(
       robots.map(async (robot) => {
@@ -154,7 +172,7 @@ app.post('/api/accounts/:account/robots', function (req, res) {
     return res.status(422).json({ message: 'Заполните имя' })
   }
   robotsPool
-    .add(req.params.account, req.body.name, uuid(), req.body.figi)
+    .add(req.params.account, req.body.name, uuid(), req.body.figi, req.body.from || null)
     .then(() => res.status(201).end())
     .catch((err) => res.status(400).json({ message: err.message }))
 })

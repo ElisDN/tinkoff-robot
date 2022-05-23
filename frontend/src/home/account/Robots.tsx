@@ -14,20 +14,30 @@ type Robot = {
   instrument: string
 }
 
+type AllRobot = {
+  id: string
+  figi: string
+  accountName: string
+  name: string
+  instrument: string
+}
+
 type FormData = {
   figi: string
   name: string
+  from: string
 }
 
 function Robots({ accountId }: Props) {
   const { getToken } = useAuth()
 
   const [robots, setRobots] = useState<Robot[] | null>(null)
+  const [allRobots, setAllRobots] = useState<AllRobot[] | null>(null)
   const [error, setError] = useState(null)
 
-  const [formData, setFormData] = useState<FormData>({ figi: '', name: '' })
+  const [formData, setFormData] = useState<FormData>({ figi: '', name: '', from: '' })
 
-  const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [event.currentTarget.name]: event.currentTarget.value,
@@ -40,11 +50,12 @@ function Robots({ accountId }: Props) {
       .then((token) => {
         api(`/api/accounts/${accountId}/robots`, {
           headers: { Authorization: 'Bearer ' + token },
-        })
-          .then((data) => setRobots(data))
-          .catch((error) => setError(error.message || error.statusText))
+        }).then((data) => setRobots(data))
+        api(`/api/robots`, {
+          headers: { Authorization: 'Bearer ' + token },
+        }).then((data) => setAllRobots(data))
       })
-      .catch(() => null)
+      .catch((error) => setError(error.message || error.statusText))
   }
 
   useEffect(() => {
@@ -66,7 +77,7 @@ function Robots({ accountId }: Props) {
         body: JSON.stringify(formData),
       })
         .then(() => {
-          setFormData({ figi: '', name: '' })
+          setFormData({ figi: '', name: '', from: '' })
           loadRobots()
         })
         .catch(async (error) => {
@@ -130,6 +141,7 @@ function Robots({ accountId }: Props) {
                   onChange={handleChange}
                   className="form-control"
                   placeholder="Название"
+                  required
                 />
               </div>
               <div className="col-auto">
@@ -140,7 +152,20 @@ function Robots({ accountId }: Props) {
                   onChange={handleChange}
                   className="form-control"
                   placeholder="FIGI"
+                  required
                 />
+              </div>
+              <div className="col-auto">
+                <select name="from" value={formData.from} onChange={handleChange} className="form-control">
+                  <option value="">Новая стратегия</option>
+                  {allRobots
+                    ? allRobots.map((allRobot) => (
+                        <option key={'allRobot-' + allRobot.id} value={allRobot.id}>
+                          {allRobot.accountName}: {allRobot.name}
+                        </option>
+                      ))
+                    : null}
+                </select>
               </div>
               <div className="col-auto">
                 <button className="w-100 btn btn-primary" type="submit">
