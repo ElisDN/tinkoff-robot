@@ -15,7 +15,7 @@ import { createAuthAction, createAuthMiddleware } from './auth'
 import Greater from './criterias/Greater'
 import None from './criterias/None'
 import Static from './criterias/Static'
-import Price from './criterias/Price'
+import PriceClose from './criterias/PriceClose'
 import Less from './criterias/Less'
 import { AvailableCriterias } from './robot/availableCriterias'
 import { Strategy } from './robot/strategy'
@@ -77,7 +77,7 @@ const availableCriterias = new AvailableCriterias([
   new Greater(),
   new Less(),
   new Static(),
-  new Price(),
+  new PriceClose(),
   new PricesHigh(),
   new PricesLow(),
   new PricesClose(),

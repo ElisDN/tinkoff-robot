@@ -1,8 +1,8 @@
-import Price from './Price'
+import PriceClose from './PriceClose'
 import { Data, Metric } from '../robot/trading'
 
 test('price', () => {
-  const criteria = new Price()
+  const criteria = new PriceClose()
   const result = criteria.eval('id-42', Data.blank().withPrice(3600))
   expect(result.value).toBe(3600)
 })

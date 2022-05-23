@@ -1,11 +1,11 @@
 import { Criteria, Schema } from '../robot/criteria'
 import { Data, Result } from '../robot/trading'
 
-class Price implements Criteria {
+class PriceClose implements Criteria {
   getSchema(): Schema {
     return {
-      type: 'price',
-      name: 'Цена',
+      type: 'price-close',
+      name: 'Цена закрытия',
       multiple: false,
       params: [],
       inputs: [],
@@ -18,4 +18,4 @@ class Price implements Criteria {
   }
 }
 
-export default Price
+export default PriceClose
