@@ -1,4 +1,4 @@
-import { AccountStatus } from '../sdk/contracts/users'
+import { AccessLevel, AccountStatus, AccountType } from '../sdk/contracts/users'
 import { Client } from '../sdk/client'
 
 export type Account = {
@@ -45,7 +45,11 @@ class AccountsService {
     if (this.real === null) {
       const real = await this.client.users.getAccounts({})
       this.real = real.accounts
-        .filter((account) => account.status === AccountStatus.ACCOUNT_STATUS_OPEN)
+        .filter(
+          (account) =>
+            account.status === AccountStatus.ACCOUNT_STATUS_OPEN &&
+            account.accessLevel === AccessLevel.ACCOUNT_ACCESS_LEVEL_FULL_ACCESS
+        )
         .map<Account>((account) => ({ real: true, id: account.id, name: account.name || account.id }))
     }
     return this.real || []
