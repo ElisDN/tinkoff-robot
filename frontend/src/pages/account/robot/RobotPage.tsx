@@ -24,6 +24,7 @@ function RobotPage() {
   const [account, setAccount] = useState<AccountResponse | null>(null)
   const [robot, setRobot] = useState<Robot | null>(null)
   const [error, setError] = useState(null)
+  const [chartKey, setChartKey] = useState(1)
 
   useEffect(() => {
     setError(null)
@@ -40,7 +41,7 @@ function RobotPage() {
   }, [])
 
   return (
-    <div className="container py-3">
+    <div className="container-fluid py-3">
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
@@ -69,8 +70,8 @@ function RobotPage() {
           </table>
         ) : null}
       </div>
-      <StrategyEditor accountId={accountId || ''} robotId={robotId || ''} />
-      <Chart accountId={accountId || ''} robotId={robotId || ''} />
+      <Chart key={'chart' + chartKey} accountId={accountId || ''} robotId={robotId || ''} />
+      <StrategyEditor accountId={accountId || ''} robotId={robotId || ''} onChange={() => setChartKey(chartKey + 1)} />
     </div>
   )
 }

@@ -8,7 +8,7 @@ type Props = {
   robotId: string
 }
 
-interface Candle {
+type Candle = {
   time: string
   open: number
   high: number
@@ -16,11 +16,31 @@ interface Candle {
   close: number
 }
 
+type Order = {
+  buy: boolean
+}
+
+type Metric = {
+  id: string
+  name: string
+  value: number | null
+}
+
+type Eval = {
+  request: Order | null
+  metrics: Metric[]
+}
+
+type Tick = {
+  candle: Candle
+  eval: Eval
+}
+
 function Chart({ accountId, robotId }: Props) {
   const { getToken } = useAuth()
 
   const [barWidth, setBarWidth] = useState<number>(1)
-  const [candles, setCandles] = useState<Candle[] | null>(null)
+  const [ticks, setTicks] = useState<Tick[] | null>(null)
   const [error, setError] = useState(null)
 
   useEffect(() => {
@@ -30,7 +50,7 @@ function Chart({ accountId, robotId }: Props) {
         api(`/api/accounts/${accountId}/robots/${robotId}/chart`, {
           headers: { Authorization: 'Bearer ' + token },
         })
-          .then((data) => setCandles(data))
+          .then((data) => setTicks(data))
           .catch((error) => setError(error.message || error.statusText))
       })
       .catch(() => null)
@@ -40,10 +60,10 @@ function Chart({ accountId, robotId }: Props) {
     return price.toFixed(2)
   }
 
-  const min = candles ? Math.min(...candles.map((candle) => candle.low)) : 0
-  const max = candles ? Math.max(...candles.map((candle) => candle.high)) : 0
+  const min = ticks ? Math.min(...ticks.map((tick) => tick.candle.low)) : 0
+  const max = ticks ? Math.max(...ticks.map((tick) => tick.candle.high)) : 0
 
-  const height = 400
+  const height = 500
   const verticalScale = height / (max - min)
 
   return (
@@ -57,53 +77,99 @@ function Chart({ accountId, robotId }: Props) {
             &ndash;
           </button>
         </div>
+        Тест
       </div>
       {error ? <div className="alert alert-danger my-0">{error}</div> : null}
-      {candles !== null ? (
-        <div className="area">
-          <svg width={candles.length * barWidth} height={height}>
-            {candles.map((candle, index) => {
+      <div className="area" style={{ height: height }}>
+        {ticks !== null ? (
+          <svg width={ticks.length * barWidth} height={height} style={{ display: 'block', margin: '0 auto' }}>
+            {ticks.map((tick, index) => {
               let candleClass = 'candle'
-              if (candle.open < candle.close) {
+              if (tick.candle.open < tick.candle.close) {
                 candleClass += ' candle-up'
               }
-              if (candle.open > candle.close) {
+              if (tick.candle.open > tick.candle.close) {
                 candleClass += ' candle-down'
               }
               return (
-                <g key={candle.time} className="bar">
+                <g key={tick.candle.time} className="bar">
                   <rect x={index * barWidth} width={barWidth} y={0} height={height} />
                   <rect
                     className="candle"
                     x={index * barWidth + barWidth / 2 - barWidth / 20}
                     width={Math.max(barWidth / 10, 1)}
-                    y={(max - candle.high) * verticalScale}
-                    height={Math.abs(candle.high - candle.low) * verticalScale}
+                    y={(max - tick.candle.high) * verticalScale}
+                    height={Math.abs(tick.candle.high - tick.candle.low) * verticalScale}
                   />
                   <rect
                     className={candleClass}
                     x={index * barWidth}
                     width={barWidth}
-                    y={(max - Math.max(candle.open, candle.close)) * verticalScale}
-                    height={Math.max(1, Math.abs(candle.open - candle.close) * verticalScale)}
+                    y={(max - Math.max(tick.candle.open, tick.candle.close)) * verticalScale}
+                    height={Math.max(1, Math.abs(tick.candle.open - tick.candle.close) * verticalScale)}
                   />
+                  {tick.eval.metrics.map((metric, i) => {
+                    if (metric.value === null) {
+                      return null
+                    }
+                    return (
+                      <rect
+                        key={'metric-' + i}
+                        x={index * barWidth}
+                        y={(max - metric.value) * verticalScale}
+                        width={barWidth * 0.5}
+                        height={2}
+                        fill={'#000'}
+                      />
+                    )
+                  })}
                   <title>
-                    {new Date(candle.time).toUTCString()}
+                    {new Date(tick.candle.time).toUTCString()}
                     {'\n\n'}
-                    Открытие: {formatPrice(candle.open)}
+                    Открытие: {formatPrice(tick.candle.open)}
                     {'\n'}
-                    Закрытие: {formatPrice(candle.close)}
+                    Закрытие: {formatPrice(tick.candle.close)}
                     {'\n\n'}
-                    Масимум: &nbsp;{formatPrice(candle.high)}
+                    Масимум: &nbsp;{formatPrice(tick.candle.high)}
                     {'\n'}
-                    Минимум: &nbsp;{formatPrice(candle.low)}
+                    Минимум: &nbsp;{formatPrice(tick.candle.low)}
+                    {'\n\n'}
+                    {tick.eval.metrics.map((metric) => {
+                      return (
+                        <>
+                          {metric.name}: &nbsp; {metric.value}
+                          {'\n'}
+                        </>
+                      )
+                    })}
                   </title>
                 </g>
               )
             })}
+            {ticks.map((tick, index) => (
+              <>
+                {tick.eval.request ? (
+                  <g key={'order-' + index}>
+                    <circle
+                      cx={index * barWidth + barWidth / 2}
+                      cy={(max - tick.candle.close) * verticalScale}
+                      r={10}
+                      style={{
+                        fill: '#faff5d',
+                        stroke: tick.eval.request.buy ? '#af27dc' : '#f35411',
+                        strokeWidth: '4px',
+                      }}
+                    />
+                    <title>
+                      {tick.eval.request.buy ? 'Покупка' : 'Продажа'} {tick.candle.close}
+                    </title>
+                  </g>
+                ) : null}
+              </>
+            ))}
           </svg>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </div>
   )
 }

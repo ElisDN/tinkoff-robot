@@ -6,6 +6,7 @@ import api from '../../../../api/api'
 type Props = {
   accountId: string
   robotId: string
+  onChange(): void
 }
 
 export type Strategy = {
@@ -13,7 +14,7 @@ export type Strategy = {
   buy: Criteria
 }
 
-function StrategyEditor({ accountId, robotId }: Props) {
+function StrategyEditor({ accountId, robotId, onChange }: Props) {
   const { getToken } = useAuth()
 
   const [schemas, setSchemas] = useState<Schema[]>([])
@@ -59,7 +60,10 @@ function StrategyEditor({ accountId, robotId }: Props) {
           method: 'DELETE',
           headers: { Authorization: 'Bearer ' + token },
         })
-          .then(() => loadStrategy())
+          .then(() => {
+            loadStrategy()
+            onChange()
+          })
           .catch((error) => setError(error.message || error.statusText))
       })
       .catch(() => null)
@@ -77,7 +81,10 @@ function StrategyEditor({ accountId, robotId }: Props) {
           },
           body: JSON.stringify({ type, params }),
         })
-          .then(() => loadStrategy())
+          .then(() => {
+            loadStrategy()
+            onChange()
+          })
           .catch((error) => setError(error.message || error.statusText))
       })
       .catch(() => null)

@@ -1,6 +1,7 @@
 import Robot from './robot'
 import RobotsStorage from './robotsStorage'
 import { Strategy } from './strategy'
+import { Trader } from './trading'
 
 type RobotView = {
   id: string
@@ -11,10 +12,12 @@ type RobotView = {
 
 class RobotsPool {
   private readonly storage: RobotsStorage
+  private readonly trader: Trader
   private robots: Robot[] = []
 
-  constructor(storage: RobotsStorage) {
+  constructor(storage: RobotsStorage, trader: Trader) {
     this.storage = storage
+    this.trader = trader
     this.robots = storage.readAll()
   }
 
@@ -45,6 +48,10 @@ class RobotsPool {
     const strategy = callback(robot.getStrategy())
     robot.changeStrategy(strategy)
     return this.storage.save(robot)
+  }
+
+  async backTest(accountId: string, robotId: string, from: Date) {
+    return this.getInAccount(accountId, robotId).backTest(this.trader, from)
   }
 
   view(accountId: string, robotId: string): RobotView {

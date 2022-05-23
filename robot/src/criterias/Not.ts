@@ -21,6 +21,11 @@ class Not implements Criteria {
 
   eval(id: string, data: Data, params: Params, inputs: Inputs): Result {
     const that = inputs.get('that', data)
+
+    if (that.value === null) {
+      return new Result(null, [...that.metrics, ...that.metrics])
+    }
+
     return new Result(!that.value ? 1 : 0, that.metrics)
   }
 }

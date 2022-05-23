@@ -26,6 +26,7 @@ import { CacheContainer } from 'node-ts-cache'
 import { MemoryStorage } from 'node-ts-cache-storage-memory'
 import { Params } from './robot/node'
 import InstrumentsService from './services/instruments'
+import { Trader } from './robot/trading'
 
 // Configuration
 
@@ -76,7 +77,8 @@ const availableCriterias = new AvailableCriterias([
 ])
 
 const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), availableCriterias)
-const robotsPool = new RobotsPool(robotsStorage)
+const trader = new Trader(candlesService)
+const robotsPool = new RobotsPool(robotsStorage, trader)
 
 // HTTP API Server
 
@@ -251,12 +253,11 @@ app.put('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria', asy
 })
 
 app.get('/api/accounts/:account/robots/:robot/chart', async function (req, res) {
-  const robot = robotsPool.view(req.params.account, req.params.robot)
   const from = new Date()
-  from.setDate(from.getDate() - 4)
-  return candlesService
-    .getHistory(robot.figi, from, new Date())
-    .then((candles) => res.json(candles))
+  from.setDate(from.getDate() - 5)
+  return robotsPool
+    .backTest(req.params.account, req.params.robot, from)
+    .then((results) => res.json(results))
     .catch((err) => res.status(500).json({ message: err.message }))
 })
 

@@ -1,5 +1,5 @@
 import { Criteria, Schema } from '../robot/criteria'
-import { Data, Metric, Result } from '../robot/trading'
+import { Data, Result } from '../robot/trading'
 
 class Price implements Criteria {
   getSchema(): Schema {
@@ -13,7 +13,8 @@ class Price implements Criteria {
   }
 
   eval(id: string, data: Data): Result {
-    return new Result(data.price, [new Metric(id, 'Цена', data.price)])
+    const price = data.candle ? data.candle.close : null
+    return new Result(price, [])
   }
 }
 

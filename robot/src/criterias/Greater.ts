@@ -27,6 +27,11 @@ class Greater implements Criteria {
   eval(id: string, data: Data, params: Params, inputs: Inputs): Result {
     const that = inputs.get('that', data)
     const than = inputs.get('than', data)
+
+    if (that.value === null || than.value === null) {
+      return new Result(null, [...that.metrics, ...that.metrics])
+    }
+
     return new Result(that.value > than.value ? 1 : 0, [...that.metrics, ...than.metrics])
   }
 }

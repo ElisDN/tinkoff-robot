@@ -27,6 +27,11 @@ class And implements Criteria {
   eval(id: string, data: Data, params: Params, inputs: Inputs): Result {
     const one = inputs.get('one', data)
     const two = inputs.get('two', data)
+
+    if (one.value === null || two.value === null) {
+      return new Result(null, [...one.metrics, ...two.metrics])
+    }
+
     return new Result(one.value && two.value ? 1 : 0, [...one.metrics, ...two.metrics])
   }
 }

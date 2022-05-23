@@ -13,7 +13,7 @@ class NotFound implements Criteria {
   }
 
   eval(): Result {
-    return new Result(0, [])
+    return new Result(null, [])
   }
 }
 

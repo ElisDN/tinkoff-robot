@@ -1,5 +1,6 @@
-import { Strategy, TickResult } from './strategy'
-import { Data } from './trading'
+import { Strategy, EvalResult } from './strategy'
+import { Data, TickResult, Trader } from './trading'
+import { v4 } from 'uuid'
 
 class Robot {
   private readonly id: string
@@ -16,8 +17,36 @@ class Robot {
     this.strategy = strategy
   }
 
-  tick(data: Data): TickResult {
+  tick(data: Data): EvalResult {
     return this.strategy.eval(data)
+  }
+
+  async backTest(trader: Trader, from: Date): Promise<TickResult[]> {
+    const candles = await trader.candles.getHistory(this.figi, from, new Date())
+    const results: TickResult[] = []
+    let data = Data.blank(new Date())
+
+    for (const candle of candles) {
+      data = data.withCandle(candle)
+
+      const result = this.tick(data)
+      results.push({
+        eval: result,
+        candle,
+      })
+
+      if (result.request) {
+        data = data.withOrder({
+          id: v4(),
+          date: candle.time,
+          buy: result.request.buy,
+          lots: 1,
+          price: candle.close,
+        })
+      }
+    }
+
+    return results
   }
 
   changeStrategy(strategy: Strategy): void {

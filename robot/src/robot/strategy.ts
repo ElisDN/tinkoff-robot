@@ -14,7 +14,7 @@ export class OrderRequest {
   }
 }
 
-export type TickResult = {
+export type EvalResult = {
   request: OrderRequest | null
   metrics: Metric[]
 }
@@ -32,7 +32,7 @@ export class Strategy {
     return new Strategy(Node.forNone(), Node.forNone())
   }
 
-  eval(data: Data): TickResult {
+  eval(data: Data): EvalResult {
     const buyResult = this.buy.eval(data)
     const sellResult = this.sell.eval(data)
 

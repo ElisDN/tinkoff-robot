@@ -27,7 +27,8 @@ class Or implements Criteria {
   eval(id: string, data: Data, params: Params, inputs: Inputs): Result {
     const one = inputs.get('one', data)
     const two = inputs.get('two', data)
-    return new Result(one.value || two.value ? 1 : 0, [...one.metrics, ...two.metrics])
+    const result = one.value !== null && two.value !== null ? (one.value || two.value ? 1 : 0) : null
+    return new Result(result, [...one.metrics, ...two.metrics])
   }
 }
 
