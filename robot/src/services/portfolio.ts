@@ -1,6 +1,7 @@
 import { Client } from '../sdk/client'
 import { Account } from './accounts'
 import { moneyToFloat, quotationToFloat } from './convert'
+import { PortfolioResponse } from '../sdk/contracts/operations'
 
 type Position = {
   figi: string
@@ -18,7 +19,7 @@ class PortfolioService {
   }
 
   public getPositions(account: Account): Promise<Position[]> {
-    let promise
+    let promise: Promise<PortfolioResponse> | null
     if (account.real) {
       promise = this.client.operations.getPortfolio({ accountId: account.id })
     } else {

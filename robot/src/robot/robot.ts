@@ -1,7 +1,7 @@
 import { Strategy, EvalResult } from './strategy'
-import { Data, Order, Trader } from './trading'
+import { Data, Trader } from './trading'
 import { v4 } from 'uuid'
-import logging from '../sdk/middleware/logging'
+import { Order } from '../services/orders'
 
 class Robot {
   private readonly id: string
@@ -23,13 +23,19 @@ class Robot {
   }
 
   async backTest(trader: Trader, from: Date) {
+    const account = await trader.accounts.get(this.accountId)
     const candles = await trader.candles.getHistory(this.figi, from, new Date())
     const instrument = await trader.instruments.getByFigi(this.figi)
+    const orders = await trader.orders.getAllNew(account, this.figi)
     const lots = 1
+    const comission = 0.003
 
     const results = []
+
     let data = Data.blank(new Date())
-    let order: Order | null = null
+
+    let order: Order | null
+    order = orders.at(-1) || null
 
     for (const candle of candles) {
       data = data.withCandle(candle)
@@ -39,10 +45,12 @@ class Robot {
       if (result.request) {
         order = {
           id: v4(),
+          figi: this.figi,
           date: candle.time,
           buy: result.request.buy,
           lots,
           price: candle.close,
+          comission: candle.close * lots * instrument.lot * comission,
         }
         data = data.withOrder(order)
       } else {
@@ -58,28 +66,27 @@ class Robot {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const orders = results.filter((result) => result.order !== null).map<Order>((result) => result.order)
+    const resultOrders = results.filter((result) => result.order !== null).map<Order>((result) => result.order)
 
-    const total = orders
+    const total = resultOrders
       .map((order) => {
-        return order.price * order.lots * instrument.lot
+        return (order.price || 0) * order.lots * instrument.lot
       })
       .reduce((a, b) => a + b, 0)
 
-    const comission = 0.003
     const comissions = total * comission
 
     const startCost = (candles.at(0)?.close || 0) * instrument.lot * lots
     const endCost = (candles.at(-1)?.close || 0) * instrument.lot * lots
 
-    const tradingPofit = orders
+    const tradingPofit = resultOrders
       .map((order) => {
-        const cost = order.price * order.lots * instrument.lot
-        return (order.buy ? -cost : cost) - cost * comission
+        const cost = (order.price || 0) * order.lots * instrument.lot
+        return (order.buy ? -cost : cost) - (order.comission || 0)
       })
       .reduce((a, b) => a + b, 0)
 
-    const lastOrder = orders.at(-1)
+    const lastOrder = resultOrders.at(-1)
     const tradingEndPofit = lastOrder && lastOrder.buy ? tradingPofit + endCost : tradingPofit
 
     return {
@@ -90,7 +97,7 @@ class Robot {
         startCost,
         endCost,
         diffProfit: (endCost - startCost) * lots,
-        ordersCount: orders.length,
+        ordersCount: resultOrders.length,
         total,
         comissions,
         tradingPofit,

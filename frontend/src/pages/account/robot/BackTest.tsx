@@ -233,7 +233,7 @@ function BackTest({ accountId, robotId }: Props) {
                   <td>{formatPrice(result.summary.endCost)}</td>
                 </tr>
                 <tr>
-                  <th>Естественный доход</th>
+                  <th>Изменение стоимости</th>
                   <td>{formatPrice(result.summary.diffProfit)}</td>
                 </tr>
                 <tr>

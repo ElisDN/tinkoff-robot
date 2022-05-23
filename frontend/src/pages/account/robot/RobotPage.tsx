@@ -4,6 +4,8 @@ import { Link, useParams } from 'react-router-dom'
 import BackTest from './BackTest'
 import StrategyEditor from './strategy/StrategyEditor'
 import api from '../../../api/api'
+import Operations from './Operations'
+import Orders from './Orders'
 
 type AccountResponse = {
   id: string
@@ -71,7 +73,19 @@ function RobotPage() {
         ) : null}
       </div>
       <BackTest key={'chart' + chartKey} accountId={accountId || ''} robotId={robotId || ''} />
-      <StrategyEditor accountId={accountId || ''} robotId={robotId || ''} onChange={() => setChartKey(chartKey + 1)} />
+      <div className="row">
+        <div className="col-md-8 col-lg-9">
+          <StrategyEditor
+            accountId={accountId || ''}
+            robotId={robotId || ''}
+            onChange={() => setChartKey(chartKey + 1)}
+          />
+        </div>
+        <div className="col-md-4 col-lg-3">
+          <Orders accountId={accountId || ''} robotId={robotId || ''} />
+          <Operations accountId={accountId || ''} robotId={robotId || ''} />
+        </div>
+      </div>
     </div>
   )
 }

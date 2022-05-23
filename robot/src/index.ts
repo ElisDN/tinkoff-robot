@@ -35,6 +35,10 @@ import Plus from './criterias/Plus'
 import Minus from './criterias/Minus'
 import Multiplication from './criterias/Multiplication'
 import Division from './criterias/Division'
+import OrdersService from './services/orders'
+import accounts from './services/accounts'
+import operations from './services/operations'
+import OperationsService from './services/operations'
 
 // Configuration
 
@@ -72,6 +76,8 @@ const accountsService = new AccountsService(client)
 const instrumentsService = new InstrumentsService(client, cache)
 const portfolioService = new PortfolioService(client)
 const candlesService = new CandlesService(client, cache)
+const ordersService = new OrdersService(client)
+const operationsService = new OperationsService(client)
 
 const availableCriterias = new AvailableCriterias([
   new None(),
@@ -93,7 +99,7 @@ const availableCriterias = new AvailableCriterias([
 ])
 
 const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), availableCriterias)
-const trader = new Trader(candlesService, instrumentsService)
+const trader = new Trader(accountsService, candlesService, instrumentsService, ordersService)
 const robotsPool = new RobotsPool(robotsStorage, trader)
 
 // HTTP API Server
@@ -244,6 +250,39 @@ app.get('/api/criterias', function (req, res) {
 app.get('/api/accounts/:account/robots/:robot/strategy', function (req, res) {
   const strategy = robotsPool.viewStrategy(req.params.account, req.params.robot)
   res.json(strategy)
+})
+
+app.get('/api/accounts/:account/robots/:robot/operations', function (req, res) {
+  const robot = robotsPool.view(req.params.account, req.params.robot)
+  const from = new Date()
+  from.setDate(from.getDate() - 1)
+  return accountsService
+    .get(req.params.account)
+    .then((account) => operationsService.getAllExecuted(account, robot.figi, from, new Date()))
+    .then((operations) =>
+      operations.sort((a, b) => {
+        if (a.date.getTime() > b.date.getTime()) {
+          return -1
+        }
+        if (a.date.getTime() < b.date.getTime()) {
+          return 1
+        }
+        return 0
+      })
+    )
+    .then((operations) => res.json(operations))
+    .catch((e) => res.status(500).json({ message: e.message }))
+})
+
+app.get('/api/accounts/:account/robots/:robot/orders', function (req, res) {
+  const robot = robotsPool.view(req.params.account, req.params.robot)
+  const from = new Date()
+  from.setDate(from.getDate() - 1)
+  return accountsService
+    .get(req.params.account)
+    .then((account) => ordersService.getAllNew(account, robot.figi))
+    .then((orders) => res.json(orders))
+    .catch((e) => res.status(500).json({ message: e.message }))
 })
 
 app.delete('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria', async function (req, res) {
