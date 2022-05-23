@@ -4,6 +4,7 @@ import styles from './Block.module.scss'
 type Props = {
   schemas: Schema[]
   criteria: Criteria
+  multiple: boolean
   remove: (id: string) => void
   replace: (id: string, type: string, params: CriteriaParam[]) => void
   wrap: (id: string, type: string) => void
@@ -45,7 +46,7 @@ export type CriteriaInput = {
   value: Criteria | null
 }
 
-function Block({ schemas, criteria, remove, replace, wrap }: Props) {
+function Block({ schemas, criteria, multiple, remove, replace, wrap }: Props) {
   const [paramsFormData, setParamsFormData] = useState<CriteriaParam[]>(criteria.params)
 
   const handleParamChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -108,11 +109,13 @@ function Block({ schemas, criteria, remove, replace, wrap }: Props) {
                   </button>
                 </div>
                 <select name="type" value={criteria.type} onChange={handleTypeChange}>
-                  {schemas.map((schema) => (
-                    <option key={'criteria-' + criteria.id + '-type-' + schema.type} value={schema.type}>
-                      {schema.name}
-                    </option>
-                  ))}
+                  {schemas
+                    .filter((allSchema) => allSchema.type === 'none' || allSchema.multiple === multiple)
+                    .map((schema) => (
+                      <option key={'criteria-' + criteria.id + '-type-' + schema.type} value={schema.type}>
+                        {schema.name}
+                      </option>
+                    ))}
                 </select>
                 <select name="type" onChange={handleWrapChange}>
                   <option value="">Обернуть</option>
@@ -138,6 +141,7 @@ function Block({ schemas, criteria, remove, replace, wrap }: Props) {
                       key={'criteria-' + criteriaInput.value.id}
                       schemas={schemas}
                       criteria={criteriaInput.value}
+                      multiple={schemaInput.multiple}
                       remove={remove}
                       replace={replace}
                       wrap={wrap}

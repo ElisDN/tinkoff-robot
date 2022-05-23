@@ -122,6 +122,7 @@ function StrategyEditor({ accountId, robotId, onChange }: Props) {
             key={'criteria-' + strategy.sell.id}
             schemas={schemas}
             criteria={strategy.sell}
+            multiple={false}
             remove={removeCriteria}
             replace={replaceCriteria}
             wrap={wrapCriteria}
@@ -132,6 +133,7 @@ function StrategyEditor({ accountId, robotId, onChange }: Props) {
             key={'criteria-' + strategy.buy.id}
             schemas={schemas}
             criteria={strategy.buy}
+            multiple={false}
             remove={removeCriteria}
             replace={replaceCriteria}
             wrap={wrapCriteria}
