@@ -155,7 +155,7 @@ function Chart({ accountId, robotId }: Props) {
                         <circle
                           cx={index * barWidth + barWidth / 2}
                           cy={(max - tick.candle.close) * verticalScale}
-                          r={10}
+                          r={8}
                           style={{
                             fill: '#faff5d',
                             stroke: tick.eval.request.buy ? '#af27dc' : '#f35411',
