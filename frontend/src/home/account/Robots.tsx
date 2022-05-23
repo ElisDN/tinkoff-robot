@@ -124,7 +124,7 @@ function Robots({ accountId }: Props) {
             <div className="row">
               <div className="col-auto">
                 <input
-                  type="name"
+                  type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
@@ -134,7 +134,7 @@ function Robots({ accountId }: Props) {
               </div>
               <div className="col-auto">
                 <input
-                  type="figi"
+                  type="text"
                   name="figi"
                   value={formData.figi}
                   onChange={handleChange}
