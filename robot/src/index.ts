@@ -30,6 +30,7 @@ import { Trader } from './robot/trading'
 import PricesHigh from './criterias/PricesHigh'
 import PricesLow from './criterias/PricesLow'
 import PricesClose from './criterias/PricesClose'
+import SMA from './criterias/SMA'
 
 // Configuration
 
@@ -80,6 +81,7 @@ const availableCriterias = new AvailableCriterias([
   new PricesHigh(),
   new PricesLow(),
   new PricesClose(),
+  new SMA(),
 ])
 
 const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), availableCriterias)

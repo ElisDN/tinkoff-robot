@@ -27,6 +27,7 @@
     "nice-grpc": "^1.2.0",
     "node-ts-cache": "^4.4.0",
     "node-ts-cache-storage-memory": "^4.4.0",
+    "technicalindicators": "^3.1.0",
     "uuid": "^8.3.2",
     "winston": "^3.7.2",
     "winston-daily-rotate-file": "^4.6.1"
