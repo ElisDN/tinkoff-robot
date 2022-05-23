@@ -31,8 +31,8 @@ test('strategy eval metrics', () => {
   const result = strategy.eval(data)
 
   expect(result.metrics).toEqual<Metric[]>([
-    { id: 'id-3', name: 'Значение', value: 100 },
     { id: 'id-6', name: 'Значение', value: 200 },
+    { id: 'id-3', name: 'Значение', value: 100 },
   ])
 })
 
