@@ -66,7 +66,7 @@ class Robot {
       })
       .reduce((a, b) => a + b, 0)
 
-    const comission = 0.0003
+    const comission = 0.003
     const comissions = total * comission
 
     const startCost = (candles.at(0)?.close || 0) * instrument.lot * lots
