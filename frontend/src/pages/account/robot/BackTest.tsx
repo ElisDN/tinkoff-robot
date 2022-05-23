@@ -192,7 +192,7 @@ function BackTest({ accountId, robotId }: Props) {
                         <circle
                           cx={index * barWidth + barWidth}
                           cy={(max - tick.candle.close) * verticalScale}
-                          r={12}
+                          r={8}
                           style={{
                             fill: '#faff5d',
                             fillOpacity: 0.8,
