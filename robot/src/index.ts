@@ -221,8 +221,11 @@ app.post('/api/accounts/:account/robots', function (req, res) {
   if (!req.body.name) {
     return res.status(422).json({ message: 'Заполните имя' })
   }
-  return robotsPool
-    .add(req.params.account, req.body.name, uuid(), req.body.figi, req.body.from || null)
+  return instrumentsService
+    .getByFigi(req.body.figi)
+    .then((instrument) =>
+      robotsPool.add(req.params.account, req.body.name, uuid(), instrument.figi, req.body.from || null)
+    )
     .then(() => res.status(201).end())
     .catch((err) => res.status(500).json({ message: err.message }))
 })
