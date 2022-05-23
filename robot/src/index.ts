@@ -252,7 +252,7 @@ app.put('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria', asy
     .catch((err) => res.status(500).json({ message: err.message }))
 })
 
-app.get('/api/accounts/:account/robots/:robot/chart', async function (req, res) {
+app.get('/api/accounts/:account/robots/:robot/back-test', async function (req, res) {
   const from = new Date()
   from.setDate(from.getDate() - 4)
   return robotsPool

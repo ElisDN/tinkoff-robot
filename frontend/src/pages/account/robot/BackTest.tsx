@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from '../../../auth/useAuth'
-import './Chart.css'
+import './BackTest.css'
 import api from '../../../api/api'
 
 type Props = {
@@ -36,7 +36,7 @@ type Tick = {
   eval: Eval
 }
 
-function Chart({ accountId, robotId }: Props) {
+function BackTest({ accountId, robotId }: Props) {
   const { getToken } = useAuth()
 
   const [barWidth, setBarWidth] = useState<number>(2)
@@ -47,7 +47,7 @@ function Chart({ accountId, robotId }: Props) {
     setError(null)
     getToken()
       .then((token) => {
-        api(`/api/accounts/${accountId}/robots/${robotId}/chart`, {
+        api(`/api/accounts/${accountId}/robots/${robotId}/back-test`, {
           headers: { Authorization: 'Bearer ' + token },
         })
           .then((data) => setTicks(data))
@@ -110,21 +110,6 @@ function Chart({ accountId, robotId }: Props) {
                         y={(max - Math.max(tick.candle.open, tick.candle.close)) * verticalScale}
                         height={Math.max(1, Math.abs(tick.candle.open - tick.candle.close) * verticalScale)}
                       />
-                      {tick.eval.metrics.map((metric, i) => {
-                        if (metric.value === null) {
-                          return null
-                        }
-                        return (
-                          <rect
-                            key={'metric-' + i}
-                            x={index * barWidth}
-                            y={(max - metric.value) * verticalScale}
-                            width={barWidth * 0.5}
-                            height={2}
-                            fill={'#000'}
-                          />
-                        )
-                      })}
                       <title>
                         {new Date(tick.candle.time).toUTCString()}
                         {'\n\n'}
@@ -146,6 +131,38 @@ function Chart({ accountId, robotId }: Props) {
                         })}
                       </title>
                     </g>
+                  )
+                })}
+                {ticks.map((tick, index) => {
+                  return (
+                    <>
+                      {tick.eval.metrics.map((metric, i) => {
+                        if (metric.value === null) {
+                          return null
+                        }
+                        return (
+                          <g key={'metric-' + tick.candle.time}>
+                            <rect
+                              x={index * barWidth}
+                              y={(max - metric.value) * verticalScale}
+                              width={barWidth}
+                              height={2}
+                              fill={'#fff'}
+                            />
+                            <rect
+                              x={index * barWidth}
+                              y={(max - metric.value) * verticalScale}
+                              width={barWidth * 0.5}
+                              height={2}
+                              fill={'#000'}
+                            />
+                            <title>
+                              {metric.name}: &nbsp; {metric.value}
+                            </title>
+                          </g>
+                        )
+                      })}
+                    </>
                   )
                 })}
                 {ticks.map((tick, index) => (
@@ -191,4 +208,4 @@ function Chart({ accountId, robotId }: Props) {
   )
 }
 
-export default Chart
+export default BackTest

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from '../../../auth/useAuth'
 import { Link, useParams } from 'react-router-dom'
-import Chart from './Chart'
+import BackTest from './BackTest'
 import StrategyEditor from './strategy/StrategyEditor'
 import api from '../../../api/api'
 
@@ -70,7 +70,7 @@ function RobotPage() {
           </table>
         ) : null}
       </div>
-      <Chart key={'chart' + chartKey} accountId={accountId || ''} robotId={robotId || ''} />
+      <BackTest key={'chart' + chartKey} accountId={accountId || ''} robotId={robotId || ''} />
       <StrategyEditor accountId={accountId || ''} robotId={robotId || ''} onChange={() => setChartKey(chartKey + 1)} />
     </div>
   )
