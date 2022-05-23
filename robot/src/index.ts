@@ -31,6 +31,10 @@ import PricesHigh from './criterias/PricesHigh'
 import PricesLow from './criterias/PricesLow'
 import PricesClose from './criterias/PricesClose'
 import SMA from './criterias/SMA'
+import Plus from './criterias/Plus'
+import Minus from './criterias/Minus'
+import Multiplication from './criterias/Multiplication'
+import Division from './criterias/Division'
 
 // Configuration
 
@@ -71,12 +75,16 @@ const candlesService = new CandlesService(client, cache)
 
 const availableCriterias = new AvailableCriterias([
   new None(),
+  new Static(),
   new And(),
   new Or(),
   new Not(),
   new Greater(),
   new Less(),
-  new Static(),
+  new Plus(),
+  new Minus(),
+  new Multiplication(),
+  new Division(),
   new PriceClose(),
   new PricesHigh(),
   new PricesLow(),
