@@ -93,34 +93,42 @@ app.get('/api', function (req, res) {
   res.json('API')
 })
 
-app.get('/api/accounts', async function (req, res) {
-  const accounts = await accountsService.getAll()
-  res.json(accounts)
+app.get('/api/accounts', function (req, res) {
+  return accountsService
+    .getAll()
+    .then((accounts) => res.json(accounts))
+    .catch((e) => res.status(500).json({ message: e.message }))
 })
 
-app.get('/api/accounts/:account', async function (req, res) {
-  const account = await accountsService.get(req.params.account)
-  res.json(account)
+app.get('/api/accounts/:account', function (req, res) {
+  return accountsService
+    .get(req.params.account)
+    .then((account) => res.json(account))
+    .catch((e) => res.status(500).json({ message: e.message }))
 })
 
-app.post('/api/sandbox/accounts', async function (req, res) {
-  await accountsService.openSandboxAccount()
-  res.status(201).end()
+app.post('/api/sandbox/accounts', function (req, res) {
+  return accountsService
+    .openSandboxAccount()
+    .then(() => res.status(201).end())
+    .catch((e) => res.status(500).json({ message: e.message }))
 })
 
-app.delete('/api/sandbox/accounts/:account', async function (req, res) {
-  await robotsPool.removeAllRobotsForAccout(req.params.account)
-  await accountsService.closeSandboxAccount(req.params.account)
-  res.status(204).end()
+app.delete('/api/sandbox/accounts/:account', function (req, res) {
+  return robotsPool
+    .removeAllRobotsForAccout(req.params.account)
+    .then(() => accountsService.closeSandboxAccount(req.params.account))
+    .then(() => res.status(204).end())
+    .catch((e) => res.status(500).json({ message: e.message }))
 })
 
-app.get('/api/accounts/:account/portfolio', async function (req, res) {
-  const account = await accountsService.get(req.params.account)
-  const positions = await portfolioService.getPositions(account)
-  res.json(
-    (
-      await Promise.all(
-        positions.map(async (position) => {
+app.get('/api/accounts/:account/portfolio', function (req, res) {
+  return accountsService
+    .get(req.params.account)
+    .then((account) => portfolioService.getPositions(account))
+    .then(async (positions) =>
+      Promise.all(
+        positions.map((position) => {
           return instrumentsService.getByFigi(position.figi).then((instrument) => ({
             ...position,
             name: instrument.name,
@@ -128,8 +136,10 @@ app.get('/api/accounts/:account/portfolio', async function (req, res) {
           }))
         })
       )
-    ).sort((a, b) => a.name.localeCompare(b.name))
-  )
+    )
+    .then(async (positions) => positions.sort((a, b) => a.name.localeCompare(b.name)))
+    .then(async (positions) => res.json(positions))
+    .catch((e) => res.status(500).json({ message: e.message }))
 })
 
 app.post('/api/accounts/:account/portfolio/sandbox-pay', function (req, res) {
@@ -139,41 +149,41 @@ app.post('/api/accounts/:account/portfolio/sandbox-pay', function (req, res) {
   if (!req.body.currency) {
     return res.status(422).json({ message: 'Заполните валюту' })
   }
-  accountsService
+  return accountsService
     .paySandboxAccount(req.params.account, req.body.amount, req.body.currency)
     .then(() => res.status(201).end())
-    .catch((err) => res.status(400).json({ message: err.message }))
+    .catch((err) => res.status(500).json({ message: err.message }))
 })
 
-app.get('/api/robots', async function (req, res) {
+app.get('/api/robots', function (req, res) {
   const robots = robotsPool.viewAll()
-  res.json(
-    await Promise.all(
-      robots.map(async (robot) => {
-        return accountsService.get(robot.accountId).then((account) => {
-          return instrumentsService.getByFigi(robot.figi).then((instrument) => ({
-            ...robot,
-            accountName: account.name,
-            instrument: instrument.name,
-          }))
-        })
-      })
-    )
-  )
-})
-
-app.get('/api/accounts/:account/robots', async function (req, res) {
-  const robots = robotsPool.viewAllForAccount(req.params.account)
-  res.json(
-    await Promise.all(
-      robots.map(async (robot) => {
+  return Promise.all(
+    robots.map((robot) => {
+      return accountsService.get(robot.accountId).then((account) => {
         return instrumentsService.getByFigi(robot.figi).then((instrument) => ({
           ...robot,
+          accountName: account.name,
           instrument: instrument.name,
         }))
       })
-    )
+    })
   )
+    .then((items) => res.json(items))
+    .catch((err) => res.status(500).json({ message: err.message }))
+})
+
+app.get('/api/accounts/:account/robots', function (req, res) {
+  const robots = robotsPool.viewAllForAccount(req.params.account)
+  return Promise.all(
+    robots.map((robot) => {
+      return instrumentsService.getByFigi(robot.figi).then((instrument) => ({
+        ...robot,
+        instrument: instrument.name,
+      }))
+    })
+  )
+    .then((items) => res.json(items))
+    .catch((err) => res.status(500).json({ message: err.message }))
 })
 
 app.post('/api/accounts/:account/robots', function (req, res) {
@@ -183,26 +193,30 @@ app.post('/api/accounts/:account/robots', function (req, res) {
   if (!req.body.name) {
     return res.status(422).json({ message: 'Заполните имя' })
   }
-  robotsPool
+  return robotsPool
     .add(req.params.account, req.body.name, uuid(), req.body.figi, req.body.from || null)
     .then(() => res.status(201).end())
-    .catch((err) => res.status(400).json({ message: err.message }))
+    .catch((err) => res.status(500).json({ message: err.message }))
 })
 
-app.get('/api/accounts/:account/robots/:robot', async function (req, res) {
+app.get('/api/accounts/:account/robots/:robot', function (req, res) {
   const robot = robotsPool.view(req.params.account, req.params.robot)
-  const instrument = await instrumentsService.getByFigi(robot.figi)
-  res.json({
-    ...robot,
-    instrument: instrument.name,
-  })
+  return instrumentsService
+    .getByFigi(robot.figi)
+    .then((instrument) =>
+      res.json({
+        ...robot,
+        instrument: instrument.name,
+      })
+    )
+    .catch((err) => res.status(500).json({ message: err.message }))
 })
 
 app.delete('/api/accounts/:account/robots/:robot', function (req, res) {
-  robotsPool
+  return robotsPool
     .remove(req.params.account, req.params.robot)
     .then(() => res.status(204).end())
-    .catch((err) => res.status(400).json({ message: err.message }))
+    .catch((err) => res.status(500).json({ message: err.message }))
 })
 
 app.get('/api/criterias', function (req, res) {
@@ -215,10 +229,12 @@ app.get('/api/accounts/:account/robots/:robot/strategy', function (req, res) {
 })
 
 app.delete('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria', async function (req, res) {
-  await robotsPool.changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
-    return strategy.remove(req.params.criteria)
-  })
-  res.end()
+  return robotsPool
+    .changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
+      return strategy.remove(req.params.criteria)
+    })
+    .then(() => res.end())
+    .catch((err) => res.status(500).json({ message: err.message }))
 })
 
 app.put('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria', async function (req, res) {
@@ -226,17 +242,19 @@ app.put('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria', asy
     return res.status(422).json({ message: 'Укажите тип критерия' })
   }
   const criteria = availableCriterias.get(req.body.type)
-  await robotsPool.changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
-    return strategy.replace(req.params.criteria, criteria, Params.fromJSON(req.body.params || []))
-  })
-  res.status(201).end()
+  return robotsPool
+    .changeStrategy(req.params.account, req.params.robot, (strategy: Strategy) => {
+      return strategy.replace(req.params.criteria, criteria, Params.fromJSON(req.body.params || []))
+    })
+    .then(() => res.status(201).end())
+    .catch((err) => res.status(500).json({ message: err.message }))
 })
 
 app.get('/api/accounts/:account/robots/:robot/chart', async function (req, res) {
   const robot = robotsPool.view(req.params.account, req.params.robot)
   const from = new Date()
   from.setDate(from.getDate() - 4)
-  candlesService
+  return candlesService
     .get(robot.figi, from, new Date())
     .then((candles) => res.json(candles))
     .catch((err) => res.status(500).json({ message: err.message }))
