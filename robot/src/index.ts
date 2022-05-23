@@ -26,7 +26,6 @@ import { CacheContainer } from 'node-ts-cache'
 import { MemoryStorage } from 'node-ts-cache-storage-memory'
 import { Params } from './robot/node'
 import InstrumentsService from './services/instruments'
-import accounts from './services/accounts'
 
 // Configuration
 
