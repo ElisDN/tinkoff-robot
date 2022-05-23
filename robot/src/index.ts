@@ -144,7 +144,7 @@ app.post('/api/sandbox/accounts', function (req, res) {
 
 app.delete('/api/sandbox/accounts/:account', function (req, res) {
   return robotsPool
-    .removeAllRobotsForAccout(req.params.account)
+    .removeAllRobotsForAccount(req.params.account)
     .then(() => accountsService.closeSandboxAccount(req.params.account))
     .then(() => res.status(204).end())
     .catch((e) => res.status(500).json({ message: e.message }))
@@ -247,6 +247,34 @@ app.get('/api/accounts/:account/robots/:robot', function (req, res) {
       })
     )
     .catch((err) => res.status(500).json({ message: err.message }))
+})
+
+app.put('/api/accounts/:account/robots/:robot', function (req, res) {
+  if (!req.body.figi) {
+    return res.status(422).json({ message: 'Заполните FIGI' })
+  }
+  if (!req.body.name) {
+    return res.status(422).json({ message: 'Заполните имя' })
+  }
+  return instrumentsService
+    .getByFigi(req.body.figi)
+    .then((instrument) => {
+      if (!instrument.available) {
+        throw new Error('Инструмент недоступен для торгов')
+      }
+      return instrument
+    })
+    .then((instrument) => {
+      return robotsPool
+        .edit(req.params.account, req.params.robot, req.body.name, instrument.figi)
+        .then(() => {
+          if (req.body.from) {
+            return robotsPool.copyStrategy(req.params.account, req.params.robot, req.body.from)
+          }
+        })
+        .then(() => res.status(200).end())
+        .catch((err) => res.status(500).json({ message: err.message }))
+    })
 })
 
 app.delete('/api/accounts/:account/robots/:robot', function (req, res) {

@@ -5,9 +5,9 @@ import { Order } from '../services/orders'
 
 class Robot {
   private readonly id: string
-  private readonly name: string
+  private name: string
   private readonly accountId: string
-  private readonly figi: string
+  private figi: string
   private strategy: Strategy
 
   constructor(id: string, name: string, accountId: string, figi: string, strategy: Strategy) {
@@ -104,6 +104,11 @@ class Robot {
         tradingEndPofit,
       },
     }
+  }
+
+  edit(name: string, figi: string) {
+    this.name = name
+    this.figi = figi
   }
 
   changeStrategy(strategy: Strategy): void {

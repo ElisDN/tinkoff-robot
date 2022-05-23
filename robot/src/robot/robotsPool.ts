@@ -28,6 +28,12 @@ class RobotsPool {
     return this.storage.save(robot)
   }
 
+  async edit(accountId: string, robotId: string, name: string, figi: string) {
+    const robot = this.getInAccount(accountId, robotId)
+    robot.edit(name, figi)
+    return this.storage.save(robot)
+  }
+
   async remove(accountId: string, robotId: string) {
     const robot = this.getInAccount(accountId, robotId)
     const index = this.robots.indexOf(robot)
@@ -37,10 +43,17 @@ class RobotsPool {
     return this.storage.remove(robot)
   }
 
-  async removeAllRobotsForAccout(accountId: string) {
+  async removeAllRobotsForAccount(accountId: string) {
     this.robots
       .filter((robot) => robot.getAccountId() === accountId)
       .forEach((robot) => this.remove(accountId, robot.getId()))
+  }
+
+  copyStrategy(accountId: string, robotId: string, from: string) {
+    const robot = this.getInAccount(accountId, robotId)
+    const strategy = this.get(from).getStrategy()
+    robot.changeStrategy(strategy)
+    return this.storage.save(robot)
   }
 
   async changeStrategy(accountId: string, robotId: string, callback: (strategy: Strategy) => Strategy) {

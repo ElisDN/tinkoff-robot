@@ -6,6 +6,7 @@ import StrategyEditor from './strategy/StrategyEditor'
 import api from '../../../api/api'
 import Operations from './Operations'
 import Orders from './Orders'
+import EditRobotForm from './EditRobotForm'
 
 type AccountResponse = {
   id: string
@@ -13,7 +14,7 @@ type AccountResponse = {
   real: boolean
 }
 
-type Robot = {
+export type Robot = {
   figi: string
   name: string
   instrument: string
@@ -28,6 +29,17 @@ function RobotPage() {
   const [error, setError] = useState(null)
   const [chartKey, setChartKey] = useState(1)
 
+  const loadRobot = () => {
+    setError(null)
+    getToken()
+      .then((token) => {
+        api(`/api/accounts/${accountId}/robots/${robotId}`, {
+          headers: { Authorization: 'Bearer ' + token },
+        }).then((data) => setRobot(data))
+      })
+      .catch((error) => setError(error.message || error.statusText))
+  }
+
   useEffect(() => {
     setError(null)
     getToken()
@@ -35,11 +47,9 @@ function RobotPage() {
         api(`/api/accounts/${accountId}`, {
           headers: { Authorization: 'Bearer ' + token },
         }).then((data) => setAccount(data))
-        api(`/api/accounts/${accountId}/robots/${robotId}`, {
-          headers: { Authorization: 'Bearer ' + token },
-        }).then((data) => setRobot(data))
       })
       .catch((error) => setError(error.message || error.statusText))
+    loadRobot()
   }, [])
 
   return (
@@ -58,18 +68,17 @@ function RobotPage() {
         </ol>
       </nav>
       <div className="card my-3">
-        <div className="card-header">Робот</div>
+        {robot !== null ? <div className="card-header">Робот для {robot.instrument}</div> : null}
         {error ? <div className="alert alert-danger my-0">{error}</div> : null}
         {robot !== null ? (
-          <table className="table align-middle my-0">
-            <tbody>
-              <tr>
-                <td>{robot.name}</td>
-                <td>{robot.figi}</td>
-                <td>{robot.instrument}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div className="card-footer">
+            <EditRobotForm
+              accountId={accountId || ''}
+              robotId={robotId || ''}
+              robot={robot}
+              onEdit={() => window.location.reload()}
+            />
+          </div>
         ) : null}
       </div>
       <BackTest key={'chart' + chartKey} accountId={accountId || ''} robotId={robotId || ''} />
