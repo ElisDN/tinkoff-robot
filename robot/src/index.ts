@@ -121,13 +121,6 @@ app.get('/api/accounts/:account/portfolio', async function (req, res) {
     (
       await Promise.all(
         positions.map(async (position) => {
-          if (position.figi === 'FG0000000000') {
-            return {
-              ...position,
-              name: '',
-              ticker: '',
-            }
-          }
           return instrumentsService.getByFigi(position.figi).then((instrument) => ({
             ...position,
             name: instrument.name,

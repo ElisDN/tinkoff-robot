@@ -19,6 +19,15 @@ class InstrumentsService {
   }
 
   public getByFigi(figi: string): Promise<Instrument> {
+    if (figi === 'FG0000000000') {
+      return Promise.resolve<Instrument>({
+        figi: figi,
+        ticker: '',
+        name: '',
+        lot: 1,
+      })
+    }
+
     const cacheKey = 'instrument-' + figi
 
     return this.cache.getItem<Promise<Instrument>>(cacheKey).then((cached) => {
