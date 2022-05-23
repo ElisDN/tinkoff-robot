@@ -1,6 +1,15 @@
 import { Client } from '../sdk/client'
-import { CandleInterval, HistoricCandle } from '../sdk/contracts/marketdata'
+import { CandleInterval } from '../sdk/contracts/marketdata'
 import { CacheContainer } from 'node-ts-cache'
+import { quotationToFloat } from './convert'
+
+export type Candle = {
+  time: Date
+  open: number
+  high: number
+  low: number
+  close: number
+}
 
 class CandlesService {
   private readonly client: Client
@@ -11,11 +20,11 @@ class CandlesService {
     this.cache = cache
   }
 
-  public async get(figi: string, from: Date, to: Date): Promise<HistoricCandle[]> {
+  public async getHistory(figi: string, from: Date, to: Date): Promise<Candle[]> {
     const cacheKey = 'candles-' + figi + '-' + from.toDateString() + '-' + to.toDateString()
 
     return this.cache
-      .getItem<Promise<HistoricCandle[]>>(cacheKey)
+      .getItem<Promise<Candle[]>>(cacheKey)
       .then((cached) => {
         if (cached) {
           return cached
@@ -39,7 +48,17 @@ class CandlesService {
                 to: search.toDate,
                 interval: CandleInterval.CANDLE_INTERVAL_1_MIN,
               })
-              .then((response) => response.candles)
+              .then((response) =>
+                response.candles
+                  .filter((candle) => candle.isComplete)
+                  .map<Candle>((candle) => ({
+                    time: candle.time || new Date(),
+                    open: candle.open ? quotationToFloat(candle.open) : -1,
+                    high: candle.high ? quotationToFloat(candle.high) : -1,
+                    low: candle.low ? quotationToFloat(candle.low) : -1,
+                    close: candle.close ? quotationToFloat(candle.close) : -1,
+                  }))
+              )
           })
         ).then((batches) => {
           return batches.flatMap((batch) => batch)

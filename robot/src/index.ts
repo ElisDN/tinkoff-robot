@@ -255,7 +255,7 @@ app.get('/api/accounts/:account/robots/:robot/chart', async function (req, res) 
   const from = new Date()
   from.setDate(from.getDate() - 4)
   return candlesService
-    .get(robot.figi, from, new Date())
+    .getHistory(robot.figi, from, new Date())
     .then((candles) => res.json(candles))
     .catch((err) => res.status(500).json({ message: err.message }))
 })
