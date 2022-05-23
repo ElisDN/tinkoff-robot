@@ -137,14 +137,14 @@ function BackTest({ accountId, robotId }: Props) {
                         {'\n'}
                         Закрытие: {formatPrice(tick.candle.close)}
                         {'\n\n'}
-                        Масимум: &nbsp;{formatPrice(tick.candle.high)}
+                        Максимум: &nbsp;{formatPrice(tick.candle.high)}
                         {'\n'}
                         Минимум: &nbsp;{formatPrice(tick.candle.low)}
                         {'\n\n'}
                         {tick.eval.metrics.map((metric) => {
                           return (
                             <>
-                              {metric.name}: &nbsp; {metric.value}
+                              {metric.name}: &nbsp; {metric.value !== null ? formatPrice(metric.value) : null}
                               {'\n'}
                             </>
                           )
@@ -201,7 +201,7 @@ function BackTest({ accountId, robotId }: Props) {
                           }}
                         />
                         <title>
-                          {tick.eval.request.buy ? 'Покупка' : 'Продажа'} {tick.candle.close}
+                          {tick.eval.request.buy ? 'Покупка' : 'Продажа'} {formatPrice(tick.candle.close)}
                         </title>
                       </g>
                     ) : null}

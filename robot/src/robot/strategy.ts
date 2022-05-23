@@ -33,25 +33,23 @@ export class Strategy {
   }
 
   eval(data: Data): EvalResult {
-    const buyResult = this.buy.eval(data)
     const sellResult = this.sell.eval(data)
+    const buyResult = this.buy.eval(data)
 
-    const isNeededBuy = (!data.order || !data.order.buy) && buyResult.value
     const isNeededSell = data.order && data.order.buy && sellResult.value
+    const isNeededBuy = (!data.order || !data.order.buy) && buyResult.value
 
     let request: OrderRequest | null = null
 
-    if (isNeededBuy) {
-      request = OrderRequest.buy()
-    }
-
     if (isNeededSell) {
       request = OrderRequest.sell()
+    } else if (isNeededBuy) {
+      request = OrderRequest.buy()
     }
 
     return {
       request: request,
-      metrics: [...buyResult.metrics, ...sellResult.metrics],
+      metrics: [...sellResult.metrics, ...buyResult.metrics],
     }
   }
 
