@@ -177,7 +177,7 @@ function BackTest({ accountId, robotId }: Props) {
                               fill={'#000'}
                             />
                             <title>
-                              {metric.name}: &nbsp; {metric.value}
+                              {metric.name}: &nbsp; {formatPrice(metric.value)}
                             </title>
                           </g>
                         )
