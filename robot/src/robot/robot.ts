@@ -12,14 +12,24 @@ class Robot {
   private figi: string
   private lots: number
   private strategy: Strategy
+  private active: boolean
 
-  constructor(id: string, name: string, accountId: string, figi: string, lots: number, strategy: Strategy) {
+  constructor(
+    id: string,
+    name: string,
+    accountId: string,
+    figi: string,
+    lots: number,
+    strategy: Strategy,
+    active: boolean
+  ) {
     this.id = id
     this.name = name
     this.accountId = accountId
     this.figi = figi
     this.lots = lots
     this.strategy = strategy
+    this.active = active
   }
 
   tick(data: Data): EvalResult {
@@ -121,6 +131,14 @@ class Robot {
     }
   }
 
+  start() {
+    this.active = true
+  }
+
+  stop() {
+    this.active = false
+  }
+
   edit(name: string, figi: string, lots: number) {
     this.name = name
     this.figi = figi
@@ -153,6 +171,10 @@ class Robot {
 
   getStrategy(): Strategy {
     return this.strategy
+  }
+
+  isActive(): boolean {
+    return this.active
   }
 }
 

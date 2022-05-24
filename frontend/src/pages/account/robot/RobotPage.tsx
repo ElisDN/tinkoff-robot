@@ -19,6 +19,7 @@ export type Robot = {
   lots: number
   name: string
   instrument: string
+  active: boolean
 }
 
 function RobotPage() {
@@ -53,6 +54,34 @@ function RobotPage() {
     loadRobot()
   }, [])
 
+  const startRobot = () => {
+    setError(null)
+    getToken()
+      .then((token) => {
+        api(`/api/accounts/${accountId}/robots/${robotId}/start`, {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + token },
+        })
+          .then(() => loadRobot())
+          .catch((error) => setError(error.message || error.statusText))
+      })
+      .catch(() => null)
+  }
+
+  const stopRobot = () => {
+    setError(null)
+    getToken()
+      .then((token) => {
+        api(`/api/accounts/${accountId}/robots/${robotId}/stop`, {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + token },
+        })
+          .then(() => loadRobot())
+          .catch((error) => setError(error.message || error.statusText))
+      })
+      .catch(() => null)
+  }
+
   return (
     <div className="container-fluid py-3">
       <nav aria-label="breadcrumb">
@@ -82,7 +111,14 @@ function RobotPage() {
           </div>
         ) : null}
       </div>
-      <BackTest key={'chart' + chartKey} accountId={accountId || ''} robotId={robotId || ''} />
+      <BackTest
+        key={'chart' + chartKey}
+        accountId={accountId || ''}
+        robotId={robotId || ''}
+        active={robot ? robot.active : null}
+        start={startRobot}
+        stop={stopRobot}
+      />
       <div className="row">
         <div className="col-md-8 col-lg-9">
           <StrategyEditor

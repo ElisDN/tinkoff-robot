@@ -6,6 +6,9 @@ import api from '../../../api/api'
 type Props = {
   accountId: string
   robotId: string
+  active: boolean | null
+  start(): void
+  stop(): void
 }
 
 type Candle = {
@@ -52,7 +55,7 @@ type Result = {
   }
 }
 
-function BackTest({ accountId, robotId }: Props) {
+function BackTest({ accountId, robotId, active, start, stop }: Props) {
   const { getToken } = useAuth()
 
   const [barWidth, setBarWidth] = useState<number>(2)
@@ -84,7 +87,7 @@ function BackTest({ accountId, robotId }: Props) {
 
   return (
     <div className="row">
-      <div className="col-md-8 col-lg-10">
+      <div className="col-md-8 col-lg-9">
         <div className="card my-3">
           <div className="card-header">
             <div className="btn-group float-end" style={{ margin: '-0.25rem 0' }}>
@@ -212,9 +215,9 @@ function BackTest({ accountId, robotId }: Props) {
           </div>
         </div>
       </div>
-      <div className="col-md-4 col-lg-2">
+      <div className="col-md-4 col-lg-3">
         <div className="card my-3">
-          <div className="card-header">Результат</div>
+          <div className="card-header">Прогноз</div>
           {result !== null ? (
             <table className="table my-0">
               <tbody>
@@ -260,6 +263,21 @@ function BackTest({ accountId, robotId }: Props) {
                 ) : null}
               </tbody>
             </table>
+          ) : null}
+        </div>
+        <div className="card my-4">
+          {active !== null ? (
+            <>
+              {active ? (
+                <button className="btn btn-danger py-3" onClick={stop}>
+                  Остановить робота
+                </button>
+              ) : (
+                <button className="btn btn-primary py-3" onClick={start}>
+                  Запустить робота
+                </button>
+              )}
+            </>
           ) : null}
         </div>
       </div>

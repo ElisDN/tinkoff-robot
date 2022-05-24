@@ -365,6 +365,20 @@ app.post('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria/wrap
     .catch((err) => res.status(500).json({ message: err.message }))
 })
 
+app.post('/api/accounts/:account/robots/:robot/start', async function (req, res) {
+  return robotsPool
+    .start(req.params.account, req.params.robot)
+    .then(() => res.status(201).end())
+    .catch((err) => res.status(500).json({ message: err.message }))
+})
+
+app.post('/api/accounts/:account/robots/:robot/stop', async function (req, res) {
+  return robotsPool
+    .stop(req.params.account, req.params.robot)
+    .then(() => res.status(201).end())
+    .catch((err) => res.status(500).json({ message: err.message }))
+})
+
 app.get('/api/accounts/:account/robots/:robot/back-test', async function (req, res) {
   const from = new Date()
   from.setDate(from.getDate() - 4)
