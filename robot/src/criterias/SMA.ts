@@ -1,6 +1,6 @@
 import { Criteria, Schema } from '../robot/criteria'
 import { Inputs, Params } from '../robot/node'
-import { Data, Metric, Result } from '../robot/trading'
+import { Data, DateValue, Metric, Result } from '../robot/trading'
 import { SMA as TechSMA } from 'technicalindicators'
 
 class SMA implements Criteria {
@@ -37,7 +37,14 @@ class SMA implements Criteria {
       return new Result(null, [...items.metrics])
     }
 
-    const value = TechSMA.calculate({ values: items.value.slice(-period), period: period }).at(-1) || null
+    const begin = new Date(data.date.getTime() - 60000000 * period)
+
+    const values = items.value
+      .map((value) => value as DateValue)
+      .filter((value) => begin.getTime() <= value.date.getTime() && value.date.getTime() <= data.date.getTime())
+      .map((value) => value.value)
+
+    const value = TechSMA.calculate({ values, period }).at(-1) || null
 
     return new Result(value, [...items.metrics, new Metric(id, 'SMA', value)])
   }

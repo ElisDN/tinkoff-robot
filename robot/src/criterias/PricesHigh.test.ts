@@ -11,5 +11,9 @@ test('prices-high', () => {
     .withCandle({ time: new Date(10300000), open: 106, low: 102, high: 119, close: 102, isComplete: false })
 
   const result = criteria.eval('id-42', data)
-  expect(result.value).toEqual([120, 122, 118])
+  expect(result.value).toEqual([
+    { date: new Date(10000000), value: 120 },
+    { date: new Date(10100000), value: 122 },
+    { date: new Date(10200000), value: 118 },
+  ])
 })
