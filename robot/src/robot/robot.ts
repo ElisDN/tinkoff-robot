@@ -193,21 +193,15 @@ class Robot {
       }
 
       await services.logger.info('Получена свеча', { figi: this.figi, candle })
-      data = data.withCandle(candle)
 
-      await services.logger.info('Вычисляем стратегию')
+      data = data.withCandle(candle)
       const result = this.tick(data)
 
       await services.logger.info('Вычислен результат', { figi: this.figi, result })
 
       if (result.request) {
         await services.logger.info('Отправляем заказ', {
-          order: {
-            account,
-            figi: this.figi,
-            buy: result.request.buy,
-            lots: this.lots,
-          },
+          order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
         })
         try {
           order = await services.orders.postOrder(account, this.figi, result.request.buy, this.lots)
