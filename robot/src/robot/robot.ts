@@ -56,7 +56,7 @@ class Robot {
 
     await services.cache.setItem(cacheKey, [candles, instrument, orders], { ttl: 60 })
 
-    const comission = 0.003
+    const comission = 0.0004
     const results = []
 
     let data = Data.blank(new Date())
