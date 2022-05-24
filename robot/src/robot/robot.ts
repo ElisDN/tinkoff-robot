@@ -1,5 +1,5 @@
 import { Strategy, EvalResult } from './strategy'
-import { Data, Trader } from './trading'
+import { Data, Services } from './trading'
 import { v4 } from 'uuid'
 import { Order } from '../services/orders'
 import { Candle } from '../services/candles'
@@ -13,6 +13,7 @@ class Robot {
   private lots: number
   private strategy: Strategy
   private active: boolean
+  private startDate: Date | null
 
   constructor(
     id: string,
@@ -21,7 +22,8 @@ class Robot {
     figi: string,
     lots: number,
     strategy: Strategy,
-    active: boolean
+    active: boolean,
+    startDate: Date | null
   ) {
     this.id = id
     this.name = name
@@ -30,31 +32,31 @@ class Robot {
     this.lots = lots
     this.strategy = strategy
     this.active = active
+    this.startDate = startDate
   }
 
   tick(data: Data): EvalResult {
     return this.strategy.eval(data)
   }
 
-  async backTest(trader: Trader, from: Date) {
-    const account = await trader.accounts.get(this.accountId)
+  async backTest(services: Services, from: Date) {
+    const account = await services.accounts.get(this.accountId)
 
     const cacheKey = 'backtest-' + this.id + '-' + this.figi
 
-    const cached = await trader.cache.getItem<Promise<[Candle[], Instrument, Order[]]>>(cacheKey)
+    const cached = await services.cache.getItem<Promise<[Candle[], Instrument, Order[]]>>(cacheKey)
 
     const [candles, instrument, orders] =
       cached ||
       (await Promise.all([
-        trader.candles.getHistory(this.figi, from, new Date()),
-        trader.instruments.getByFigi(this.figi),
-        trader.orders.getAllNew(account, this.figi),
+        services.candles.getHistory(this.figi, from, new Date()),
+        services.instruments.getByFigi(this.figi),
+        services.orders.getAllNew(account, this.figi),
       ]))
 
-    await trader.cache.setItem(cacheKey, [candles, instrument, orders], { ttl: 60 })
+    await services.cache.setItem(cacheKey, [candles, instrument, orders], { ttl: 60 })
 
     const comission = 0.003
-
     const results = []
 
     let data = Data.blank(new Date())
@@ -131,12 +133,98 @@ class Robot {
     }
   }
 
-  start() {
+  async trade(services: Services) {
+    if (!this.active) {
+      throw new Error('Робот не активирован')
+    }
+
+    await services.logger.info('Запуск робота', {
+      id: this.id,
+      name: this.name,
+      accountId: this.accountId,
+      figi: this.figi,
+    })
+
+    const account = await services.accounts.get(this.accountId)
+
+    await services.logger.info('Загружен счёт', account)
+
+    const instrument = await services.instruments.getByFigi(this.figi)
+
+    await services.logger.info('Получен инструмент', instrument)
+
+    if (!instrument.available) {
+      await services.logger.info('Инструмент недоступен', instrument)
+      throw new Error('Инструмент ' + instrument.figi + ' недоступен')
+    }
+
+    const from = new Date()
+    from.setDate(from.getDate() - 5)
+
+    const candles = await services.candles.getHistory(this.figi, from, new Date())
+    await services.logger.info('Загружены свечи')
+
+    const orders = await services.orders.getAllNew(account, this.figi)
+    await services.logger.info('Загружены активные заказы')
+
+    let data = Data.blank(new Date())
+
+    const existingOrder = orders.at(-1)
+
+    if (existingOrder) {
+      await services.logger.info('Имеется активный заказ', existingOrder)
+      data = data.withOrder(existingOrder)
+    }
+
+    let order: Order | null
+
+    for (const candle of candles) {
+      data = data.withCandle(candle)
+    }
+
+    await services.logger.info('Подписываемся на свечи', { figi: this.figi })
+
+    const stream = services.market.subscribeToCandles(this.figi)
+
+    for await (const candle of stream) {
+      if (!this.active) {
+        await services.market.unsubscribeFromCandles(this.figi)
+        break
+      }
+
+      await services.logger.info('Получена свеча', candle)
+      data = data.withCandle(candle)
+
+      await services.logger.info('Вычисляем стратегию')
+      const result = this.tick(data)
+
+      await services.logger.info('Вычислен результат', result)
+
+      if (result.request) {
+        await services.logger.info('Отправляем заказ', {
+          account,
+          figi: this.figi,
+          buy: result.request.buy,
+          lots: this.lots,
+        })
+        try {
+          order = await services.orders.postOrder(account, this.figi, result.request.buy, this.lots)
+          data = data.withOrder(order)
+        } catch (e) {
+          await services.logger.error('Ошибка', e)
+        }
+      }
+    }
+  }
+
+  start(date: Date) {
     this.active = true
+    this.startDate = date
   }
 
   stop() {
     this.active = false
+    this.startDate = null
   }
 
   edit(name: string, figi: string, lots: number) {
@@ -175,6 +263,10 @@ class Robot {
 
   isActive(): boolean {
     return this.active
+  }
+
+  getStartDate(): Date | null {
+    return this.startDate
   }
 }
 

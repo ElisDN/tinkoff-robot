@@ -1,7 +1,7 @@
 import Robot from './robot'
 import RobotsStorage from './robotsStorage'
 import { Strategy } from './strategy'
-import { Trader } from './trading'
+import { Services } from './trading'
 
 type RobotView = {
   id: string
@@ -10,22 +10,28 @@ type RobotView = {
   lots: number
   name: string
   active: boolean
+  startDate: Date | null
 }
 
 class RobotsPool {
   private readonly storage: RobotsStorage
-  private readonly trader: Trader
+  private readonly trader: Services
   private robots: Robot[] = []
 
-  constructor(storage: RobotsStorage, trader: Trader) {
+  constructor(storage: RobotsStorage, trader: Services) {
     this.storage = storage
     this.trader = trader
     this.robots = storage.readAll()
+    this.robots.forEach((robot) => {
+      if (robot.isActive()) {
+        robot.trade(this.trader)
+      }
+    })
   }
 
   async add(accountId: string, name: string, robotId: string, figi: string, lots: number, from: string | null) {
     const strategy = from ? this.get(from).getStrategy() : Strategy.blank()
-    const robot = new Robot(robotId, name, accountId, figi, lots, strategy, false)
+    const robot = new Robot(robotId, name, accountId, figi, lots, strategy, false, null)
     this.robots.push(robot)
     return this.storage.save(robot)
   }
@@ -69,10 +75,18 @@ class RobotsPool {
     return this.getInAccount(accountId, robotId).backTest(this.trader, from)
   }
 
-  async start(accountId: string, robotId: string) {
+  async start(accountId: string, robotId: string, from: Date) {
     const robot = await this.getInAccount(accountId, robotId)
-    robot.start()
-    return this.storage.save(robot)
+    this.robots.forEach((other) => {
+      if (other.getAccountId() === accountId && other.getFigi() === robot.getFigi() && other.isActive()) {
+        throw new Error('Для этого инструмента уже запущен другой робот')
+      }
+    })
+    if (!robot.isActive()) {
+      robot.start(from)
+      this.storage.save(robot)
+      robot.trade(this.trader)
+    }
   }
 
   async stop(accountId: string, robotId: string) {
@@ -90,6 +104,7 @@ class RobotsPool {
       lots: robot.getLots(),
       name: robot.getName(),
       active: robot.isActive(),
+      startDate: robot.getStartDate(),
     }
   }
 
@@ -101,6 +116,7 @@ class RobotsPool {
       lots: robot.getLots(),
       name: robot.getName(),
       active: robot.isActive(),
+      startDate: robot.getStartDate(),
     }))
   }
 
@@ -114,6 +130,7 @@ class RobotsPool {
         lots: robot.getLots(),
         name: robot.getName(),
         active: robot.isActive(),
+        startDate: robot.getStartDate(),
       }))
   }
 

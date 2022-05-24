@@ -4,8 +4,9 @@ import InstrumentsService from '../services/instruments'
 import OrdersService from '../services/orders'
 import AccountsService from '../services/accounts'
 import { Order } from '../services/orders'
-import OperationsService from '../services/operations'
 import { CacheContainer } from 'node-ts-cache'
+import { Logger } from 'winston'
+import MarketService from '../services/market'
 
 export class Data {
   public readonly date: Date
@@ -72,12 +73,14 @@ export type TickResult = {
   candle: Candle
 }
 
-export class Trader {
+export class Services {
   constructor(
     public readonly accounts: AccountsService,
     public readonly candles: CandlesService,
     public readonly instruments: InstrumentsService,
     public readonly orders: OrdersService,
-    public readonly cache: CacheContainer
+    public readonly market: MarketService,
+    public readonly cache: CacheContainer,
+    public readonly logger: Logger
   ) {}
 }

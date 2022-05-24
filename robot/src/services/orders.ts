@@ -1,7 +1,15 @@
 import { Client } from '../sdk/client'
 import { Account } from './accounts'
 import { moneyToFloat } from './convert'
-import { GetOrdersResponse, OrderDirection, OrderExecutionReportStatus } from '../sdk/contracts/orders'
+import {
+  GetOrdersResponse,
+  OrderDirection,
+  OrderExecutionReportStatus,
+  OrderType,
+  PostOrderRequest,
+  PostOrderResponse,
+} from '../sdk/contracts/orders'
+import { v4 } from 'uuid'
 
 export type Order = {
   id: string
@@ -45,6 +53,34 @@ class OrdersService {
           comission: order.serviceCommission ? moneyToFloat(order.serviceCommission) : null,
         }))
     })
+  }
+
+  async postOrder(account: Account, figi: string, buy: boolean, lots: number): Promise<Order> {
+    let promise: Promise<PostOrderResponse> | null
+    const request: PostOrderRequest = PostOrderRequest.fromPartial({
+      orderId: v4(),
+      accountId: account.id,
+      figi,
+      orderType: OrderType.ORDER_TYPE_MARKET,
+      direction: buy ? OrderDirection.ORDER_DIRECTION_BUY : OrderDirection.ORDER_DIRECTION_SELL,
+      quantity: lots,
+    })
+
+    if (account.real) {
+      promise = this.client.orders.postOrder(request)
+    } else {
+      promise = this.client.sandbox.postSandboxOrder(request)
+    }
+
+    return promise.then((response) => ({
+      id: response.orderId,
+      date: null,
+      figi: response.figi,
+      lots: response.lotsRequested,
+      buy: response.direction === OrderDirection.ORDER_DIRECTION_BUY,
+      price: response.initialOrderPrice ? moneyToFloat(response.initialOrderPrice) : null,
+      comission: response.initialCommission ? moneyToFloat(response.initialCommission) : null,
+    }))
   }
 }
 

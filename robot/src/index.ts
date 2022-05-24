@@ -26,7 +26,7 @@ import { CacheContainer } from 'node-ts-cache'
 import { MemoryStorage } from 'node-ts-cache-storage-memory'
 import { Params } from './robot/node'
 import InstrumentsService from './services/instruments'
-import { Trader } from './robot/trading'
+import { Services } from './robot/trading'
 import PricesHigh from './criterias/PricesHigh'
 import PricesLow from './criterias/PricesLow'
 import PricesClose from './criterias/PricesClose'
@@ -39,6 +39,7 @@ import OrdersService from './services/orders'
 import OperationsService from './services/operations'
 import LastBuyPrice from './criterias/LastBuyPrice'
 import LastSellPrice from './criterias/LastSellPrice'
+import MarketService from './services/market'
 
 // Configuration
 
@@ -78,6 +79,7 @@ const portfolioService = new PortfolioService(client)
 const candlesService = new CandlesService(client, cache)
 const ordersService = new OrdersService(client)
 const operationsService = new OperationsService(client)
+const marketService = new MarketService(client)
 
 const availableCriterias = new AvailableCriterias([
   new None(),
@@ -101,7 +103,15 @@ const availableCriterias = new AvailableCriterias([
 ])
 
 const robotsStorage = new FileRobotsStorage(path.resolve(__dirname, '../storage/robots'), availableCriterias)
-const trader = new Trader(accountsService, candlesService, instrumentsService, ordersService, cache)
+const trader = new Services(
+  accountsService,
+  candlesService,
+  instrumentsService,
+  ordersService,
+  marketService,
+  cache,
+  logger
+)
 const robotsPool = new RobotsPool(robotsStorage, trader)
 
 // HTTP API Server
@@ -366,8 +376,10 @@ app.post('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria/wrap
 })
 
 app.post('/api/accounts/:account/robots/:robot/start', async function (req, res) {
+  const from = new Date()
+  from.setDate(from.getDate() - 4)
   return robotsPool
-    .start(req.params.account, req.params.robot)
+    .start(req.params.account, req.params.robot, from)
     .then(() => res.status(201).end())
     .catch((err) => res.status(500).json({ message: err.message }))
 })
