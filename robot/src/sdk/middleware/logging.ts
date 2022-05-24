@@ -8,20 +8,20 @@ function createLoggingMiddleware(logger: Logger) {
     options: CallOptions
   ) {
     const { path } = call.method
-    logger.info('Client call', { path, request: call.request })
+    logger.info('Запрос', { path, request: call.request })
     try {
       return yield* call.next(call.request, options)
     } catch (error) {
       if (error instanceof ClientError) {
-        logger.error('Client call', {
+        logger.error('Ошибка', {
           path,
           status: 'error',
           error: { code: Status[error.code], details: error.details },
         })
       } else if (isAbortError(error)) {
-        logger.error('Client call', { path, status: 'cancel' })
+        logger.error('Отмена', { path, status: 'cancel' })
       } else {
-        logger.error('Client call', { path, status: 'error', error: error })
+        logger.error('Ошибка', { path, status: 'error', error: error })
       }
       throw error
     }

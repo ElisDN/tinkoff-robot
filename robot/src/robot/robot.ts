@@ -147,14 +147,14 @@ class Robot {
 
     const account = await services.accounts.get(this.accountId)
 
-    await services.logger.info('Загружен счёт', account)
+    await services.logger.info('Загружен счёт', { account })
 
     const instrument = await services.instruments.getByFigi(this.figi)
 
-    await services.logger.info('Получен инструмент', instrument)
+    await services.logger.info('Получен инструмент', { instrument })
 
     if (!instrument.available) {
-      await services.logger.info('Инструмент недоступен', instrument)
+      await services.logger.info('Инструмент недоступен', { instrument })
       throw new Error('Инструмент ' + instrument.figi + ' недоступен')
     }
 
@@ -172,7 +172,7 @@ class Robot {
     const existingOrder = orders.at(-1)
 
     if (existingOrder) {
-      await services.logger.info('Имеется активный заказ', existingOrder)
+      await services.logger.info('Имеется активный заказ', { order: existingOrder })
       data = data.withOrder(existingOrder)
     }
 
@@ -192,26 +192,28 @@ class Robot {
         break
       }
 
-      await services.logger.info('Получена свеча', candle)
+      await services.logger.info('Получена свеча', { candle })
       data = data.withCandle(candle)
 
       await services.logger.info('Вычисляем стратегию')
       const result = this.tick(data)
 
-      await services.logger.info('Вычислен результат', result)
+      await services.logger.info('Вычислен результат', { result })
 
       if (result.request) {
         await services.logger.info('Отправляем заказ', {
-          account,
-          figi: this.figi,
-          buy: result.request.buy,
-          lots: this.lots,
+          order: {
+            account,
+            figi: this.figi,
+            buy: result.request.buy,
+            lots: this.lots,
+          },
         })
         try {
           order = await services.orders.postOrder(account, this.figi, result.request.buy, this.lots)
           data = data.withOrder(order)
         } catch (e) {
-          await services.logger.error('Ошибка', e)
+          await services.logger.error('Ошибка', { error: e })
         }
       }
     }
