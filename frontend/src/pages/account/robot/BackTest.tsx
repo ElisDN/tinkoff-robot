@@ -217,7 +217,7 @@ function BackTest({ accountId, robotId, active, start, stop }: Props) {
       </div>
       <div className="col-md-4 col-lg-3">
         <div className="card my-3">
-          <div className="card-header">Прогноз</div>
+          <div className="card-header">Тестовый результат</div>
           {result !== null ? (
             <table className="table my-0">
               <tbody>
