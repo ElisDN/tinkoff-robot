@@ -159,7 +159,7 @@ class Robot {
     }
 
     const from = new Date()
-    from.setDate(from.getDate() - 5)
+    from.setDate(from.getDate() - 4)
 
     const candles = await services.candles.getHistory(this.figi, from, new Date())
     await services.logger.info('Загружены свечи')
