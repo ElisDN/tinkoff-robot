@@ -98,7 +98,7 @@ function BackTest({ accountId, robotId }: Props) {
             Тест
           </div>
           {error ? <div className="alert alert-danger my-0">{error}</div> : null}
-          <div className="area" style={{ height: height }}>
+          <div className="area" style={{ height: height + 20 }}>
             {result !== null ? (
               <svg
                 width={result.ticks.length * barWidth}
