@@ -5,14 +5,17 @@ import { Candle } from './candles'
 
 class MarketService {
   private readonly client: Client
+  private readonly killSwitch: AbortController
 
-  constructor(client: Client) {
+  constructor(client: Client, killSwitch: AbortController) {
     this.client = client
+    this.killSwitch = killSwitch
   }
 
   async *subscribeToCandles(figi: string) {
+    const killSwitch = this.killSwitch
     async function* getSubscribeCandlesRequest() {
-      while (true) {
+      while (!killSwitch.signal.aborted) {
         await new Promise((resolve) => setTimeout(resolve, 1000))
         yield MarketDataRequest.fromPartial({
           subscribeCandlesRequest: {
@@ -29,7 +32,6 @@ class MarketService {
     }
     const stream = this.client.marketDataStream.marketDataStream(getSubscribeCandlesRequest())
     for await (const message of stream) {
-      console.log(message)
       if (message.candle) {
         const candle: Candle = {
           time: message.candle.time || new Date(0),
