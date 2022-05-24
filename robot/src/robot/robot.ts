@@ -192,13 +192,13 @@ class Robot {
         break
       }
 
-      await services.logger.info('Получена свеча', { candle })
+      await services.logger.info('Получена свеча', { figi: this.figi, candle })
       data = data.withCandle(candle)
 
       await services.logger.info('Вычисляем стратегию')
       const result = this.tick(data)
 
-      await services.logger.info('Вычислен результат', { result })
+      await services.logger.info('Вычислен результат', { figi: this.figi, result })
 
       if (result.request) {
         await services.logger.info('Отправляем заказ', {
