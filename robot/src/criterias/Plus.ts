@@ -38,7 +38,7 @@ class Plus implements Criteria {
 
     const value = one.value + two.value
 
-    return new Result(value, [...one.metrics, ...two.metrics, new Metric(id, 'Минус', value)])
+    return new Result(value, [...one.metrics, ...two.metrics, new Metric(id, 'Плюс', value)])
   }
 }
 

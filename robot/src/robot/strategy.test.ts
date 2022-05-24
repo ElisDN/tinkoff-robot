@@ -46,10 +46,12 @@ test('strategy eval middle without order', () => {
 test('strategy eval middle with buy order', () => {
   const data = Data.blank().withPrice(150).withOrder({
     id: '1',
+    figi: 'F1',
     date: new Date(),
     buy: true,
     lots: 1,
     price: 140,
+    comission: 1,
   })
   const result = strategy.eval(data)
 
@@ -59,10 +61,12 @@ test('strategy eval middle with buy order', () => {
 test('strategy eval middle with sell order', () => {
   const data = Data.blank().withPrice(150).withOrder({
     id: '1',
+    figi: 'F1',
     date: new Date(),
     buy: false,
     lots: 1,
     price: 140,
+    comission: 1,
   })
   const result = strategy.eval(data)
 
@@ -79,10 +83,12 @@ test('strategy eval buy without order', () => {
 test('strategy eval buy with buy order', () => {
   const data = Data.blank().withPrice(50).withOrder({
     id: '1',
+    figi: 'F1',
     date: new Date(),
     buy: true,
     lots: 1,
     price: 80,
+    comission: 1,
   })
   const result = strategy.eval(data)
 
@@ -92,10 +98,12 @@ test('strategy eval buy with buy order', () => {
 test('strategy eval buy with sell order', () => {
   const data = Data.blank().withPrice(50).withOrder({
     id: '1',
+    figi: 'F1',
     date: new Date(),
     buy: false,
     lots: 1,
     price: 80,
+    comission: 1,
   })
   const result = strategy.eval(data)
 
@@ -112,10 +120,12 @@ test('strategy eval sell without order', () => {
 test('strategy eval sell with buy order', () => {
   const data = Data.blank().withPrice(250).withOrder({
     id: '1',
+    figi: 'F1',
     date: new Date(),
     buy: true,
     lots: 1,
     price: 80,
+    comission: 1,
   })
   const result = strategy.eval(data)
 
@@ -125,10 +135,12 @@ test('strategy eval sell with buy order', () => {
 test('strategy eval sell with sell order', () => {
   const data = Data.blank().withPrice(250).withOrder({
     id: '1',
+    figi: 'F1',
     date: new Date(),
     buy: false,
     lots: 1,
     price: 180,
+    comission: 1,
   })
   const result = strategy.eval(data)
 
