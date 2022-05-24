@@ -73,8 +73,9 @@ function Robots({ accountId }: Props) {
                 <td>{robot.figi}</td>
                 <td>{robot.instrument}</td>
                 <td>{robot.lots}</td>
-                <td>{robot.active ? 'Запущен' : ''}</td>
-                <td>{robot.startDate}</td>
+                <td style={{ textAlign: 'right' }}>
+                  {robot.active ? 'Запущен' : ''} {robot.startDate}
+                </td>
                 <td style={{ textAlign: 'right' }}>
                   <button type="button" className="btn btn-danger btn-sm" onClick={() => removeRobot(robot.id)}>
                     Удалить

@@ -210,6 +210,7 @@ app.get('/api/robots', function (req, res) {
       })
     })
   )
+    .then(async (items) => items.sort((a, b) => a.name.localeCompare(b.name)))
     .then((items) => res.json(items))
     .catch((err) => res.status(500).json({ message: err.message }))
 })
