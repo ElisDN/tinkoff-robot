@@ -119,7 +119,7 @@ function CreateRobotForm({ accountId, onCreate }: Props) {
           </div>
           <div className="col-auto">
             <select name="from" value={formData.from} onChange={handleChange} className="form-control">
-              <option value="">Новая стратегия</option>
+              <option value="">Пустая стратегия</option>
               {robots
                 ? robots.map((allRobot) => (
                     <option key={'allRobot-' + allRobot.id} value={allRobot.id}>
@@ -131,7 +131,7 @@ function CreateRobotForm({ accountId, onCreate }: Props) {
           </div>
           <div className="col-auto">
             <button className="w-100 btn btn-primary" type="submit">
-              Создать
+              Создать робота
             </button>
           </div>
         </div>
