@@ -8,6 +8,7 @@ export type Instrument = {
   name: string
   lot: number
   available: boolean
+  currency: string
 }
 
 class InstrumentsService {
@@ -27,6 +28,7 @@ class InstrumentsService {
         name: '',
         lot: 1,
         available: true,
+        currency: 'rub',
       })
     }
 
@@ -47,6 +49,7 @@ class InstrumentsService {
             ticker: response.instrument.ticker,
             name: response.instrument.name,
             lot: response.instrument.lot,
+            currency: response.instrument.currency,
             available: response.instrument.buyAvailableFlag && response.instrument.buyAvailableFlag,
           }
         })

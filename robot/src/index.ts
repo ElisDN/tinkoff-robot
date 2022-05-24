@@ -110,6 +110,7 @@ const trader = new Services(
   candlesService,
   instrumentsService,
   ordersService,
+  portfolioService,
   marketService,
   cache,
   logger

@@ -200,14 +200,21 @@ class Robot {
       await services.logger.info('Вычислен результат', { figi: this.figi, result })
 
       if (result.request) {
-        await services.logger.info('Отправляем заказ', {
-          order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
-        })
-        try {
-          order = await services.orders.postOrder(account, this.figi, result.request.buy, this.lots)
-          data = data.withOrder(order)
-        } catch (e) {
-          await services.logger.error('Ошибка', { error: e })
+        const available = await services.portfolio.getAvailableMoney(account, instrument.currency)
+        if (available) {
+          await services.logger.info('Отправляем заказ', {
+            order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
+          })
+          try {
+            order = await services.orders.postOrder(account, this.figi, result.request.buy, this.lots)
+            data = data.withOrder(order)
+          } catch (e) {
+            await services.logger.error('Ошибка', { error: e })
+          }
+        } else {
+          await services.logger.info('Недостаточно средств для заказа', {
+            order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
+          })
         }
       }
     }

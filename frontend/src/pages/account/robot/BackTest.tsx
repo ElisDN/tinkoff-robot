@@ -199,7 +199,7 @@ function BackTest({ accountId, robotId, active, start, stop }: Props) {
                           style={{
                             fill: '#faff5d',
                             fillOpacity: 0.8,
-                            stroke: tick.eval.request.buy ? '#af27dc' : '#f35411',
+                            stroke: tick.eval.request.buy ? '#c60eef' : '#f35411',
                             strokeWidth: '4px',
                           }}
                         />
