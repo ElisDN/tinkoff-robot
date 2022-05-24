@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import useAuth from '../../../auth/useAuth'
 import './BackTest.css'
 import api from '../../../api/api'
@@ -114,7 +114,7 @@ function BackTest({ accountId, robotId }: Props) {
                     candleClass += ' candle-down'
                   }
                   return (
-                    <g key={tick.candle.time} className="bar">
+                    <g key={'bar-' + tick.candle.time} className="bar">
                       <rect x={index * barWidth} width={barWidth} y={0} height={height} />
                       <rect
                         className="candle"
@@ -143,10 +143,10 @@ function BackTest({ accountId, robotId }: Props) {
                         {'\n\n'}
                         {tick.eval.metrics.map((metric) => {
                           return (
-                            <>
+                            <Fragment key={'bar-' + tick.candle.time + '-metrics-' + metric.id}>
                               {metric.name}: &nbsp; {metric.value !== null ? formatPrice(metric.value) : null}
                               {'\n'}
-                            </>
+                            </Fragment>
                           )
                         })}
                       </title>
@@ -155,13 +155,13 @@ function BackTest({ accountId, robotId }: Props) {
                 })}
                 {result.ticks.map((tick, index) => {
                   return (
-                    <>
-                      {tick.eval.metrics.map((metric, i) => {
+                    <Fragment key={'tik-metric-' + tick.candle.time}>
+                      {tick.eval.metrics.map((metric) => {
                         if (metric.value === null) {
                           return null
                         }
                         return (
-                          <g key={'metric-' + tick.candle.time}>
+                          <g key={'tik-metric-' + tick.candle.time + '-' + metric.id}>
                             <rect
                               x={index * barWidth}
                               y={(max - metric.value) * verticalScale}
@@ -182,13 +182,13 @@ function BackTest({ accountId, robotId }: Props) {
                           </g>
                         )
                       })}
-                    </>
+                    </Fragment>
                   )
                 })}
                 {result.ticks.map((tick, index) => (
-                  <>
+                  <Fragment key={'tik-order-' + tick.candle.time}>
                     {tick.eval.request ? (
-                      <g key={'order-' + index}>
+                      <g>
                         <circle
                           cx={index * barWidth + barWidth}
                           cy={(max - tick.candle.close) * verticalScale}
@@ -205,7 +205,7 @@ function BackTest({ accountId, robotId }: Props) {
                         </title>
                       </g>
                     ) : null}
-                  </>
+                  </Fragment>
                 ))}
               </svg>
             ) : null}
