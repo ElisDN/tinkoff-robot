@@ -37,7 +37,7 @@ function Orders({ accountId, robotId }: Props) {
 
   useEffect(() => {
     loadOrders()
-    const interval = setInterval(loadOrders, 5000)
+    const interval = setInterval(loadOrders, 9300)
     return () => clearInterval(interval)
   }, [])
 
