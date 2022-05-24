@@ -49,6 +49,9 @@ function Accounts() {
   }
 
   const closeSandboxAccount = (accountId: string) => {
+    if (!confirm('Удалить счёт?')) {
+      return
+    }
     setError(null)
     getToken()
       .then((token) => {

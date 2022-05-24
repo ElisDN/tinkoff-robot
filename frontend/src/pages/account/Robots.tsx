@@ -39,6 +39,9 @@ function Robots({ accountId }: Props) {
   }, [])
 
   const removeRobot = (robotId: string) => {
+    if (!confirm('Удалить робота?')) {
+      return
+    }
     setError(null)
     getToken()
       .then((token) => {
