@@ -12,20 +12,24 @@ class MarketService {
 
   async *subscribeToCandles(figi: string) {
     async function* getSubscribeCandlesRequest() {
-      yield MarketDataRequest.fromPartial({
-        subscribeCandlesRequest: {
-          subscriptionAction: SubscriptionAction.SUBSCRIPTION_ACTION_SUBSCRIBE,
-          instruments: [
-            {
-              figi: figi,
-              interval: SubscriptionInterval.SUBSCRIPTION_INTERVAL_ONE_MINUTE,
-            },
-          ],
-        },
-      })
+      while (true) {
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        yield MarketDataRequest.fromPartial({
+          subscribeCandlesRequest: {
+            subscriptionAction: SubscriptionAction.SUBSCRIPTION_ACTION_SUBSCRIBE,
+            instruments: [
+              {
+                figi: figi,
+                interval: SubscriptionInterval.SUBSCRIPTION_INTERVAL_ONE_MINUTE,
+              },
+            ],
+          },
+        })
+      }
     }
     const stream = this.client.marketDataStream.marketDataStream(getSubscribeCandlesRequest())
     for await (const message of stream) {
+      console.log(message)
       if (message.candle) {
         const candle: Candle = {
           time: message.candle.time || new Date(0),
