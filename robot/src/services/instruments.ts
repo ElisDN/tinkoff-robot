@@ -2,7 +2,7 @@ import { Client } from '../sdk/client'
 import { InstrumentIdType } from '../sdk/contracts/instruments'
 import { CacheContainer } from 'node-ts-cache'
 
-type Instrument = {
+export type Instrument = {
   figi: string
   ticker: string
   name: string

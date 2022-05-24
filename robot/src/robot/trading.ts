@@ -5,6 +5,7 @@ import OrdersService from '../services/orders'
 import AccountsService from '../services/accounts'
 import { Order } from '../services/orders'
 import OperationsService from '../services/operations'
+import { CacheContainer } from 'node-ts-cache'
 
 export class Data {
   public readonly date: Date
@@ -76,6 +77,7 @@ export class Trader {
     public readonly accounts: AccountsService,
     public readonly candles: CandlesService,
     public readonly instruments: InstrumentsService,
-    public readonly orders: OrdersService
+    public readonly orders: OrdersService,
+    public readonly cache: CacheContainer
   ) {}
 }

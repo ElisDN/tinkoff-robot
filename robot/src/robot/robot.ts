@@ -2,6 +2,8 @@ import { Strategy, EvalResult } from './strategy'
 import { Data, Trader } from './trading'
 import { v4 } from 'uuid'
 import { Order } from '../services/orders'
+import { Candle } from '../services/candles'
+import { Instrument } from '../services/instruments'
 
 class Robot {
   private readonly id: string
@@ -24,9 +26,21 @@ class Robot {
 
   async backTest(trader: Trader, from: Date) {
     const account = await trader.accounts.get(this.accountId)
-    const candles = await trader.candles.getHistory(this.figi, from, new Date())
-    const instrument = await trader.instruments.getByFigi(this.figi)
-    const orders = await trader.orders.getAllNew(account, this.figi)
+
+    const cacheKey = 'backtest-' + this.id + '-' + this.figi
+
+    const cached = await trader.cache.getItem<Promise<[Candle[], Instrument, Order[]]>>(cacheKey)
+
+    const [candles, instrument, orders] =
+      cached ||
+      (await Promise.all([
+        trader.candles.getHistory(this.figi, from, new Date()),
+        trader.instruments.getByFigi(this.figi),
+        trader.orders.getAllNew(account, this.figi),
+      ]))
+
+    await trader.cache.setItem(cacheKey, [candles, instrument, orders], { ttl: 60 })
+
     const lots = 1
     const comission = 0.003
 
