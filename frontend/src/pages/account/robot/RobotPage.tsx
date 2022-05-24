@@ -16,6 +16,7 @@ type AccountResponse = {
 
 export type Robot = {
   figi: string
+  lots: number
   name: string
   instrument: string
 }

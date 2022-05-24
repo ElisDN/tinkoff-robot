@@ -12,6 +12,7 @@ type Robot = {
   id: string
   figi: string
   name: string
+  lots: number
   instrument: string
 }
 
@@ -69,6 +70,7 @@ function Robots({ accountId }: Props) {
                 </td>
                 <td>{robot.figi}</td>
                 <td>{robot.instrument}</td>
+                <td>{robot.lots}</td>
                 <td style={{ textAlign: 'right' }}>
                   <button type="button" className="btn btn-danger btn-sm" onClick={() => removeRobot(robot.id)}>
                     Удалить

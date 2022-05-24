@@ -21,6 +21,7 @@ type AllRobot = {
 type FormData = {
   figi: string
   name: string
+  lots: string
   from: string
 }
 
@@ -28,7 +29,12 @@ function EditRobotForm({ accountId, robotId, robot, onEdit }: Props) {
   const { getToken } = useAuth()
 
   const [robots, setRobots] = useState<AllRobot[] | null>(null)
-  const [formData, setFormData] = useState<FormData>({ figi: robot.figi, name: robot.name, from: '' })
+  const [formData, setFormData] = useState<FormData>({
+    figi: robot.figi,
+    name: robot.name,
+    lots: robot.lots.toString(),
+    from: '',
+  })
   const [error, setError] = useState(null)
 
   const handleChange = (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -66,7 +72,7 @@ function EditRobotForm({ accountId, robotId, robot, onEdit }: Props) {
         body: JSON.stringify(formData),
       })
         .then(() => {
-          setFormData({ figi: formData.figi, name: formData.name, from: '' })
+          setFormData({ ...formData, from: '' })
           loadRobots()
           onEdit()
         })
@@ -109,6 +115,17 @@ function EditRobotForm({ accountId, robotId, robot, onEdit }: Props) {
             />
           </div>
           <div className="col-auto">
+            <input
+              type="number"
+              name="lots"
+              value={formData.lots}
+              onChange={handleChange}
+              className="form-control"
+              placeholder="Лотов"
+              required
+            />
+          </div>
+          <div className="col-auto">
             <select name="from" value={formData.from} onChange={handleChange} className="form-control">
               <option value="">Импорт стратегии</option>
               {robots
@@ -121,7 +138,7 @@ function EditRobotForm({ accountId, robotId, robot, onEdit }: Props) {
             </select>
           </div>
           <div className="col-auto">
-            <button className="w-100 btn btn-primary" type="submit">
+            <button className="w-100 btn btn-outline-secondary" type="submit">
               Сохранить
             </button>
           </div>

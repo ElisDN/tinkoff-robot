@@ -18,6 +18,7 @@ type Robot = {
 type FormData = {
   figi: string
   name: string
+  lots: string
   from: string
 }
 
@@ -25,7 +26,7 @@ function CreateRobotForm({ accountId, onCreate }: Props) {
   const { getToken } = useAuth()
 
   const [robots, setRobots] = useState<Robot[] | null>(null)
-  const [formData, setFormData] = useState<FormData>({ figi: '', name: '', from: '' })
+  const [formData, setFormData] = useState<FormData>({ figi: '', name: '', lots: '', from: '' })
   const [error, setError] = useState(null)
 
   const handleChange = (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -63,7 +64,7 @@ function CreateRobotForm({ accountId, onCreate }: Props) {
         body: JSON.stringify(formData),
       })
         .then(() => {
-          setFormData({ figi: '', name: '', from: '' })
+          setFormData({ figi: '', name: '', lots: '', from: '' })
           loadRobots()
           onCreate()
         })
@@ -102,6 +103,17 @@ function CreateRobotForm({ accountId, onCreate }: Props) {
               onChange={handleChange}
               className="form-control"
               placeholder="FIGI"
+              required
+            />
+          </div>
+          <div className="col-auto">
+            <input
+              type="number"
+              name="lots"
+              value={formData.lots}
+              onChange={handleChange}
+              className="form-control"
+              placeholder="Лотов"
               required
             />
           </div>

@@ -36,8 +36,6 @@ import Minus from './criterias/Minus'
 import Multiplication from './criterias/Multiplication'
 import Division from './criterias/Division'
 import OrdersService from './services/orders'
-import accounts from './services/accounts'
-import operations from './services/operations'
 import OperationsService from './services/operations'
 import LastBuyPrice from './criterias/LastBuyPrice'
 import LastSellPrice from './criterias/LastSellPrice'
@@ -221,6 +219,9 @@ app.post('/api/accounts/:account/robots', function (req, res) {
   if (!req.body.name) {
     return res.status(422).json({ message: 'Заполните имя' })
   }
+  if (!req.body.lots) {
+    return res.status(422).json({ message: 'Заполните число лотов' })
+  }
   return instrumentsService
     .getByFigi(req.body.figi)
     .then((instrument) => {
@@ -230,7 +231,7 @@ app.post('/api/accounts/:account/robots', function (req, res) {
       return instrument
     })
     .then((instrument) =>
-      robotsPool.add(req.params.account, req.body.name, uuid(), instrument.figi, req.body.from || null)
+      robotsPool.add(req.params.account, req.body.name, uuid(), instrument.figi, req.body.lots, req.body.from || null)
     )
     .then(() => res.status(201).end())
     .catch((err) => res.status(500).json({ message: err.message }))
@@ -256,6 +257,9 @@ app.put('/api/accounts/:account/robots/:robot', function (req, res) {
   if (!req.body.name) {
     return res.status(422).json({ message: 'Заполните имя' })
   }
+  if (!req.body.lots) {
+    return res.status(422).json({ message: 'Заполните число лотов' })
+  }
   return instrumentsService
     .getByFigi(req.body.figi)
     .then((instrument) => {
@@ -266,7 +270,7 @@ app.put('/api/accounts/:account/robots/:robot', function (req, res) {
     })
     .then((instrument) => {
       return robotsPool
-        .edit(req.params.account, req.params.robot, req.body.name, instrument.figi)
+        .edit(req.params.account, req.params.robot, req.body.name, instrument.figi, req.body.lots)
         .then(() => {
           if (req.body.from) {
             return robotsPool.copyStrategy(req.params.account, req.params.robot, req.body.from)

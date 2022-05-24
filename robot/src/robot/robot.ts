@@ -10,13 +10,15 @@ class Robot {
   private name: string
   private readonly accountId: string
   private figi: string
+  private lots: number
   private strategy: Strategy
 
-  constructor(id: string, name: string, accountId: string, figi: string, strategy: Strategy) {
+  constructor(id: string, name: string, accountId: string, figi: string, lots: number, strategy: Strategy) {
     this.id = id
     this.name = name
     this.accountId = accountId
     this.figi = figi
+    this.lots = lots
     this.strategy = strategy
   }
 
@@ -41,7 +43,6 @@ class Robot {
 
     await trader.cache.setItem(cacheKey, [candles, instrument, orders], { ttl: 60 })
 
-    const lots = 1
     const comission = 0.003
 
     const results = []
@@ -62,9 +63,9 @@ class Robot {
           figi: this.figi,
           date: candle.time,
           buy: result.request.buy,
-          lots,
+          lots: this.lots,
           price: candle.close,
-          comission: candle.close * lots * instrument.lot * comission,
+          comission: candle.close * this.lots * instrument.lot * comission,
         }
         data = data.withOrder(order)
       } else {
@@ -90,8 +91,8 @@ class Robot {
 
     const comissions = total * comission
 
-    const startCost = (candles.at(0)?.close || 0) * instrument.lot * lots
-    const endCost = (candles.at(-1)?.close || 0) * instrument.lot * lots
+    const startCost = (candles.at(0)?.close || 0) * instrument.lot * this.lots
+    const endCost = (candles.at(-1)?.close || 0) * instrument.lot * this.lots
 
     const tradingPofit = resultOrders
       .map((order) => {
@@ -106,11 +107,11 @@ class Robot {
     return {
       ticks: results,
       summary: {
-        lots,
+        lots: this.lots,
         instrumentLots: instrument.lot,
         startCost,
         endCost,
-        diffProfit: (endCost - startCost) * lots,
+        diffProfit: (endCost - startCost) * this.lots,
         ordersCount: resultOrders.length,
         total,
         comissions,
@@ -120,9 +121,10 @@ class Robot {
     }
   }
 
-  edit(name: string, figi: string) {
+  edit(name: string, figi: string, lots: number) {
     this.name = name
     this.figi = figi
+    this.lots = lots
   }
 
   changeStrategy(strategy: Strategy): void {
@@ -139,6 +141,10 @@ class Robot {
 
   getFigi(): string {
     return this.figi
+  }
+
+  getLots(): number {
+    return this.lots
   }
 
   getName(): string {

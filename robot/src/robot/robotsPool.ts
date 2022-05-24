@@ -7,6 +7,7 @@ type RobotView = {
   id: string
   accountId: string
   figi: string
+  lots: number
   name: string
 }
 
@@ -21,16 +22,16 @@ class RobotsPool {
     this.robots = storage.readAll()
   }
 
-  async add(accountId: string, name: string, robotId: string, figi: string, from: string | null) {
+  async add(accountId: string, name: string, robotId: string, figi: string, lots: number, from: string | null) {
     const strategy = from ? this.get(from).getStrategy() : Strategy.blank()
-    const robot = new Robot(robotId, name, accountId, figi, strategy)
+    const robot = new Robot(robotId, name, accountId, figi, lots, strategy)
     this.robots.push(robot)
     return this.storage.save(robot)
   }
 
-  async edit(accountId: string, robotId: string, name: string, figi: string) {
+  async edit(accountId: string, robotId: string, name: string, figi: string, lots: number) {
     const robot = this.getInAccount(accountId, robotId)
-    robot.edit(name, figi)
+    robot.edit(name, figi, lots)
     return this.storage.save(robot)
   }
 
@@ -73,6 +74,7 @@ class RobotsPool {
       id: robot.getId(),
       accountId: robot.getAccountId(),
       figi: robot.getFigi(),
+      lots: robot.getLots(),
       name: robot.getName(),
     }
   }
@@ -82,6 +84,7 @@ class RobotsPool {
       id: robot.getId(),
       accountId: robot.getAccountId(),
       figi: robot.getFigi(),
+      lots: robot.getLots(),
       name: robot.getName(),
     }))
   }
@@ -93,6 +96,7 @@ class RobotsPool {
         id: robot.getId(),
         accountId: robot.getAccountId(),
         figi: robot.getFigi(),
+        lots: robot.getLots(),
         name: robot.getName(),
       }))
   }
