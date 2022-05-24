@@ -87,7 +87,7 @@ function BackTest({ accountId, robotId }: Props) {
       <div className="col-md-8 col-lg-10">
         <div className="card my-3">
           <div className="card-header">
-            <div className="btn-group float-end">
+            <div className="btn-group float-end" style={{ margin: '-0.25rem 0' }}>
               <button type="button" className="btn btn-sm btn-outline-dark" onClick={() => setBarWidth(barWidth * 2)}>
                 +
               </button>
@@ -95,7 +95,7 @@ function BackTest({ accountId, robotId }: Props) {
                 &ndash;
               </button>
             </div>
-            Тест
+            Тест на истории
           </div>
           {error ? <div className="alert alert-danger my-0">{error}</div> : null}
           <div className="area" style={{ height: height + 20 }}>
