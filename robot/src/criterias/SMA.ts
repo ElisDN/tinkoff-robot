@@ -37,12 +37,7 @@ class SMA implements Criteria {
       return new Result(null, [...items.metrics])
     }
 
-    const begin = new Date(data.date.getTime() - 60000000 * period)
-
-    const values = items.value
-      .map((value) => value as DateValue)
-      .filter((value) => begin.getTime() <= value.date.getTime() && value.date.getTime() <= data.date.getTime())
-      .map((value) => value.value)
+    const values = items.value.map((value) => (typeof value === 'number' ? value : value.value))
 
     const value = TechSMA.calculate({ values, period }).at(-1) || null
 
