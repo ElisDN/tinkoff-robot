@@ -26,7 +26,7 @@ cp .env.example .env
 npm run start
 ```
 
-В браузере перейдите по адресу `http://localhost:3000`
+В браузере перейдите по адресу `http://localhost:3000` и введите пароль `admin`.
 
 ## Торговые стратегии
 
