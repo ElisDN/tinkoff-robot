@@ -48,6 +48,7 @@ class RobotsPool {
     if (index > -1) {
       this.robots.splice(index, 1)
     }
+    robot.stop()
     return this.storage.remove(robot)
   }
 
