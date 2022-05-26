@@ -60,16 +60,11 @@ export class Metric {
   }
 }
 
-export type DateValue = {
-  date: Date
-  value: number
-}
-
 export class Result {
-  public readonly value: DateValue[] | number[] | number | null
+  public readonly value: number[] | number | null
   public readonly metrics: Metric[]
 
-  constructor(value: DateValue[] | number[] | number | null, metrics: Metric[]) {
+  constructor(value: number[] | number | null, metrics: Metric[]) {
     this.value = value
     this.metrics = metrics
   }

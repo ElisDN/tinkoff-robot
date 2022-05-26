@@ -1,5 +1,5 @@
 import { Criteria, Schema } from '../robot/criteria'
-import { Data, DateValue, Result } from '../robot/trading'
+import { Data, Result } from '../robot/trading'
 
 class PricesHigh implements Criteria {
   getSchema(): Schema {
@@ -16,7 +16,7 @@ class PricesHigh implements Criteria {
     const prices = Object.entries(data.candles)
       .map(([, candle]) => candle)
       .filter((candle) => candle.isComplete)
-      .map<DateValue>((candle) => ({ date: candle.time, value: candle.high }))
+      .map((candle) => candle.high)
 
     return new Result(prices, [])
   }
