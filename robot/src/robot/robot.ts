@@ -201,7 +201,12 @@ class Robot {
 
       if (result.request) {
         if (result.request.buy) {
-          const available = await services.portfolio.getAvailableMoney(account, instrument.currency)
+          let available = 0
+          try {
+            available = await services.portfolio.getAvailableMoney(account, instrument.currency)
+          } catch (e) {
+            await services.logger.error('Ошибка', { error: e })
+          }
           if (available) {
             await services.logger.info('Отправляем заказ на покупку', {
               order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
@@ -218,7 +223,12 @@ class Robot {
             })
           }
         } else {
-          const available = await services.portfolio.getAvailableLots(account, this.figi)
+          let available = 0
+          try {
+            available = await services.portfolio.getAvailableLots(account, this.figi)
+          } catch (e) {
+            await services.logger.error('Ошибка', { error: e })
+          }
           if (available) {
             await services.logger.info('Отправляем заказ на продажу', {
               order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },

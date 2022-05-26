@@ -78,7 +78,7 @@ class PortfolioService {
   async getAvailableLots(account: Account, figi: string) {
     return this.getPositions(account)
       .then((positions) => positions.find((position) => position.figi === figi))
-      .then((position) => (position ? position.quantityLots : 0))
+      .then((position) => (position ? position.quantityLots || 0 : 0))
   }
 }
 
