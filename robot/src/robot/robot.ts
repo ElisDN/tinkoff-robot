@@ -207,7 +207,7 @@ class Robot {
           } catch (e) {
             await services.logger.error('Ошибка', { error: e })
           }
-          if (available) {
+          if (available > candle.close * this.lots * instrument.lot) {
             await services.logger.info('Отправляем заказ на покупку', {
               order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
             })
@@ -229,7 +229,7 @@ class Robot {
           } catch (e) {
             await services.logger.error('Ошибка', { error: e })
           }
-          if (available) {
+          if (available >= this.lots) {
             await services.logger.info('Отправляем заказ на продажу', {
               order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
             })
