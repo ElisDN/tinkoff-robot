@@ -40,21 +40,18 @@ class Robot {
   }
 
   async backTest(services: Services, from: Date) {
-    const account = await services.accounts.get(this.accountId)
-
     const cacheKey = 'backtest-' + this.id + '-' + this.figi
 
     const cached = await services.cache.getItem<Promise<[Candle[], Instrument, Order[]]>>(cacheKey)
 
-    const [candles, instrument, orders] =
+    const [candles, instrument] =
       cached ||
       (await Promise.all([
         services.candles.getHistory(this.figi, from, new Date()),
         services.instruments.getByFigi(this.figi),
-        services.orders.getAllNew(account, this.figi),
       ]))
 
-    await services.cache.setItem(cacheKey, [candles, instrument, orders], { ttl: 60 })
+    await services.cache.setItem(cacheKey, [candles, instrument], { ttl: 60 })
 
     const comission = 0.0004
     const results = []
@@ -62,7 +59,16 @@ class Robot {
     let data = Data.blank(new Date())
 
     let order: Order | null
-    order = orders.at(-1) || null
+
+    data = data.withOrder({
+      id: v4(),
+      figi: this.figi,
+      date: new Date(),
+      buy: false,
+      lots: this.lots,
+      price: 0,
+      comission: 0,
+    })
 
     for (const candle of candles) {
       data = data.withCandle(candle)
