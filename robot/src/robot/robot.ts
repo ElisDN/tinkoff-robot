@@ -200,21 +200,40 @@ class Robot {
       await services.logger.info('Вычислен результат', { figi: this.figi, result })
 
       if (result.request) {
-        const available = await services.portfolio.getAvailableMoney(account, instrument.currency)
-        if (available) {
-          await services.logger.info('Отправляем заказ', {
-            order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
-          })
-          try {
-            order = await services.orders.postOrder(account, this.figi, result.request.buy, this.lots)
-            data = data.withOrder(order)
-          } catch (e) {
-            await services.logger.error('Ошибка', { error: e })
+        if (result.request.buy) {
+          const available = await services.portfolio.getAvailableMoney(account, instrument.currency)
+          if (available) {
+            await services.logger.info('Отправляем заказ на покупку', {
+              order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
+            })
+            try {
+              order = await services.orders.postOrder(account, this.figi, result.request.buy, this.lots)
+              data = data.withOrder(order)
+            } catch (e) {
+              await services.logger.error('Ошибка', { error: e })
+            }
+          } else {
+            await services.logger.info('Недостаточно средств для заказа', {
+              order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
+            })
           }
         } else {
-          await services.logger.info('Недостаточно средств для заказа', {
-            order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
-          })
+          const available = await services.portfolio.getAvailableLots(account, this.figi)
+          if (available) {
+            await services.logger.info('Отправляем заказ на продажу', {
+              order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
+            })
+            try {
+              order = await services.orders.postOrder(account, this.figi, result.request.buy, this.lots)
+              data = data.withOrder(order)
+            } catch (e) {
+              await services.logger.error('Ошибка', { error: e })
+            }
+          } else {
+            await services.logger.info('Недостаточно лотов для продажи', {
+              order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
+            })
+          }
         }
       }
     }

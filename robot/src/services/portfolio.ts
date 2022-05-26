@@ -74,6 +74,12 @@ class PortfolioService {
           .then((position) => (position && position.quantity ? quotationToFloat(position.quantity) : 0))
       })
   }
+
+  async getAvailableLots(account: Account, figi: string) {
+    return this.getPositions(account)
+      .then((positions) => positions.find((position) => position.figi === figi))
+      .then((position) => (position ? position.quantityLots : 0))
+  }
 }
 
 export default PortfolioService
