@@ -6,6 +6,7 @@ import api from '../../../api/api'
 type Props = {
   accountId: string
   robotId: string
+  chartKey: number
 }
 
 type Candle = {
@@ -52,7 +53,7 @@ type Result = {
   }
 }
 
-function BackTest({ accountId, robotId }: Props) {
+function BackTest({ accountId, robotId, chartKey }: Props) {
   const { getToken } = useAuth()
 
   const [barWidth, setBarWidth] = useState<number>(2)
@@ -60,6 +61,7 @@ function BackTest({ accountId, robotId }: Props) {
   const [error, setError] = useState(null)
 
   useEffect(() => {
+    setResult(null)
     setError(null)
     getToken()
       .then((token) => {
@@ -70,7 +72,7 @@ function BackTest({ accountId, robotId }: Props) {
           .catch((error) => setError(error.message || error.statusText))
       })
       .catch(() => null)
-  }, [])
+  }, [chartKey])
 
   const formatPrice = (price: number) => {
     return price.toFixed(2)

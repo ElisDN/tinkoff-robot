@@ -111,7 +111,7 @@ function RobotPage() {
           </div>
         ) : null}
       </div>
-      <BackTest key={'chart' + chartKey} accountId={accountId || ''} robotId={robotId || ''} />
+      <BackTest chartKey={chartKey} accountId={accountId || ''} robotId={robotId || ''} />
       <div className="row">
         <div className="col-md-8 col-lg-9">
           <StrategyEditor
