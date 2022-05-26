@@ -6,9 +6,6 @@ import api from '../../../api/api'
 type Props = {
   accountId: string
   robotId: string
-  active: boolean | null
-  start(): void
-  stop(): void
 }
 
 type Candle = {
@@ -55,7 +52,7 @@ type Result = {
   }
 }
 
-function BackTest({ accountId, robotId, active, start, stop }: Props) {
+function BackTest({ accountId, robotId }: Props) {
   const { getToken } = useAuth()
 
   const [barWidth, setBarWidth] = useState<number>(2)
@@ -263,21 +260,6 @@ function BackTest({ accountId, robotId, active, start, stop }: Props) {
                 ) : null}
               </tbody>
             </table>
-          ) : null}
-        </div>
-        <div className="card my-4">
-          {active !== null ? (
-            <>
-              {active ? (
-                <button className="btn btn-danger py-3" onClick={stop}>
-                  Остановить робота
-                </button>
-              ) : (
-                <button className="btn btn-primary py-3" onClick={start}>
-                  Запустить робота
-                </button>
-              )}
-            </>
           ) : null}
         </div>
       </div>

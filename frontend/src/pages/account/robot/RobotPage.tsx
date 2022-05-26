@@ -111,14 +111,7 @@ function RobotPage() {
           </div>
         ) : null}
       </div>
-      <BackTest
-        key={'chart' + chartKey}
-        accountId={accountId || ''}
-        robotId={robotId || ''}
-        active={robot ? robot.active : null}
-        start={startRobot}
-        stop={stopRobot}
-      />
+      <BackTest key={'chart' + chartKey} accountId={accountId || ''} robotId={robotId || ''} />
       <div className="row">
         <div className="col-md-8 col-lg-9">
           <StrategyEditor
@@ -128,6 +121,21 @@ function RobotPage() {
           />
         </div>
         <div className="col-md-4 col-lg-3">
+          <div className="card my-3">
+            {robot !== null ? (
+              <>
+                {robot.active ? (
+                  <button className="btn btn-danger py-3" onClick={stopRobot}>
+                    Остановить робота
+                  </button>
+                ) : (
+                  <button className="btn btn-primary py-3" onClick={startRobot}>
+                    Запустить робота
+                  </button>
+                )}
+              </>
+            ) : null}
+          </div>
           <Orders accountId={accountId || ''} robotId={robotId || ''} />
           <Operations accountId={accountId || ''} robotId={robotId || ''} />
         </div>

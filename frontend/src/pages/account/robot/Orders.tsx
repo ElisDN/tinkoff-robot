@@ -46,7 +46,7 @@ function Orders({ accountId, robotId }: Props) {
   }
 
   return (
-    <div className="card my-3">
+    <div className="card my-4">
       <div className="card-header">Активные заявки</div>
       {error ? <div className="alert alert-danger my-0">{error}</div> : null}
       {orders !== null ? (
