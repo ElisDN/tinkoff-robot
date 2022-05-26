@@ -1,5 +1,4 @@
 import CandlesService, { Candle } from '../services/candles'
-import { EvalResult } from './strategy'
 import InstrumentsService from '../services/instruments'
 import OrdersService from '../services/orders'
 import AccountsService from '../services/accounts'
