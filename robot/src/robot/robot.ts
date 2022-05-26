@@ -201,13 +201,13 @@ class Robot {
 
       if (result.request) {
         if (result.request.buy) {
-          let available = 0
+          let availableMoney = 0
           try {
-            available = await services.portfolio.getAvailableMoney(account, instrument.currency)
+            availableMoney = await services.portfolio.getAvailableMoney(account, instrument.currency)
           } catch (e) {
             await services.logger.error('Ошибка', { error: e })
           }
-          if (available > candle.close * this.lots * instrument.lot) {
+          if (availableMoney > candle.close * this.lots * instrument.lot) {
             await services.logger.info('Отправляем заказ на покупку', {
               order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
             })
@@ -223,13 +223,13 @@ class Robot {
             })
           }
         } else {
-          let available = 0
+          let availableLots = 0
           try {
-            available = await services.portfolio.getAvailableLots(account, this.figi)
+            availableLots = await services.portfolio.getAvailableLots(account, this.figi)
           } catch (e) {
             await services.logger.error('Ошибка', { error: e })
           }
-          if (available >= this.lots) {
+          if (availableLots >= this.lots) {
             await services.logger.info('Отправляем заказ на продажу', {
               order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
             })
