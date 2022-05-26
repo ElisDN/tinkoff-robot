@@ -5,17 +5,14 @@ import { Candle } from './candles'
 
 class MarketService {
   private readonly client: Client
-  private readonly killSwitch: AbortController
 
-  constructor(client: Client, killSwitch: AbortController) {
+  constructor(client: Client) {
     this.client = client
-    this.killSwitch = killSwitch
   }
 
   async *subscribeToCandles(figi: string) {
-    const killSwitch = this.killSwitch
     async function* getSubscribeCandlesRequest() {
-      while (!killSwitch.signal.aborted) {
+      while (true) {
         await new Promise((resolve) => setTimeout(resolve, 1000))
         yield MarketDataRequest.fromPartial({
           subscribeCandlesRequest: {
@@ -44,23 +41,6 @@ class MarketService {
         yield candle
       }
     }
-  }
-
-  async unsubscribeFromCandles(figi: string) {
-    async function* getUnSubscribeCandlesRequest() {
-      yield MarketDataRequest.fromPartial({
-        subscribeCandlesRequest: {
-          subscriptionAction: SubscriptionAction.SUBSCRIPTION_ACTION_UNSUBSCRIBE,
-          instruments: [
-            {
-              figi: figi,
-              interval: SubscriptionInterval.SUBSCRIPTION_INTERVAL_ONE_MINUTE,
-            },
-          ],
-        },
-      })
-    }
-    return this.client.marketDataStream.marketDataStream(getUnSubscribeCandlesRequest())
   }
 }
 

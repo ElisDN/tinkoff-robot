@@ -210,7 +210,6 @@ class Robot {
 
     for await (const candle of stream) {
       if (!this.active) {
-        await services.market.unsubscribeFromCandles(this.figi)
         break
       }
 
@@ -269,6 +268,8 @@ class Robot {
         }
       }
     }
+
+    await services.logger.info('Остановка робота', { id: this.id })
   }
 
   start(date: Date) {

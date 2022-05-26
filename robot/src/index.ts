@@ -68,8 +68,6 @@ if (!tinkoffToken) {
 
 // Services
 
-const killSwitch = new AbortController()
-
 const logger = createLogger()
 const cache = new CacheContainer(new MemoryStorage())
 
@@ -81,7 +79,7 @@ const portfolioService = new PortfolioService(client)
 const candlesService = new CandlesService(client, cache)
 const ordersService = new OrdersService(client)
 const operationsService = new OperationsService(client)
-const marketService = new MarketService(client, killSwitch)
+const marketService = new MarketService(client)
 
 const availableCriterias = new AvailableCriterias([
   new None(),
@@ -117,10 +115,6 @@ const trader = new Services(
   logger
 )
 const robotsPool = new RobotsPool(robotsStorage, trader)
-
-process.on('SIGINT', function () {
-  killSwitch.abort()
-})
 
 // HTTP API Server
 
