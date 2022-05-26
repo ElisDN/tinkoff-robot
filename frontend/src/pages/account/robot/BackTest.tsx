@@ -114,48 +114,44 @@ function BackTest({ accountId, robotId }: Props) {
                     candleClass += ' candle-down'
                   }
                   return (
-                    <g key={'bar-' + tick.candle.time} className="bar">
-                      <rect x={index * barWidth} width={barWidth} y={0} height={height} />
-                      <rect
-                        className="candle"
-                        x={index * barWidth + barWidth / 2 - barWidth / 20}
-                        width={Math.max(barWidth / 10, 1)}
-                        y={(max - tick.candle.high) * verticalScale}
-                        height={Math.abs(tick.candle.high - tick.candle.low) * verticalScale}
-                      />
-                      <rect
-                        className={candleClass}
-                        x={index * barWidth}
-                        width={barWidth}
-                        y={(max - Math.max(tick.candle.open, tick.candle.close)) * verticalScale}
-                        height={Math.max(1, Math.abs(tick.candle.open - tick.candle.close) * verticalScale)}
-                      />
-                      <title>
-                        {new Date(tick.candle.time).toUTCString()}
-                        {'\n\n'}
-                        Открытие: {formatPrice(tick.candle.open)}
-                        {'\n'}
-                        Закрытие: {formatPrice(tick.candle.close)}
-                        {'\n\n'}
-                        Максимум: &nbsp;{formatPrice(tick.candle.high)}
-                        {'\n'}
-                        Минимум: &nbsp;{formatPrice(tick.candle.low)}
-                        {'\n\n'}
-                        {tick.eval.metrics.map((metric) => {
-                          return (
-                            <Fragment key={'bar-' + tick.candle.time + '-metrics-' + metric.id}>
-                              {metric.name}: &nbsp; {metric.value !== null ? formatPrice(metric.value) : null}
-                              {'\n'}
-                            </Fragment>
-                          )
-                        })}
-                      </title>
-                    </g>
-                  )
-                })}
-                {result.ticks.map((tick, index) => {
-                  return (
                     <Fragment key={'tik-metric-' + tick.candle.time}>
+                      <g key={'bar-' + tick.candle.time} className="bar">
+                        <rect x={index * barWidth} width={barWidth} y={0} height={height} />
+                        <rect
+                          className="candle"
+                          x={index * barWidth + barWidth / 2 - barWidth / 20}
+                          width={Math.max(barWidth / 10, 1)}
+                          y={(max - tick.candle.high) * verticalScale}
+                          height={Math.abs(tick.candle.high - tick.candle.low) * verticalScale}
+                        />
+                        <rect
+                          className={candleClass}
+                          x={index * barWidth}
+                          width={barWidth}
+                          y={(max - Math.max(tick.candle.open, tick.candle.close)) * verticalScale}
+                          height={Math.max(1, Math.abs(tick.candle.open - tick.candle.close) * verticalScale)}
+                        />
+                        <title>
+                          {new Date(tick.candle.time).toUTCString()}
+                          {'\n\n'}
+                          Открытие: {formatPrice(tick.candle.open)}
+                          {'\n'}
+                          Закрытие: {formatPrice(tick.candle.close)}
+                          {'\n\n'}
+                          Максимум: &nbsp;{formatPrice(tick.candle.high)}
+                          {'\n'}
+                          Минимум: &nbsp;{formatPrice(tick.candle.low)}
+                          {'\n\n'}
+                          {tick.eval.metrics.map((metric) => {
+                            return (
+                              <Fragment key={'bar-' + tick.candle.time + '-metrics-' + metric.id}>
+                                {metric.name}: &nbsp; {metric.value !== null ? formatPrice(metric.value) : null}
+                                {'\n'}
+                              </Fragment>
+                            )
+                          })}
+                        </title>
+                      </g>
                       {tick.eval.metrics.map((metric) => {
                         if (metric.value === null) {
                           return null
