@@ -8,6 +8,7 @@ import { CacheContainer } from 'node-ts-cache'
 import { Logger } from 'winston'
 import MarketService from '../services/market'
 import PortfolioService from '../services/portfolio'
+import OperationsService from '../services/operations'
 
 export class Data {
   public readonly date: Date
@@ -85,6 +86,7 @@ export class Services {
     public readonly candles: CandlesService,
     public readonly instruments: InstrumentsService,
     public readonly orders: OrdersService,
+    public readonly operations: OperationsService,
     public readonly portfolio: PortfolioService,
     public readonly market: MarketService,
     public readonly cache: CacheContainer,

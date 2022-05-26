@@ -167,13 +167,29 @@ class Robot {
     const orders = await services.orders.getAllNew(account, this.figi)
     await services.logger.info('Загружены активные заказы')
 
+    const operations = await services.operations.getAllExecuted(account, this.figi, from, new Date())
+    await services.logger.info('Загружены прошлые операции')
+
     let data = Data.blank(new Date())
 
     const existingOrder = orders.at(-1)
-
     if (existingOrder) {
       await services.logger.info('Имеется активный заказ', { order: existingOrder })
       data = data.withOrder(existingOrder)
+    } else {
+      const existingOperation = operations.at(-1)
+      if (existingOperation) {
+        await services.logger.info('Имеется прошлая операция', { order: existingOperation })
+        data = data.withOrder({
+          id: existingOperation.id,
+          date: existingOperation.date,
+          price: existingOperation.price,
+          figi: existingOperation.figi,
+          buy: existingOperation.buy,
+          lots: existingOperation.lots,
+          comission: 0,
+        })
+      }
     }
 
     let order: Order | null
