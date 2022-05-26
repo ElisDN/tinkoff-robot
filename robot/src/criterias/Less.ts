@@ -29,7 +29,7 @@ class Less implements Criteria {
     const two = inputs.get('two', data)
 
     if (one.value === null || two.value === null) {
-      return new Result(null, [...one.metrics, ...one.metrics])
+      return new Result(null, [...one.metrics, ...two.metrics])
     }
 
     return new Result(one.value < two.value ? 1 : 0, [...one.metrics, ...two.metrics])
