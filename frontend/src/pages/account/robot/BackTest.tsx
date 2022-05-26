@@ -185,28 +185,26 @@ function BackTest({ accountId, robotId }: Props) {
                     </Fragment>
                   )
                 })}
-                {result.ticks.map((tick, index) => (
-                  <Fragment key={'tik-order-' + tick.candle.time}>
-                    {tick.eval.request ? (
-                      <g>
-                        <circle
-                          cx={index * barWidth + barWidth}
-                          cy={(max - tick.candle.close) * verticalScale}
-                          r={8}
-                          style={{
-                            fill: '#faff5d',
-                            fillOpacity: 0.8,
-                            stroke: tick.eval.request.buy ? '#c60eef' : '#f35411',
-                            strokeWidth: '4px',
-                          }}
-                        />
-                        <title>
-                          {tick.eval.request.buy ? 'Покупка' : 'Продажа'} {formatPrice(tick.candle.close)}
-                        </title>
-                      </g>
-                    ) : null}
-                  </Fragment>
-                ))}
+                {result.ticks.map((tick, index) => {
+                  return tick.eval.request ? (
+                    <g key={'tik-order-' + tick.candle.time}>
+                      <circle
+                        cx={index * barWidth + barWidth}
+                        cy={(max - tick.candle.close) * verticalScale}
+                        r={8}
+                        style={{
+                          fill: '#faff5d',
+                          fillOpacity: 0.8,
+                          stroke: tick.eval.request.buy ? '#c60eef' : '#f35411',
+                          strokeWidth: '4px',
+                        }}
+                      />
+                      <title>
+                        {tick.eval.request.buy ? 'Покупка' : 'Продажа'} {formatPrice(tick.candle.close)}
+                      </title>
+                    </g>
+                  ) : null
+                })}
               </svg>
             ) : null}
           </div>
