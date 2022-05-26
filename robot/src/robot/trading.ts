@@ -70,11 +70,6 @@ export class Result {
   }
 }
 
-export type TickResult = {
-  eval: EvalResult
-  candle: Candle
-}
-
 export class Services {
   constructor(
     public readonly accounts: AccountsService,
