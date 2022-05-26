@@ -1,5 +1,5 @@
 import PriceClose from './PriceClose'
-import { Data, Metric } from '../robot/trading'
+import { Data } from '../robot/trading'
 
 test('price', () => {
   const criteria = new PriceClose()
