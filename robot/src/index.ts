@@ -323,17 +323,6 @@ app.get('/api/accounts/:account/robots/:robot/operations', function (req, res) {
   return accountsService
     .get(req.params.account)
     .then((account) => operationsService.getAllExecuted(account, robot.figi, from, new Date()))
-    .then((operations) =>
-      operations.sort((a, b) => {
-        if (a.date.getTime() > b.date.getTime()) {
-          return -1
-        }
-        if (a.date.getTime() < b.date.getTime()) {
-          return 1
-        }
-        return 0
-      })
-    )
     .then((operations) => res.json(operations))
     .catch((e) => res.status(500).json({ message: e.message }))
 })
