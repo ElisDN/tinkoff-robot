@@ -145,7 +145,7 @@ class Robot {
     }
 
     await services.logger.info('Запуск робота', {
-      id: this.id,
+      robot: this.id,
       name: this.name,
       accountId: this.accountId,
       figi: this.figi,
@@ -153,14 +153,14 @@ class Robot {
 
     const account = await services.accounts.get(this.accountId)
 
-    await services.logger.info('Загружен счёт', { account })
+    await services.logger.info('Загружен счёт', { robot: this.id, account })
 
     const instrument = await services.instruments.getByFigi(this.figi)
 
-    await services.logger.info('Получен инструмент', { instrument })
+    await services.logger.info('Получен инструмент', { robot: this.id, instrument })
 
     if (!instrument.available) {
-      await services.logger.info('Инструмент недоступен', { instrument })
+      await services.logger.info('Инструмент недоступен', { robot: this.id, instrument })
       throw new Error('Инструмент ' + instrument.figi + ' недоступен')
     }
 
@@ -168,24 +168,24 @@ class Robot {
     from.setDate(from.getDate() - 4)
 
     const candles = await services.candles.getHistory(this.figi, from, new Date())
-    await services.logger.info('Загружены свечи')
+    await services.logger.info('Загружены свечи', { robot: this.id })
 
     const orders = await services.orders.getAllNew(account, this.figi)
-    await services.logger.info('Загружены активные заказы')
+    await services.logger.info('Загружены активные заказы', { robot: this.id })
 
     const operations = await services.operations.getAllExecuted(account, this.figi, from, new Date())
-    await services.logger.info('Загружены прошлые операции')
+    await services.logger.info('Загружены прошлые операции', { robot: this.id })
 
     let data = Data.blank(new Date())
 
     const existingOrder = orders.at(0)
     if (existingOrder) {
-      await services.logger.info('Имеется активный заказ', { order: existingOrder })
+      await services.logger.info('Имеется активный заказ', { robot: this.id, order: existingOrder })
       data = data.withOrder(existingOrder)
     } else {
       const existingOperation = operations.at(0)
       if (existingOperation) {
-        await services.logger.info('Имеется прошлая операция', { order: existingOperation })
+        await services.logger.info('Имеется прошлая операция', { robot: this.id, operation: existingOperation })
         data = data.withOrder({
           id: existingOperation.id,
           date: existingOperation.date,
@@ -204,7 +204,7 @@ class Robot {
       data = data.withCandle(candle)
     }
 
-    await services.logger.info('Подписываемся на свечи', { figi: this.figi })
+    await services.logger.info('Подписываемся на свечи', { robot: this.id, figi: this.figi })
 
     const stream = services.market.subscribeToCandles(this.figi)
 
@@ -213,12 +213,12 @@ class Robot {
         break
       }
 
-      await services.logger.info('Получена свеча', { figi: this.figi, candle })
+      await services.logger.info('Получена свеча', { robot: this.id, figi: this.figi, candle })
 
       data = data.withCandle(candle)
       const result = this.tick(data)
 
-      await services.logger.info('Вычислен результат', { figi: this.figi, result })
+      await services.logger.info('Вычислен результат', { robot: this.id, figi: this.figi, result })
 
       if (result.request) {
         if (result.request.buy) {
@@ -226,20 +226,22 @@ class Robot {
           try {
             availableMoney = await services.portfolio.getAvailableMoney(account, instrument.currency)
           } catch (e) {
-            await services.logger.error('Ошибка', { error: e })
+            await services.logger.error('Ошибка', { robot: this.id, error: e })
           }
           if (availableMoney > candle.close * this.lots * instrument.lot) {
             await services.logger.info('Отправляем заказ на покупку', {
+              robot: this.id,
               order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
             })
             try {
               order = await services.orders.postOrder(account, this.figi, result.request.buy, this.lots)
               data = data.withOrder(order)
             } catch (e) {
-              await services.logger.error('Ошибка', { error: e })
+              await services.logger.error('Ошибка', { robot: this.id, error: e })
             }
           } else {
             await services.logger.info('Недостаточно средств для заказа', {
+              robot: this.id,
               order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
             })
           }
@@ -248,20 +250,22 @@ class Robot {
           try {
             availableLots = await services.portfolio.getAvailableLots(account, this.figi)
           } catch (e) {
-            await services.logger.error('Ошибка', { error: e })
+            await services.logger.error('Ошибка', { robot: this.id, error: e })
           }
           if (availableLots >= this.lots) {
             await services.logger.info('Отправляем заказ на продажу', {
+              robot: this.id,
               order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
             })
             try {
               order = await services.orders.postOrder(account, this.figi, result.request.buy, this.lots)
               data = data.withOrder(order)
             } catch (e) {
-              await services.logger.error('Ошибка', { error: e })
+              await services.logger.error('Ошибка', { robot: this.id, error: e })
             }
           } else {
             await services.logger.info('Недостаточно лотов для продажи', {
+              robot: this.id,
               order: { account: this.accountId, figi: this.figi, buy: result.request.buy, lots: this.lots },
             })
           }
@@ -269,7 +273,7 @@ class Robot {
       }
     }
 
-    await services.logger.info('Остановка робота', { id: this.id })
+    await services.logger.info('Остановка робота', { robot: this.id })
   }
 
   start(date: Date) {
