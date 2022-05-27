@@ -40,7 +40,6 @@ import OperationsService from './services/operations'
 import LastBuyPrice from './criterias/LastBuyPrice'
 import LastSellPrice from './criterias/LastSellPrice'
 import MarketService from './services/market'
-import instruments from './services/instruments'
 
 // Configuration
 
