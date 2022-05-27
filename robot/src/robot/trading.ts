@@ -43,7 +43,9 @@ export class Data {
   }
 
   withCandle(candle: Candle) {
-    return new Data(this.date, candle, { ...this.candles, [candle.time.toUTCString()]: candle }, this.order)
+    const candles = Object.fromEntries(Object.entries(this.candles).slice(-1440))
+
+    return new Data(this.date, candle, { ...candles, [candle.time.toUTCString()]: candle }, this.order)
   }
 }
 
