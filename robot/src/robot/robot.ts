@@ -173,7 +173,19 @@ class Robot {
     const orders = await services.orders.getAllNew(account, this.figi)
     await services.logger.info('Загружены активные заказы', { robot: this.id })
 
-    const operations = await services.operations.getAllExecuted(account, this.figi, from, new Date())
+    const operations = await services.operations
+      .getAllExecuted(account, this.figi, from, new Date())
+      .then((operations) =>
+        operations.sort((a, b) => {
+          if (a.date.getTime() > b.date.getTime()) {
+            return 1
+          }
+          if (a.date.getTime() < b.date.getTime()) {
+            return -1
+          }
+          return 0
+        })
+      )
     await services.logger.info('Загружены прошлые операции', { robot: this.id })
 
     let data = Data.blank(new Date())
@@ -183,7 +195,7 @@ class Robot {
       await services.logger.info('Имеется активный заказ', { robot: this.id, order: existingOrder })
       data = data.withOrder(existingOrder)
     } else {
-      const existingOperation = operations.at(0)
+      const existingOperation = operations.at(-1)
       if (existingOperation) {
         await services.logger.info('Имеется прошлая операция', { robot: this.id, operation: existingOperation })
         data = data.withOrder({
@@ -225,6 +237,7 @@ class Robot {
           let availableMoney = 0
           try {
             availableMoney = await services.portfolio.getAvailableMoney(account, instrument.currency)
+            await services.logger.info('Доступно денег', { robot: this.id, available: availableMoney })
           } catch (e) {
             await services.logger.error('Ошибка', { robot: this.id, error: e })
           }
@@ -249,6 +262,7 @@ class Robot {
           let availableLots = 0
           try {
             availableLots = await services.portfolio.getAvailableLots(account, this.figi)
+            await services.logger.info('Доступно лотов', { robot: this.id, available: availableLots })
           } catch (e) {
             await services.logger.error('Ошибка', { robot: this.id, error: e })
           }
