@@ -39,23 +39,33 @@ class OperationsService {
       })
     }
 
-    return promise.then((response) => {
-      return response.operations
-        .filter((operation) => {
-          return (
-            operation.operationType === OperationType.OPERATION_TYPE_BUY ||
-            operation.operationType === OperationType.OPERATION_TYPE_SELL
+    return promise
+      .then((response) => response.operations)
+      .then((operations) =>
+        operations
+          .filter(
+            (operation) =>
+              operation.operationType === OperationType.OPERATION_TYPE_BUY ||
+              operation.operationType === OperationType.OPERATION_TYPE_SELL
           )
-        })
-        .map<Operation>((operation) => ({
-          id: operation.id,
-          date: operation.date || new Date(0),
-          figi: operation.figi,
-          buy: operation.operationType === OperationType.OPERATION_TYPE_BUY,
-          lots: operation.quantity,
-          price: operation.price ? moneyToFloat(operation.price) : 0,
-        }))
-    })
+          .map<Operation>((operation) => ({
+            id: operation.id,
+            date: operation.date || new Date(0),
+            figi: operation.figi,
+            buy: operation.operationType === OperationType.OPERATION_TYPE_BUY,
+            lots: operation.quantity,
+            price: operation.price ? moneyToFloat(operation.price) : 0,
+          }))
+          .sort((a, b) => {
+            if (a.date.getTime() > b.date.getTime()) {
+              return -1
+            }
+            if (a.date.getTime() < b.date.getTime()) {
+              return 1
+            }
+            return 0
+          })
+      )
   }
 }
 

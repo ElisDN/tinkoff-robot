@@ -52,6 +52,18 @@ class OrdersService {
           price: order.executedOrderPrice ? moneyToFloat(order.executedOrderPrice) : null,
           comission: order.serviceCommission ? moneyToFloat(order.serviceCommission) : null,
         }))
+        .sort((a, b) => {
+          if (!a.date || !b.date) {
+            return 0
+          }
+          if (a.date.getTime() > b.date.getTime()) {
+            return -1
+          }
+          if (a.date.getTime() < b.date.getTime()) {
+            return 1
+          }
+          return 0
+        })
     })
   }
 
