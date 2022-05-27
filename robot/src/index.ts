@@ -370,7 +370,7 @@ app.post('/api/accounts/:account/robots/:robot/strategy/criterias/:criteria/wrap
 
 app.post('/api/accounts/:account/robots/:robot/start', async function (req, res) {
   const from = new Date()
-  from.setDate(from.getDate() - 4)
+  from.setDate(from.getDate() - 3)
   return robotsPool
     .start(req.params.account, req.params.robot, from)
     .then(() => res.status(201).end())
@@ -406,7 +406,7 @@ app.post('/api/accounts/:account/robots/:robot/sell', async function (req, res) 
 
 app.get('/api/accounts/:account/robots/:robot/back-test', async function (req, res) {
   const from = new Date()
-  from.setDate(from.getDate() - 4)
+  from.setDate(from.getDate() - 3)
   return robotsPool
     .backTest(req.params.account, req.params.robot, from)
     .then((results) => res.json(results))
