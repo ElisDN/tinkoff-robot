@@ -29,7 +29,7 @@ class MarketService {
     }
     const stream = this.client.marketDataStream.marketDataStream(getSubscribeCandlesRequest())
     for await (const message of stream) {
-      if (message.candle) {
+      if (message.candle && message.candle.figi === figi) {
         const candle: Candle = {
           time: message.candle.time || new Date(0),
           open: message.candle.open ? quotationToFloat(message.candle.open) : 0,
