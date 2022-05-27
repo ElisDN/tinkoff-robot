@@ -82,6 +82,34 @@ function RobotPage() {
       .catch(() => null)
   }
 
+  const buy = () => {
+    setError(null)
+    getToken()
+      .then((token) => {
+        api(`/api/accounts/${accountId}/robots/${robotId}/buy`, {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + token },
+        })
+          .then(() => loadRobot())
+          .catch((error) => setError(error.message || error.statusText))
+      })
+      .catch(() => null)
+  }
+
+  const sell = () => {
+    setError(null)
+    getToken()
+      .then((token) => {
+        api(`/api/accounts/${accountId}/robots/${robotId}/sell`, {
+          method: 'POST',
+          headers: { Authorization: 'Bearer ' + token },
+        })
+          .then(() => loadRobot())
+          .catch((error) => setError(error.message || error.statusText))
+      })
+      .catch(() => null)
+  }
+
   return (
     <div className="container-fluid py-3">
       <nav aria-label="breadcrumb">
@@ -121,9 +149,23 @@ function RobotPage() {
           />
         </div>
         <div className="col-md-4 col-lg-3">
-          <div className="card my-3">
-            {robot !== null ? (
-              <>
+          {robot !== null ? (
+            <>
+              {!robot.active ? (
+                <div className="row my-3">
+                  <div className="col-md-6 d-grid">
+                    <button className="btn btn-outline-primary py-3" onClick={buy}>
+                      Купить
+                    </button>
+                  </div>
+                  <div className="col-md-6 d-grid">
+                    <button className="btn btn-outline-primary py-3" onClick={sell}>
+                      Продать
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+              <div className="my-3 d-grid">
                 {robot.active ? (
                   <button className="btn btn-danger py-3" onClick={stopRobot}>
                     Остановить робота
@@ -133,9 +175,9 @@ function RobotPage() {
                     Запустить робота
                   </button>
                 )}
-              </>
-            ) : null}
-          </div>
+              </div>
+            </>
+          ) : null}
           <Orders accountId={accountId || ''} robotId={robotId || ''} />
           <Operations accountId={accountId || ''} robotId={robotId || ''} />
         </div>

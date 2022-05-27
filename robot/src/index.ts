@@ -40,6 +40,7 @@ import OperationsService from './services/operations'
 import LastBuyPrice from './criterias/LastBuyPrice'
 import LastSellPrice from './criterias/LastSellPrice'
 import MarketService from './services/market'
+import instruments from './services/instruments'
 
 // Configuration
 
@@ -381,6 +382,26 @@ app.post('/api/accounts/:account/robots/:robot/stop', async function (req, res) 
     .stop(req.params.account, req.params.robot)
     .then(() => res.status(201).end())
     .catch((err) => res.status(500).json({ message: err.message }))
+})
+
+app.post('/api/accounts/:account/robots/:robot/buy', async function (req, res) {
+  const robot = robotsPool.view(req.params.account, req.params.robot)
+  return instrumentsService
+    .getByFigi(robot.figi)
+    .then(() => accountsService.get(req.params.account))
+    .then((account) => ordersService.postOrder(account, robot.figi, true, robot.lots))
+    .then(() => res.status(201).end())
+    .catch((e) => res.status(500).json({ message: e.message }))
+})
+
+app.post('/api/accounts/:account/robots/:robot/sell', async function (req, res) {
+  const robot = robotsPool.view(req.params.account, req.params.robot)
+  return instrumentsService
+    .getByFigi(robot.figi)
+    .then(() => accountsService.get(req.params.account))
+    .then((account) => ordersService.postOrder(account, robot.figi, false, robot.lots))
+    .then(() => res.status(201).end())
+    .catch((e) => res.status(500).json({ message: e.message }))
 })
 
 app.get('/api/accounts/:account/robots/:robot/back-test', async function (req, res) {
