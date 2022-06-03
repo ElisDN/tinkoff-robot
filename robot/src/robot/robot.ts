@@ -179,12 +179,12 @@ class Robot {
 
     let data = Data.blank(new Date())
 
-    const existingOrder = orders.at(0)
+    const existingOrder = orders.at(-1)
     if (existingOrder) {
       await services.logger.info('Имеется активный заказ', { robot: this.id, order: existingOrder })
       data = data.withOrder(existingOrder)
     } else {
-      const existingOperation = operations.at(0)
+      const existingOperation = operations.at(-1)
       if (existingOperation) {
         await services.logger.info('Имеется прошлая операция', { robot: this.id, operation: existingOperation })
         data = data.withOrder({
