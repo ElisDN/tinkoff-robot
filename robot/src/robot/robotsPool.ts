@@ -15,16 +15,16 @@ type RobotView = {
 
 class RobotsPool {
   private readonly storage: RobotsStorage
-  private readonly trader: Services
+  private readonly services: Services
   private robots: Robot[] = []
 
-  constructor(storage: RobotsStorage, trader: Services) {
+  constructor(storage: RobotsStorage, services: Services) {
     this.storage = storage
-    this.trader = trader
+    this.services = services
     this.robots = storage.readAll()
     this.robots.forEach((robot) => {
       if (robot.isActive()) {
-        robot.trade(this.trader)
+        robot.trade(this.services)
       }
     })
   }
@@ -73,7 +73,7 @@ class RobotsPool {
   }
 
   async backTest(accountId: string, robotId: string, from: Date) {
-    return this.getInAccount(accountId, robotId).backTest(this.trader, from)
+    return this.getInAccount(accountId, robotId).backTest(this.services, from)
   }
 
   async start(accountId: string, robotId: string, from: Date) {
@@ -86,7 +86,7 @@ class RobotsPool {
     if (!robot.isActive()) {
       robot.start(from)
       this.storage.save(robot)
-      robot.trade(this.trader)
+      robot.trade(this.services)
     }
   }
 
