@@ -57,10 +57,10 @@ class OrdersService {
             return 0
           }
           if (a.date.getTime() > b.date.getTime()) {
-            return -1
+            return 1
           }
           if (a.date.getTime() < b.date.getTime()) {
-            return 1
+            return -1
           }
           return 0
         })
