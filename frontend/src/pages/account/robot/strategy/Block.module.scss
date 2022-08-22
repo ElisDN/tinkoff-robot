@@ -24,12 +24,15 @@ $box-background: #eee;
 
       .params {
         display: flex;
+
         .param {
           margin-bottom: 0.5rem;
 
-          label, input {
+          label,
+          input {
             display: block;
           }
+
           input {
             width: 8rem;
             border: 1px solid $box-border-color;
@@ -41,7 +44,8 @@ $box-background: #eee;
         display: flex;
         flex-flow: column nowrap;
 
-        button, select {
+        button,
+        select {
           margin: 0;
           padding: 0.1rem 0.4rem;
           background: #fff;
@@ -71,7 +75,7 @@ $box-background: #eee;
 
         .inputName {
           background: $box-background;
-          padding: 0.2rem 0.2rem;
+          padding: 0.2rem;
           border-top: 1px solid $box-border-color;
           border-bottom: 1px solid $box-border-color;
         }

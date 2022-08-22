@@ -24,6 +24,8 @@
     "eslint-plugin-promise": "^5.2.0",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-testing-library": "^5.0.0",
+    "postcss-scss": "^4.0.3",
+    "postcss-syntax": "^0.36.2",
     "prettier": "^2.0.4",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
@@ -42,7 +44,7 @@
     "test": "react-scripts test",
     "eslint": "eslint --ext .js,.ts,.jsx,.tsx src",
     "eslint-fix": "eslint --fix --ext .js,.ts,.jsx,.tsx src",
-    "stylelint": "stylelint \"src/**/*.css\"",
+    "stylelint": "stylelint \"src/**/*.scss\"",
     "prettier": "prettier --write \"**/*.+(js|jsx|ts|tsx|json|css|md)\""
   },
   "browserslist": {
