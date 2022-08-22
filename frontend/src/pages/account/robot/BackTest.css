@@ -4,7 +4,7 @@
 }
 
 .bar {
-  fill: #ffffff;
+  fill: #fff;
 }
 
 .bar:hover {
@@ -27,10 +27,11 @@
   font: 10px sans-serif;
 }
 
-.axis path, .axis line {
+.axis path,
+.axis line {
   fill: none;
   stroke: #000;
-  shape-rendering: crispEdges;
+  shape-rendering: crispedges;
 }
 
 .x.axis path {
