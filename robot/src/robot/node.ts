@@ -190,7 +190,7 @@ export class Node {
       data.id,
       criterias.get(data.type),
       Params.fromJSON(data.params),
-      Inputs.fromJSON(data.inputs, criterias)
+      Inputs.fromJSON(data.inputs, criterias),
     )
   }
 }

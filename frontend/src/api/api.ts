@@ -3,7 +3,6 @@ function isJsonResponse(response: Response) {
   return type && type.includes('application/json')
 }
 
-// eslint-disable-next-line no-undef
 function api(uri: string, params: RequestInit) {
   return fetch(process.env.REACT_APP_API_HOST + uri, params)
     .then((response) => {

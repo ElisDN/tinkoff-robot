@@ -23,7 +23,7 @@ class Robot {
     lots: number,
     strategy: Strategy,
     active: boolean,
-    startDate: Date | null
+    startDate: Date | null,
   ) {
     this.id = id
     this.name = name

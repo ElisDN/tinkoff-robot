@@ -13,7 +13,7 @@ const strategy = new Strategy(
     new Inputs([
       new Input('one', new Node('id-2', new PriceClose(), Params.blank(), Inputs.blank())),
       new Input('two', Node.forStatic('id-3', 100)),
-    ])
+    ]),
   ),
   new Node(
     'id-4',
@@ -22,8 +22,8 @@ const strategy = new Strategy(
     new Inputs([
       new Input('one', new Node('id-5', new PriceClose(), Params.blank(), Inputs.blank())),
       new Input('two', Node.forStatic('id-6', 200)),
-    ])
-  )
+    ]),
+  ),
 )
 
 test('strategy eval metrics', () => {
@@ -114,7 +114,7 @@ test('strategy eval sell without order', () => {
   const data = Data.blank().withPrice(250)
   const result = strategy.eval(data)
 
-  expect(result.request).toBe(null)
+  expect(result.request).toEqual<OrderRequest>({ buy: false })
 })
 
 test('strategy eval sell with buy order', () => {

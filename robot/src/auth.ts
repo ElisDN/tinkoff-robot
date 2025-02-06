@@ -4,10 +4,12 @@ import jwt from 'jsonwebtoken'
 export function createAuthAction(password: string, secret: string, timeout: number) {
   return (req: Request, res: Response) => {
     if (!req.body.password) {
-      return res.status(422).json({ message: 'Заполните пароль' })
+      res.status(422).json({ message: 'Заполните пароль' })
+      return
     }
     if (req.body.password !== password) {
-      return res.status(409).json({ message: 'Неверный пароль' })
+      res.status(409).json({ message: 'Неверный пароль' })
+      return
     }
     const token = jwt.sign({}, secret, { expiresIn: timeout })
     res.status(200).json({ token, expires: timeout })
@@ -17,7 +19,8 @@ export function createAuthAction(password: string, secret: string, timeout: numb
 export function createAuthMiddleware(secret: string) {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
-      return res.status(401).end()
+      res.status(401).end()
+      return
     }
     const token = req.headers.authorization.split(' ')[1]
     jwt.verify(token, secret, (err) => {

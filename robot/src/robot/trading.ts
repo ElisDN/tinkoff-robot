@@ -81,6 +81,6 @@ export class Services {
     public readonly portfolio: PortfolioService,
     public readonly market: MarketService,
     public readonly cache: CacheContainer,
-    public readonly logger: Logger
+    public readonly logger: Logger,
   ) {}
 }

@@ -41,7 +41,7 @@ class OrdersService {
         .filter(
           (order) =>
             order.figi === figi &&
-            order.executionReportStatus === OrderExecutionReportStatus.EXECUTION_REPORT_STATUS_NEW
+            order.executionReportStatus === OrderExecutionReportStatus.EXECUTION_REPORT_STATUS_NEW,
         )
         .map<Order>((order) => ({
           id: order.orderId,

@@ -46,7 +46,7 @@ class OperationsService {
           .filter(
             (operation) =>
               operation.operationType === OperationType.OPERATION_TYPE_BUY ||
-              operation.operationType === OperationType.OPERATION_TYPE_SELL
+              operation.operationType === OperationType.OPERATION_TYPE_SELL,
           )
           .map<Operation>((operation) => ({
             id: operation.id,
@@ -64,7 +64,7 @@ class OperationsService {
               return -1
             }
             return 0
-          })
+          }),
       )
   }
 }

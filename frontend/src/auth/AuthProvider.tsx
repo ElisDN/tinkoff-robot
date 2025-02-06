@@ -51,7 +51,7 @@ function AuthProvider({ children }: Props) {
       login,
       logout,
     }),
-    [isAuthenticated, getToken, login, logout]
+    [isAuthenticated, getToken, login, logout],
   )
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

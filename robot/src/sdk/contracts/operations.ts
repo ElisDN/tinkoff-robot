@@ -2671,13 +2671,13 @@ export const GetDividendsForeignIssuerRequest = {
     if (message.generateDivForeignIssuerReport !== undefined) {
       GenerateDividendsForeignIssuerReportRequest.encode(
         message.generateDivForeignIssuerReport,
-        writer.uint32(10).fork()
+        writer.uint32(10).fork(),
       ).ldelim()
     }
     if (message.getDivForeignIssuerReport !== undefined) {
       GetDividendsForeignIssuerReportRequest.encode(
         message.getDivForeignIssuerReport,
-        writer.uint32(18).fork()
+        writer.uint32(18).fork(),
       ).ldelim()
     }
     return writer
@@ -2693,7 +2693,7 @@ export const GetDividendsForeignIssuerRequest = {
         case 1:
           message.generateDivForeignIssuerReport = GenerateDividendsForeignIssuerReportRequest.decode(
             reader,
-            reader.uint32()
+            reader.uint32(),
           )
           break
         case 2:
@@ -2754,7 +2754,7 @@ export const GetDividendsForeignIssuerResponse = {
     if (message.generateDivForeignIssuerReportResponse !== undefined) {
       GenerateDividendsForeignIssuerReportResponse.encode(
         message.generateDivForeignIssuerReportResponse,
-        writer.uint32(10).fork()
+        writer.uint32(10).fork(),
       ).ldelim()
     }
     if (message.divForeignIssuerReport !== undefined) {
@@ -2773,7 +2773,7 @@ export const GetDividendsForeignIssuerResponse = {
         case 1:
           message.generateDivForeignIssuerReportResponse = GenerateDividendsForeignIssuerReportResponse.decode(
             reader,
-            reader.uint32()
+            reader.uint32(),
           )
           break
         case 2:
@@ -2885,7 +2885,7 @@ export const GenerateDividendsForeignIssuerReportRequest = {
   },
 
   fromPartial(
-    object: DeepPartial<GenerateDividendsForeignIssuerReportRequest>
+    object: DeepPartial<GenerateDividendsForeignIssuerReportRequest>,
   ): GenerateDividendsForeignIssuerReportRequest {
     const message = createBaseGenerateDividendsForeignIssuerReportRequest()
     message.accountId = object.accountId ?? ''
@@ -2996,7 +2996,7 @@ export const GenerateDividendsForeignIssuerReportResponse = {
   },
 
   fromPartial(
-    object: DeepPartial<GenerateDividendsForeignIssuerReportResponse>
+    object: DeepPartial<GenerateDividendsForeignIssuerReportResponse>,
   ): GenerateDividendsForeignIssuerReportResponse {
     const message = createBaseGenerateDividendsForeignIssuerReportResponse()
     message.taskId = object.taskId ?? ''
@@ -3067,7 +3067,7 @@ export const GetDividendsForeignIssuerReportResponse = {
     const obj: any = {}
     if (message.dividendsForeignIssuerReport) {
       obj.dividendsForeignIssuerReport = message.dividendsForeignIssuerReport.map((e) =>
-        e ? DividendsForeignIssuerReport.toJSON(e) : undefined
+        e ? DividendsForeignIssuerReport.toJSON(e) : undefined,
       )
     } else {
       obj.dividendsForeignIssuerReport = []
@@ -3346,12 +3346,12 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>
+    ? Array<DeepPartial<U>>
+    : T extends ReadonlyArray<infer U>
+      ? ReadonlyArray<DeepPartial<U>>
+      : T extends {}
+        ? { [K in keyof T]?: DeepPartial<T[K]> }
+        : Partial<T>
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000

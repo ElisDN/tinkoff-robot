@@ -1435,7 +1435,7 @@ export const SubscribeOrderBookResponse = {
     message.trackingId !== undefined && (obj.trackingId = message.trackingId)
     if (message.orderBookSubscriptions) {
       obj.orderBookSubscriptions = message.orderBookSubscriptions.map((e) =>
-        e ? OrderBookSubscription.toJSON(e) : undefined
+        e ? OrderBookSubscription.toJSON(e) : undefined,
       )
     } else {
       obj.orderBookSubscriptions = []
@@ -2158,7 +2158,7 @@ export const SubscribeLastPriceResponse = {
     message.trackingId !== undefined && (obj.trackingId = message.trackingId)
     if (message.lastPriceSubscriptions) {
       obj.lastPriceSubscriptions = message.lastPriceSubscriptions.map((e) =>
-        e ? LastPriceSubscription.toJSON(e) : undefined
+        e ? LastPriceSubscription.toJSON(e) : undefined,
       )
     } else {
       obj.lastPriceSubscriptions = []
@@ -3696,12 +3696,12 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>
+    ? Array<DeepPartial<U>>
+    : T extends ReadonlyArray<infer U>
+      ? ReadonlyArray<DeepPartial<U>>
+      : T extends {}
+        ? { [K in keyof T]?: DeepPartial<T[K]> }
+        : Partial<T>
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000

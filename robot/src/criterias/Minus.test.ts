@@ -8,7 +8,7 @@ test('minus metrics', () => {
     'id-1',
     Data.blank(),
     Params.blank(),
-    new Inputs([Input.forStatic('id-2', 'one', 22), Input.forStatic('id-3', 'two', 10)])
+    new Inputs([Input.forStatic('id-2', 'one', 22), Input.forStatic('id-3', 'two', 10)]),
   )
   expect(result.metrics).toEqual<Metric[]>([
     { id: 'id-2', name: 'Значение', value: 22 },
@@ -23,7 +23,7 @@ test('minus', () => {
     'id-1',
     Data.blank(),
     Params.blank(),
-    new Inputs([Input.forStatic('id-2', 'one', 5.2), Input.forStatic('id-3', 'two', 3.6)])
+    new Inputs([Input.forStatic('id-2', 'one', 5.2), Input.forStatic('id-3', 'two', 3.6)]),
   )
   expect(result.value).toBe(1.6)
 })

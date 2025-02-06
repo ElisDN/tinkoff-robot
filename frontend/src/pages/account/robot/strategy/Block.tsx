@@ -56,7 +56,7 @@ function Block({ schemas, criteria, multiple, remove, replace, wrap }: Props) {
           return { ...data, value: parseFloat(event.currentTarget.value) }
         }
         return data
-      })
+      }),
     )
   }
 

@@ -59,9 +59,9 @@ class CandlesService {
                     low: candle.low ? quotationToFloat(candle.low) : -1,
                     close: candle.close ? quotationToFloat(candle.close) : -1,
                     isComplete: candle.isComplete,
-                  }))
+                  })),
               )
-          })
+          }),
         ).then((batches) => {
           return batches.flatMap((batch) => batch)
         })

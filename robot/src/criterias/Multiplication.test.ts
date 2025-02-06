@@ -8,7 +8,7 @@ test('multiplication metrics', () => {
     'id-1',
     Data.blank(),
     Params.blank(),
-    new Inputs([Input.forStatic('id-2', 'one', 11), Input.forStatic('id-3', 'two', 22)])
+    new Inputs([Input.forStatic('id-2', 'one', 11), Input.forStatic('id-3', 'two', 22)]),
   )
   expect(result.metrics).toEqual<Metric[]>([
     { id: 'id-2', name: 'Значение', value: 11 },
@@ -22,7 +22,7 @@ test('multiplication', () => {
     'id-1',
     Data.blank(),
     Params.blank(),
-    new Inputs([Input.forStatic('id-2', 'one', 5.2), Input.forStatic('id-3', 'two', 2)])
+    new Inputs([Input.forStatic('id-2', 'one', 5.2), Input.forStatic('id-3', 'two', 2)]),
   )
   expect(result.value).toBe(10.4)
 })

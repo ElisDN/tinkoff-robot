@@ -36,10 +36,10 @@ export class FileRobotsStorage implements RobotsStorage {
           data.lots,
           new Strategy(
             Node.fromJSON(data.strategy.buy, this.criterias),
-            Node.fromJSON(data.strategy.sell, this.criterias)
+            Node.fromJSON(data.strategy.sell, this.criterias),
           ),
           data.active || false,
-          data.startDate || null
+          data.startDate || null,
         )
       })
   }
@@ -56,7 +56,7 @@ export class FileRobotsStorage implements RobotsStorage {
         strategy: robot.getStrategy(),
         active: robot.isActive(),
         startDate: robot.getStartDate(),
-      })
+      }),
     )
   }
 

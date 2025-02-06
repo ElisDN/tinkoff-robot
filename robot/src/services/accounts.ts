@@ -56,7 +56,7 @@ class AccountsService {
           .filter(
             (account) =>
               account.status === AccountStatus.ACCOUNT_STATUS_OPEN &&
-              account.accessLevel === AccessLevel.ACCOUNT_ACCESS_LEVEL_FULL_ACCESS
+              account.accessLevel === AccessLevel.ACCOUNT_ACCESS_LEVEL_FULL_ACCESS,
           )
           .map<Account>((account) => ({ real: true, id: account.id, name: account.name || account.id }))
       })

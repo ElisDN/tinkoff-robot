@@ -5,7 +5,7 @@ import { Logger } from 'winston'
 function createLoggingMiddleware(logger: Logger) {
   return async function* loggingMiddleware<Request, Response>(
     call: ClientMiddlewareCall<Request, Response>,
-    options: CallOptions
+    options: CallOptions,
   ) {
     const { path } = call.method
     logger.info('Запрос', { path, request: call.request })
